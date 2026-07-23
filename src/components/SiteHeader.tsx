@@ -45,7 +45,7 @@ const labels = {
   },
   ko: {
     tools: "도구",
-    pulse: "Pulse",
+    pulse: "펄스",
     dividend: "배당 계산기",
     fire: "FIRE 계산기",
     average: "평단가 계산기",
@@ -96,7 +96,11 @@ export default function SiteHeader({
         <div className="flex items-center gap-3 sm:gap-6">
           {showLocaleControls && (
             <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1">
-              <div className="flex items-center pl-2 pr-1 border-r border-slate-200">
+              <div
+                className={`flex items-center pl-2 pr-1 ${
+                  onCurrencyChange ? "border-r border-slate-200" : ""
+                }`}
+              >
                 <Globe className="w-4 h-4 text-slate-400 mr-1" />
                 <select
                   value={lang}
@@ -107,14 +111,16 @@ export default function SiteHeader({
                   <option value="ko">한국어</option>
                 </select>
               </div>
-              <select
-                value={currency}
-                onChange={(e) => onCurrencyChange?.(e.target.value as Currency)}
-                className="text-sm bg-transparent text-slate-700 py-1 pl-2 pr-2 focus:outline-none cursor-pointer font-medium"
-              >
-                <option value="USD">USD ($)</option>
-                <option value="KRW">KRW (₩)</option>
-              </select>
+              {onCurrencyChange && (
+                <select
+                  value={currency}
+                  onChange={(e) => onCurrencyChange(e.target.value as Currency)}
+                  className="text-sm bg-transparent text-slate-700 py-1 pl-2 pr-2 focus:outline-none cursor-pointer font-medium"
+                >
+                  <option value="USD">USD ($)</option>
+                  <option value="KRW">KRW (₩)</option>
+                </select>
+              )}
             </div>
           )}
 

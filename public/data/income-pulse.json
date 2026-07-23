@@ -7,8 +7,8 @@
     "ko": "중립"
   },
   "brief": {
-    "en": "Income backdrop is mixed — ETF vs 10Y spread +0.85%, real yield 0.90%. Curve: Normal.",
-    "ko": "배당 소득 환경은 혼조 — ETF 대비 10년물 스프레드 +0.85%, 실질금리 0.90%. 곡선: 정상."
+    "en": "Today’s income backdrop is mixed — neither clearly favoring dividend ETFs nor Treasuries. Average ETF yield 5.48% vs 10Y 4.63% (spread +0.85%); real yield 0.90%. Curve: Normal.",
+    "ko": "오늘의 인컴 환경은 혼조입니다. 배당 ETF와 국채 중 한쪽이 뚜렷이 우세하지 않습니다. ETF 평균 5.48% vs 10년물 4.63% (스프레드 +0.85%), 실질금리 0.90%. 수익률 곡선: 정상."
   },
   "avgEtfYield": 5.477,
   "spreadVs10y": 0.847,
@@ -109,8 +109,8 @@
     "etf": "Yahoo Finance chart dividends (TTM / price, delayed)"
   },
   "disclaimer": {
-    "en": "For educational purposes only. Not investment advice.",
-    "ko": "교육 목적 정보이며 투자 자문이 아닙니다."
+    "en": "Educational information only. Not investment, tax, or financial advice.",
+    "ko": "교육 목적의 정보이며 투자·세무·재무 자문이 아닙니다."
   },
   "errors": []
 }

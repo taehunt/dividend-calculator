@@ -30,9 +30,10 @@ export default function PulseTeaser({ lang = "en" }: Props) {
     };
   }, []);
 
-  const title = lang === "ko" ? "Income Pulse" : "Income Pulse";
-  const cta = lang === "ko" ? "전체 보기" : "View full pulse";
-  const loading = lang === "ko" ? "지표 불러오는 중…" : "Loading live pulse…";
+  const title = lang === "ko" ? "인컴 펄스" : "Income Pulse";
+  const cta = lang === "ko" ? "자세히 보기" : "See today's score";
+  const loading =
+    lang === "ko" ? "오늘의 점수를 불러오는 중…" : "Loading today’s score…";
 
   return (
     <Link
@@ -50,7 +51,9 @@ export default function PulseTeaser({ lang = "en" }: Props) {
                 {title}
               </p>
               {data ? (
-                <p className={`text-3xl font-extrabold leading-none ${scoreTone(data.score)}`}>
+                <p
+                  className={`text-3xl font-extrabold leading-none ${scoreTone(data.score)}`}
+                >
                   {data.score ?? "—"}
                   <span className="text-sm font-semibold text-slate-500 ml-2">
                     {data.scoreLabel[lang]}

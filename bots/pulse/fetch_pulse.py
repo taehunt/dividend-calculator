@@ -222,43 +222,47 @@ def build_brief(
 
     if score is None or spread is None:
         return {
-            "en": "Income Pulse data is temporarily incomplete. Check back after the next update.",
-            "ko": "Income Pulse 데이터가 일시적으로 불완전합니다. 다음 업데이트 후 다시 확인해 주세요.",
+            "en": "Today’s Income Pulse is incomplete. Check back after the next daily update.",
+            "ko": "오늘 인컴 펄스 데이터가 아직 완전하지 않습니다. 다음 일일 업데이트 후 다시 확인해 주세요.",
         }
 
     spread_txt = f"{spread:+.2f}%"
     real_txt = f"{real_yield:.2f}%" if real_yield is not None else "n/a"
+    avg_txt = f"{avg_etf_yield:.2f}%" if avg_etf_yield is not None else "n/a"
+    dgs_txt = f"{dgs10:.2f}%" if dgs10 is not None else "n/a"
 
     if score >= 70:
         en = (
-            f"Dividend ETFs look relatively attractive vs Treasuries "
-            f"(avg yield spread {spread_txt}; real yield {real_txt}). "
-            f"Curve: {regime['label_en']}."
-        )
-        ko = (
-            f"배당 ETF가 국채 대비 상대적으로 매력적입니다 "
-            f"(평균 스프레드 {spread_txt}, 실질금리 {real_txt}). "
-            f"수익률 곡선: {regime['label_ko']}."
-        )
-    elif score >= 45:
-        en = (
-            f"Income backdrop is mixed — ETF vs 10Y spread {spread_txt}, "
+            f"Dividend ETF income looks relatively attractive versus Treasuries. "
+            f"Average ETF yield {avg_txt} vs 10Y {dgs_txt} (spread {spread_txt}); "
             f"real yield {real_txt}. Curve: {regime['label_en']}."
         )
         ko = (
-            f"배당 소득 환경은 혼조 — ETF 대비 10년물 스프레드 {spread_txt}, "
-            f"실질금리 {real_txt}. 곡선: {regime['label_ko']}."
+            f"배당 ETF 소득이 국채 대비 상대적으로 매력적입니다. "
+            f"ETF 평균 {avg_txt} vs 10년물 {dgs_txt} (스프레드 {spread_txt}), "
+            f"실질금리 {real_txt}. 수익률 곡선: {regime['label_ko']}."
+        )
+    elif score >= 45:
+        en = (
+            f"Today’s income backdrop is mixed — neither clearly favoring dividend ETFs nor Treasuries. "
+            f"Average ETF yield {avg_txt} vs 10Y {dgs_txt} (spread {spread_txt}); "
+            f"real yield {real_txt}. Curve: {regime['label_en']}."
+        )
+        ko = (
+            f"오늘의 인컴 환경은 혼조입니다. 배당 ETF와 국채 중 한쪽이 뚜렷이 우세하지 않습니다. "
+            f"ETF 평균 {avg_txt} vs 10년물 {dgs_txt} (스프레드 {spread_txt}), "
+            f"실질금리 {real_txt}. 수익률 곡선: {regime['label_ko']}."
         )
     else:
         en = (
-            f"Bonds look more competitive for income right now "
-            f"(ETF–10Y spread {spread_txt}; real yield {real_txt}). "
-            f"Curve: {regime['label_en']}."
+            f"Treasuries look more competitive for income right now. "
+            f"Average ETF yield {avg_txt} vs 10Y {dgs_txt} (spread {spread_txt}); "
+            f"real yield {real_txt}. Curve: {regime['label_en']}."
         )
         ko = (
-            f"지금은 채권 소득이 상대적으로 경쟁력 있습니다 "
-            f"(ETF–10Y 스프레드 {spread_txt}, 실질금리 {real_txt}). "
-            f"곡선: {regime['label_ko']}."
+            f"지금은 국채 소득이 상대적으로 더 경쟁력 있습니다. "
+            f"ETF 평균 {avg_txt} vs 10년물 {dgs_txt} (스프레드 {spread_txt}), "
+            f"실질금리 {real_txt}. 수익률 곡선: {regime['label_ko']}."
         )
 
     return {"en": en, "ko": ko, "label_en": label["en"], "label_ko": label["ko"]}
@@ -377,8 +381,8 @@ def main() -> int:
             "etf": "Yahoo Finance chart dividends (TTM / price, delayed)",
         },
         "disclaimer": {
-            "en": "For educational purposes only. Not investment advice.",
-            "ko": "교육 목적 정보이며 투자 자문이 아닙니다.",
+            "en": "Educational information only. Not investment, tax, or financial advice.",
+            "ko": "교육 목적의 정보이며 투자·세무·재무 자문이 아닙니다.",
         },
         "errors": errors,
     }

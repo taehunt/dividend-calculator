@@ -17,7 +17,7 @@ const tools = [
     href: "/pulse",
     title: "Income Pulse",
     titleKo: "인컴 펄스",
-    desc: "Daily dividend attractiveness score vs Treasuries, inflation, and VIX.",
+    desc: "Daily score: how attractive dividend ETF income looks vs Treasuries, inflation, and market stress.",
     icon: Activity,
   },
   {
