@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://dividend-calculator-3b5s.vercel.app/sitemap.xml',
+    sitemap: 'https://yieldgrower.com/sitemap.xml',
   }
 }
