@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://dividend-snowball-calc.vercel.app/sitemap.xml', // 추후 실제 도메인으로 변경
+    sitemap: 'https://dividend-calculator-3b5s.vercel.app/sitemap.xml',
   }
 }

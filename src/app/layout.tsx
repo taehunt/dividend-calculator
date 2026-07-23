@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Dividend Reinvestment & Compound Interest Calculator",
     description: "Visualize your dividend snowball. Calculate how your investments grow over time with the power of compound interest and DRIP.",
-    url: "https://dividend-snowball-calc.vercel.app",
+    url: "https://dividend-calculator-3b5s.vercel.app",
     siteName: "YieldGrower",
     locale: "en_US",
     type: "website",
