@@ -3,11 +3,13 @@ import { readFile } from "fs/promises";
 import path from "path";
 import PulseClient from "@/components/PulseClient";
 import type { IncomePulse } from "@/lib/income-pulse";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Income Pulse — Daily Dividend Attractiveness Score | YieldGrower",
+export const metadata: Metadata = pageMeta({
+  title: "Income Pulse — Daily Dividend Attractiveness Score",
   description:
     "Free daily Income Pulse: YieldGrower’s dividend attractiveness score vs 10Y Treasuries, CPI inflation, VIX, and popular dividend ETF yields (SCHD, VYM, JEPI, and more).",
+  path: "/pulse",
   keywords: [
     "income pulse",
     "dividend attractiveness score",
@@ -18,25 +20,7 @@ export const metadata: Metadata = {
     "FIRE income",
     "YieldGrower",
   ],
-  alternates: {
-    canonical: "https://yieldgrower.com/pulse",
-  },
-  openGraph: {
-    title: "Income Pulse — Dividend Attractiveness Score | YieldGrower",
-    description:
-      "A daily YieldGrower readout: how attractive dividend ETF income looks versus bonds and inflation.",
-    url: "https://yieldgrower.com/pulse",
-    siteName: "YieldGrower",
-    type: "website",
-    locale: "en_US",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Income Pulse — Dividend Attractiveness Score | YieldGrower",
-    description:
-      "Daily dividend attractiveness vs Treasuries, inflation, and VIX — free on YieldGrower.",
-  },
-};
+});
 
 async function loadPulse(): Promise<IncomePulse> {
   const filePath = path.join(

@@ -7,11 +7,18 @@ import SiteFooter from "@/components/SiteFooter";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Dividend Reinvestment & Compound Interest Calculator",
+  metadataBase: new URL("https://yieldgrower.com"),
+  title: {
+    default: "Dividend Reinvestment & Compound Interest Calculator",
+    template: "%s | YieldGrower",
+  },
   description:
     "Calculate how your investments grow over time with the power of compound interest and dividend reinvestment (DRIP). Free visual calculator for FIRE movement and dividend investors.",
   keywords:
     "dividend calculator, compound interest, DRIP, investment calculator, FIRE movement, stock calculator, yield growth",
+  alternates: {
+    canonical: "https://yieldgrower.com",
+  },
   openGraph: {
     title: "Dividend Reinvestment & Compound Interest Calculator",
     description:
