@@ -347,7 +347,7 @@ export default function DividendCalculator() {
                         border: '1px solid #e2e8f0',
                         boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
                       }}
-                      formatter={(value: number, name: string) => [formatCurrency(value), name === 'balance' ? 'Total Value' : 'Contributions']}
+                      formatter={(value: any, name: any) => [formatCurrency(Number(value)), name === 'balance' ? 'Total Value' : 'Contributions']}
                       labelFormatter={(label) => `Year ${label}`}
                     />
                     <Legend 
