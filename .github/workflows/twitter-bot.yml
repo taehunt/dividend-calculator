@@ -2,9 +2,9 @@ name: Twitter Auto Posting Bot
 
 on:
   schedule:
-    # 매일 UTC 기준 13시 (한국 시간 밤 10시)에 실행
-    - cron: '0 13 * * *'
-  workflow_dispatch: # 수동으로 실행할 수 있는 버튼 활성화
+    # Pulse 갱신(UTC 21:00) 직후 — 한국시간 오전 7시
+    - cron: '0 22 * * *'
+  workflow_dispatch:
 
 jobs:
   tweet:
