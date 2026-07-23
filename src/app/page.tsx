@@ -19,6 +19,7 @@ import NumberField from '@/components/NumberField';
 import CurrencyIcon from '@/components/CurrencyIcon';
 import { useMoneyValue } from '@/hooks/useMoneyValue';
 import PulseTeaser from '@/components/PulseTeaser';
+import CalculatorFaq from '@/components/CalculatorFaq';
 
 const translations = {
   en: {
@@ -481,6 +482,8 @@ export default function DividendCalculator() {
             </div>
           </div>
         </div>
+
+        <CalculatorFaq page="dividend" />
 
         {/* About Section */}
         <div id="about" className="mt-24 pt-16 border-t border-slate-200 mb-12">

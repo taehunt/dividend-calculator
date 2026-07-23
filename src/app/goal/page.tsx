@@ -8,6 +8,7 @@ import { useLocale } from "@/components/LocaleProvider";
 import NumberField from "@/components/NumberField";
 import { useMoneyValue } from "@/hooks/useMoneyValue";
 import PulseCallout from "@/components/PulseCallout";
+import CalculatorFaq from "@/components/CalculatorFaq";
 
 const copy = {
   en: {
@@ -177,6 +178,8 @@ export default function DividendGoalPage() {
             </div>
           </div>
         </div>
+
+        <CalculatorFaq page="goal" />
       </main>
     </div>
   );

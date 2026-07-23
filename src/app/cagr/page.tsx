@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Calculator, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
+import CalculatorFaq from "@/components/CalculatorFaq";
 import { useLocale } from "@/components/LocaleProvider";
 import NumberField from "@/components/NumberField";
 import { useMoneyValue } from "@/hooks/useMoneyValue";
@@ -170,6 +171,8 @@ export default function CagrCalculatorPage() {
             </div>
           </div>
         </div>
+
+        <CalculatorFaq page="cagr" />
       </main>
     </div>
   );

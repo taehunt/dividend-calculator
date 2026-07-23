@@ -23,6 +23,7 @@ import NumberField from "@/components/NumberField";
 import CurrencyIcon from "@/components/CurrencyIcon";
 import { useMoneyValue } from "@/hooks/useMoneyValue";
 import PulseCallout from "@/components/PulseCallout";
+import CalculatorFaq from "@/components/CalculatorFaq";
 
 type TargetMode = "auto" | "manual";
 
@@ -447,6 +448,8 @@ export default function FireCalculatorPage() {
             </div>
           </div>
         </div>
+
+        <CalculatorFaq page="fire" />
       </main>
     </div>
   );

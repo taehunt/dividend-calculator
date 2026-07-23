@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Calculator, Plus, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
+import CalculatorFaq from "@/components/CalculatorFaq";
 import { useLocale } from "@/components/LocaleProvider";
 import DraftNumberInput from "@/components/DraftNumberInput";
 import { convertMoney, toDisplayMoney, type MoneyCurrency } from "@/lib/money";
@@ -241,6 +242,8 @@ export default function AverageCalculatorPage() {
             </div>
           </div>
         </div>
+
+        <CalculatorFaq page="average" />
       </main>
     </div>
   );
