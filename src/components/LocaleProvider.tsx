@@ -48,7 +48,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     const stored = readStored();
     if (stored) {
       setLangState(stored.lang);
-      setCurrencyState(stored.currency);
+      // Keep language and money unit aligned
+      setCurrencyState(stored.lang === "ko" ? "KRW" : "USD");
     }
     setReady(true);
   }, []);
@@ -68,6 +69,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   const setLang = useCallback((next: Lang) => {
     setLangState(next);
+    setCurrencyState(next === "ko" ? "KRW" : "USD");
   }, []);
 
   const setCurrency = useCallback((next: Currency) => {

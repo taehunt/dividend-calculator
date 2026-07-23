@@ -16,6 +16,8 @@ import { Calculator, DollarSign, TrendingUp, Calendar, Percent, Info, Printer } 
 import { motion } from 'framer-motion';
 import SiteHeader from '@/components/SiteHeader';
 import { useLocale } from '@/components/LocaleProvider';
+import NumberField from '@/components/NumberField';
+import { useMoneyValue } from '@/hooks/useMoneyValue';
 import PulseTeaser from '@/components/PulseTeaser';
 
 const translations = {
@@ -105,8 +107,8 @@ const translations = {
 
 export default function DividendCalculator() {
   const { lang, currency } = useLocale();
-  const [initialInvestment, setInitialInvestment] = useState<number>(10000);
-  const [monthlyContribution, setMonthlyContribution] = useState<number>(500);
+  const [initialInvestment, setInitialInvestment] = useMoneyValue(10000);
+  const [monthlyContribution, setMonthlyContribution] = useMoneyValue(500);
   const [yearsToGrow, setYearsToGrow] = useState<number>(20);
   const [expectedAnnualReturn, setExpectedAnnualReturn] = useState<number>(7);
   const [dividendYield, setDividendYield] = useState<number>(3);
@@ -114,6 +116,7 @@ export default function DividendCalculator() {
   const [dripEnabled, setDripEnabled] = useState<boolean>(true);
 
   const t = translations[lang];
+  const moneySuffix = currency === 'KRW' ? '원' : 'USD';
 
   const calculateData = useMemo(() => {
     let currentBalance = initialInvestment;
@@ -173,28 +176,6 @@ export default function DividendCalculator() {
     }).format(value);
   };
 
-  const InputField = ({ label, icon: Icon, value, onChange, type = "number", suffix = "" }: any) => (
-    <div className="relative group">
-      <label className="block text-sm font-semibold text-slate-700 mb-1.5">{label}</label>
-      <div className="relative rounded-xl shadow-sm transition-all duration-200 group-hover:shadow-md">
-        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-          <Icon className="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
-        </div>
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
-          className="block w-full pl-11 pr-8 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
-        />
-        {suffix && (
-          <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
-            <span className="text-slate-400 sm:text-sm">{suffix}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-indigo-100 selection:text-indigo-900">
       <SiteHeader
@@ -250,19 +231,21 @@ export default function DividendCalculator() {
               </div>
               
               <div className="space-y-5">
-                <InputField 
+                <NumberField 
                   label={t.initInv} 
                   icon={DollarSign} 
                   value={initialInvestment} 
-                  onChange={setInitialInvestment} 
+                  onChange={setInitialInvestment}
+                  suffix={moneySuffix}
                 />
-                <InputField 
+                <NumberField 
                   label={t.moCont} 
                   icon={DollarSign} 
                   value={monthlyContribution} 
-                  onChange={setMonthlyContribution} 
+                  onChange={setMonthlyContribution}
+                  suffix={moneySuffix}
                 />
-                <InputField 
+                <NumberField 
                   label={t.yrsGrow} 
                   icon={Calendar} 
                   value={yearsToGrow} 
@@ -276,21 +259,21 @@ export default function DividendCalculator() {
                     {t.mktAssump}
                   </h3>
                   <div className="space-y-5">
-                    <InputField 
+                    <NumberField 
                       label={t.expRet} 
                       icon={Percent} 
                       value={expectedAnnualReturn} 
                       onChange={setExpectedAnnualReturn} 
                       suffix="%"
                     />
-                    <InputField 
+                    <NumberField 
                       label={t.divYield} 
                       icon={Percent} 
                       value={dividendYield} 
                       onChange={setDividendYield} 
                       suffix="%"
                     />
-                    <InputField 
+                    <NumberField 
                       label={t.divTax} 
                       icon={Percent} 
                       value={dividendTaxRate} 

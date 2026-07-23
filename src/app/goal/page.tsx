@@ -5,6 +5,8 @@ import { Calculator, Target } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
+import NumberField from "@/components/NumberField";
+import { useMoneyValue } from "@/hooks/useMoneyValue";
 
 const copy = {
   en: {
@@ -45,12 +47,13 @@ const copy = {
 
 export default function DividendGoalPage() {
   const { lang, currency } = useLocale();
-  const [monthlyGoal, setMonthlyGoal] = useState(3000);
+  const [monthlyGoal, setMonthlyGoal] = useMoneyValue(3000);
   const [yieldRate, setYieldRate] = useState(3.5);
   const [taxRate, setTaxRate] = useState(15);
-  const [currentPortfolio, setCurrentPortfolio] = useState(50000);
+  const [currentPortfolio, setCurrentPortfolio] = useMoneyValue(50000);
 
   const t = copy[lang];
+  const moneySuffix = currency === "KRW" ? "원" : "USD";
 
   const result = useMemo(() => {
     const annualGrossGoal = monthlyGoal * 12;
@@ -80,37 +83,6 @@ export default function DividendGoalPage() {
       maximumFractionDigits: 0,
     }).format(value);
 
-  const Field = ({
-    label,
-    value,
-    onChange,
-    suffix,
-  }: {
-    label: string;
-    value: number;
-    onChange: (v: number) => void;
-    suffix?: string;
-  }) => (
-    <div>
-      <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-        {label}
-      </label>
-      <div className="relative">
-        <input
-          type="number"
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
-          className="block w-full py-3 px-4 pr-12 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        {suffix && (
-          <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 text-sm">
-            {suffix}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
@@ -136,27 +108,29 @@ export default function DividendGoalPage() {
               <Calculator className="w-6 h-6 text-indigo-600" />
               <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
             </div>
-            <Field
+            <NumberField
               label={t.monthlyGoal}
               value={monthlyGoal}
               onChange={setMonthlyGoal}
+              suffix={moneySuffix}
             />
-            <Field
+            <NumberField
               label={t.yieldRate}
               value={yieldRate}
               onChange={setYieldRate}
               suffix="%"
             />
-            <Field
+            <NumberField
               label={t.taxRate}
               value={taxRate}
               onChange={setTaxRate}
               suffix="%"
             />
-            <Field
+            <NumberField
               label={t.currentPortfolio}
               value={currentPortfolio}
               onChange={setCurrentPortfolio}
+              suffix={moneySuffix}
             />
           </div>
 

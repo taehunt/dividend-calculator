@@ -1,10 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Calculator, Plus, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
+import DraftNumberInput from "@/components/DraftNumberInput";
+import { convertMoney, toDisplayMoney, type MoneyCurrency } from "@/lib/money";
 
 type Purchase = {
   id: number;
@@ -53,11 +55,27 @@ const copy = {
 
 export default function AverageCalculatorPage() {
   const { lang, currency } = useLocale();
-  const [purchases, setPurchases] = useState<Purchase[]>([
-    { id: 1, shares: 10, price: 100 },
-    { id: 2, shares: 20, price: 80 },
+  const [purchases, setPurchases] = useState<Purchase[]>(() => [
+    { id: 1, shares: 10, price: toDisplayMoney(100, currency) },
+    { id: 2, shares: 20, price: toDisplayMoney(80, currency) },
   ]);
-  const [currentPrice, setCurrentPrice] = useState<number>(90);
+  const [currentPrice, setCurrentPrice] = useState(() =>
+    toDisplayMoney(90, currency)
+  );
+  const prevCurrency = useRef<MoneyCurrency>(currency);
+
+  useEffect(() => {
+    if (prevCurrency.current === currency) return;
+    const from = prevCurrency.current;
+    setPurchases((prev) =>
+      prev.map((p) => ({
+        ...p,
+        price: convertMoney(p.price, from, currency),
+      }))
+    );
+    setCurrentPrice((v) => convertMoney(v, from, currency));
+    prevCurrency.current = currency;
+  }, [currency]);
 
   const t = copy[lang];
 
@@ -94,15 +112,14 @@ export default function AverageCalculatorPage() {
   };
 
   const removePurchase = (id: number) => {
-    setPurchases((prev) => (prev.length <= 1 ? prev : prev.filter((p) => p.id !== id)));
+    setPurchases((prev) =>
+      prev.length <= 1 ? prev : prev.filter((p) => p.id !== id)
+    );
   };
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      <SiteHeader
-        active="average"
-        showLocaleControls
-      />
+      <SiteHeader active="average" showLocaleControls />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center max-w-3xl mx-auto mb-12">
@@ -138,22 +155,19 @@ export default function AverageCalculatorPage() {
                 <span />
               </div>
               {purchases.map((p) => (
-                <div key={p.id} className="grid grid-cols-[1fr_1fr_40px] gap-3 items-center">
-                  <input
-                    type="number"
+                <div
+                  key={p.id}
+                  className="grid grid-cols-[1fr_1fr_40px] gap-3 items-center"
+                >
+                  <DraftNumberInput
+                    aria-label={t.shares}
                     value={p.shares}
-                    onChange={(e) =>
-                      updatePurchase(p.id, "shares", Number(e.target.value))
-                    }
-                    className="w-full py-3 px-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    onChange={(v) => updatePurchase(p.id, "shares", v)}
                   />
-                  <input
-                    type="number"
+                  <DraftNumberInput
+                    aria-label={t.price}
                     value={p.price}
-                    onChange={(e) =>
-                      updatePurchase(p.id, "price", Number(e.target.value))
-                    }
-                    className="w-full py-3 px-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    onChange={(v) => updatePurchase(p.id, "price", v)}
                   />
                   <button
                     onClick={() => removePurchase(p.id)}
@@ -170,36 +184,43 @@ export default function AverageCalculatorPage() {
               <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                 {t.currentPrice}
               </label>
-              <input
-                type="number"
+              <DraftNumberInput
+                aria-label={t.currentPrice}
                 value={currentPrice}
-                onChange={(e) => setCurrentPrice(Number(e.target.value))}
-                className="w-full py-3 px-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={setCurrentPrice}
               />
             </div>
           </div>
 
           <div className="lg:col-span-5 space-y-4">
             <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <p className="text-sm font-semibold text-slate-500 mb-1">{t.totalShares}</p>
+              <p className="text-sm font-semibold text-slate-500 mb-1">
+                {t.totalShares}
+              </p>
               <p className="text-3xl font-bold text-slate-900">
                 {result.totalShares.toLocaleString()}
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <p className="text-sm font-semibold text-slate-500 mb-1">{t.totalCost}</p>
+              <p className="text-sm font-semibold text-slate-500 mb-1">
+                {t.totalCost}
+              </p>
               <p className="text-3xl font-bold text-slate-900">
                 {formatMoney(result.totalCost)}
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <p className="text-sm font-semibold text-slate-500 mb-1">{t.avgCost}</p>
+              <p className="text-sm font-semibold text-slate-500 mb-1">
+                {t.avgCost}
+              </p>
               <p className="text-3xl font-bold text-indigo-600">
                 {formatMoney(result.avgCost)}
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <p className="text-sm font-semibold text-slate-500 mb-1">{t.marketValue}</p>
+              <p className="text-sm font-semibold text-slate-500 mb-1">
+                {t.marketValue}
+              </p>
               <p className="text-3xl font-bold text-slate-900">
                 {formatMoney(result.marketValue)}
               </p>
@@ -214,9 +235,9 @@ export default function AverageCalculatorPage() {
                 {formatMoney(result.pnl)}
               </p>
             </div>
-            <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-6">
+            <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5">
               <h3 className="font-bold text-slate-900 mb-2">{t.tipTitle}</h3>
-              <p className="text-slate-600 leading-relaxed text-sm">{t.tipBody}</p>
+              <p className="text-sm text-slate-600 leading-relaxed">{t.tipBody}</p>
             </div>
           </div>
         </div>

@@ -15,6 +15,8 @@ import { Calculator } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
+import NumberField from "@/components/NumberField";
+import { useMoneyValue } from "@/hooks/useMoneyValue";
 
 const copy = {
   en: {
@@ -63,12 +65,13 @@ const copy = {
 
 export default function CompoundCalculatorPage() {
   const { lang, currency } = useLocale();
-  const [initial, setInitial] = useState(10000);
-  const [monthly, setMonthly] = useState(500);
+  const [initial, setInitial] = useMoneyValue(10000);
+  const [monthly, setMonthly] = useMoneyValue(500);
   const [rate, setRate] = useState(7);
   const [years, setYears] = useState(20);
 
   const t = copy[lang];
+  const moneySuffix = currency === "KRW" ? "원" : "USD";
 
   const result = useMemo(() => {
     let balance = initial;
@@ -106,33 +109,6 @@ export default function CompoundCalculatorPage() {
       maximumFractionDigits: 0,
     }).format(value);
 
-  const Field = ({
-    label,
-    value,
-    onChange,
-    suffix,
-  }: {
-    label: string;
-    value: number;
-    onChange: (v: number) => void;
-    suffix?: string;
-  }) => (
-    <div>
-      <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-        {label}
-      </label>
-      <input
-        type="number"
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="block w-full py-3 px-4 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      />
-      {suffix && (
-        <p className="text-xs text-slate-400 mt-1">{suffix}</p>
-      )}
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
@@ -158,15 +134,15 @@ export default function CompoundCalculatorPage() {
               <Calculator className="w-6 h-6 text-indigo-600" />
               <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
             </div>
-            <Field label={t.initial} value={initial} onChange={setInitial} />
-            <Field label={t.monthly} value={monthly} onChange={setMonthly} />
-            <Field
+            <NumberField label={t.initial} value={initial} onChange={setInitial} suffix={moneySuffix} />
+            <NumberField label={t.monthly} value={monthly} onChange={setMonthly} suffix={moneySuffix} />
+            <NumberField
               label={t.rate}
               value={rate}
               onChange={setRate}
               suffix="%"
             />
-            <Field
+            <NumberField
               label={t.years}
               value={years}
               onChange={setYears}

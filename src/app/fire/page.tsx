@@ -22,6 +22,8 @@ import {
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
+import NumberField from "@/components/NumberField";
+import { useMoneyValue } from "@/hooks/useMoneyValue";
 
 const copy = {
   en: {
@@ -80,14 +82,15 @@ const copy = {
 
 export default function FireCalculatorPage() {
   const { lang, currency } = useLocale();
-  const [currentSavings, setCurrentSavings] = useState(100000);
-  const [monthlyContribution, setMonthlyContribution] = useState(2000);
-  const [annualExpenses, setAnnualExpenses] = useState(40000);
+  const [currentSavings, setCurrentSavings] = useMoneyValue(100000);
+  const [monthlyContribution, setMonthlyContribution] = useMoneyValue(2000);
+  const [annualExpenses, setAnnualExpenses] = useMoneyValue(40000);
   const [expectedReturn, setExpectedReturn] = useState(7);
   const [safeWithdraw, setSafeWithdraw] = useState(4);
   const [maxYears, setMaxYears] = useState(40);
 
   const t = copy[lang];
+  const moneySuffix = currency === "KRW" ? "원" : "USD";
 
   const result = useMemo(() => {
     const fireNumber = annualExpenses / (safeWithdraw / 100);
@@ -142,46 +145,9 @@ export default function FireCalculatorPage() {
       maximumFractionDigits: 0,
     }).format(value);
 
-  const InputField = ({
-    label,
-    value,
-    onChange,
-    suffix,
-  }: {
-    label: string;
-    value: number;
-    onChange: (v: number) => void;
-    suffix?: string;
-  }) => (
-    <div>
-      <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-        {label}
-      </label>
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-          <DollarSign className="h-5 w-5 text-slate-400" />
-        </div>
-        <input
-          type="number"
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
-          className="block w-full pl-11 pr-12 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        {suffix && (
-          <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 text-sm">
-            {suffix}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      <SiteHeader
-        active="fire"
-        showLocaleControls
-      />
+      <SiteHeader active="fire" showLocaleControls />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center max-w-3xl mx-auto mb-12">
@@ -205,35 +171,44 @@ export default function FireCalculatorPage() {
               <Calculator className="w-6 h-6 text-indigo-600" />
               <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
             </div>
-            <InputField
+            <NumberField
               label={t.currentSavings}
+              icon={DollarSign}
               value={currentSavings}
               onChange={setCurrentSavings}
+              suffix={moneySuffix}
             />
-            <InputField
+            <NumberField
               label={t.monthlyContribution}
+              icon={DollarSign}
               value={monthlyContribution}
               onChange={setMonthlyContribution}
+              suffix={moneySuffix}
             />
-            <InputField
+            <NumberField
               label={t.annualExpenses}
+              icon={Target}
               value={annualExpenses}
               onChange={setAnnualExpenses}
+              suffix={moneySuffix}
             />
-            <InputField
+            <NumberField
               label={t.expectedReturn}
+              icon={TrendingUp}
               value={expectedReturn}
               onChange={setExpectedReturn}
               suffix="%"
             />
-            <InputField
+            <NumberField
               label={t.safeWithdraw}
+              icon={TrendingUp}
               value={safeWithdraw}
               onChange={setSafeWithdraw}
               suffix="%"
             />
-            <InputField
+            <NumberField
               label={t.maxYears}
+              icon={Calendar}
               value={maxYears}
               onChange={setMaxYears}
               suffix={t.years}
@@ -243,16 +218,16 @@ export default function FireCalculatorPage() {
           <div className="lg:col-span-8 space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white rounded-2xl border border-slate-200 p-6">
-                <p className="text-sm font-semibold text-slate-500 mb-1 flex items-center gap-1">
-                  <Target className="w-4 h-4" /> {t.fireNumber}
+                <p className="text-sm font-semibold text-slate-500 mb-1">
+                  {t.fireNumber}
                 </p>
                 <p className="text-3xl font-bold text-slate-900">
                   {formatCurrency(result.fireNumber)}
                 </p>
               </div>
               <div className="bg-white rounded-2xl border border-slate-200 p-6">
-                <p className="text-sm font-semibold text-slate-500 mb-1 flex items-center gap-1">
-                  <Calendar className="w-4 h-4" /> {t.yearsToFire}
+                <p className="text-sm font-semibold text-slate-500 mb-1">
+                  {t.yearsToFire}
                 </p>
                 <p className="text-3xl font-bold text-indigo-600">
                   {result.yearsToFire === null
@@ -260,7 +235,9 @@ export default function FireCalculatorPage() {
                     : `${result.yearsToFire}${lang === "ko" ? "년" : " yrs"}`}
                 </p>
                 {result.yearsToFire !== null && (
-                  <p className="text-xs text-emerald-600 mt-2">{t.reached}</p>
+                  <p className="text-xs text-emerald-600 mt-1 font-medium">
+                    {t.reached}
+                  </p>
                 )}
               </div>
               <div className="bg-white rounded-2xl border border-slate-200 p-6">
@@ -272,8 +249,8 @@ export default function FireCalculatorPage() {
                 </p>
               </div>
               <div className="bg-white rounded-2xl border border-slate-200 p-6">
-                <p className="text-sm font-semibold text-slate-500 mb-1 flex items-center gap-1">
-                  <TrendingUp className="w-4 h-4" /> {t.portfolioAtFire}
+                <p className="text-sm font-semibold text-slate-500 mb-1">
+                  {t.portfolioAtFire}
                 </p>
                 <p className="text-3xl font-bold text-slate-900">
                   {formatCurrency(result.portfolioAtFire)}
@@ -284,15 +261,9 @@ export default function FireCalculatorPage() {
             <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8">
               <h3 className="text-xl font-bold text-slate-900">{t.chartTitle}</h3>
               <p className="text-sm text-slate-500 mt-1 mb-6">{t.chartSub}</p>
-              <div className="h-[380px]">
+              <div className="h-[360px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={result.rows}>
-                    <defs>
-                      <linearGradient id="firePortfolio" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                     <XAxis
                       dataKey="year"
@@ -327,16 +298,18 @@ export default function FireCalculatorPage() {
                       dataKey="portfolio"
                       name="portfolio"
                       stroke="#4f46e5"
+                      fillOpacity={0.15}
+                      fill="#4f46e5"
                       strokeWidth={3}
-                      fill="url(#firePortfolio)"
                     />
                     <Area
                       type="monotone"
                       dataKey="fireTarget"
                       name="fireTarget"
                       stroke="#f97316"
-                      strokeWidth={2}
                       fillOpacity={0}
+                      strokeWidth={2}
+                      strokeDasharray="6 4"
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -345,7 +318,7 @@ export default function FireCalculatorPage() {
 
             <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-6">
               <h3 className="font-bold text-slate-900 mb-2">{t.tipTitle}</h3>
-              <p className="text-slate-600 leading-relaxed">{t.tipBody}</p>
+              <p className="text-slate-600 leading-relaxed text-sm">{t.tipBody}</p>
             </div>
           </div>
         </div>

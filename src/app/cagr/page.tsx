@@ -5,6 +5,8 @@ import { Calculator, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
+import NumberField from "@/components/NumberField";
+import { useMoneyValue } from "@/hooks/useMoneyValue";
 
 const copy = {
   en: {
@@ -43,11 +45,12 @@ const copy = {
 
 export default function CagrCalculatorPage() {
   const { lang, currency } = useLocale();
-  const [startValue, setStartValue] = useState(10000);
-  const [endValue, setEndValue] = useState(25000);
+  const [startValue, setStartValue] = useMoneyValue(10000);
+  const [endValue, setEndValue] = useMoneyValue(25000);
   const [years, setYears] = useState(7);
 
   const t = copy[lang];
+  const moneySuffix = currency === "KRW" ? "원" : "USD";
 
   const result = useMemo(() => {
     const safeYears = Math.max(years, 0.0001);
@@ -76,37 +79,6 @@ export default function CagrCalculatorPage() {
   const formatPct = (value: number) =>
     `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`;
 
-  const Field = ({
-    label,
-    value,
-    onChange,
-    suffix,
-  }: {
-    label: string;
-    value: number;
-    onChange: (v: number) => void;
-    suffix?: string;
-  }) => (
-    <div>
-      <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-        {label}
-      </label>
-      <div className="relative">
-        <input
-          type="number"
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
-          className="block w-full py-3 px-4 pr-12 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        {suffix && (
-          <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 text-sm">
-            {suffix}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
@@ -132,13 +104,19 @@ export default function CagrCalculatorPage() {
               <Calculator className="w-6 h-6 text-indigo-600" />
               <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
             </div>
-            <Field
+            <NumberField
               label={t.startValue}
               value={startValue}
               onChange={setStartValue}
+              suffix={moneySuffix}
             />
-            <Field label={t.endValue} value={endValue} onChange={setEndValue} />
-            <Field
+            <NumberField
+              label={t.endValue}
+              value={endValue}
+              onChange={setEndValue}
+              suffix={moneySuffix}
+            />
+            <NumberField
               label={t.years}
               value={years}
               onChange={setYears}

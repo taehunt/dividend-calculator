@@ -15,6 +15,8 @@ import { Calculator } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
+import NumberField from "@/components/NumberField";
+import { useMoneyValue } from "@/hooks/useMoneyValue";
 
 const copy = {
   en: {
@@ -61,11 +63,12 @@ const copy = {
 
 export default function InflationCalculatorPage() {
   const { lang, currency } = useLocale();
-  const [amount, setAmount] = useState(50000);
+  const [amount, setAmount] = useMoneyValue(50000);
   const [rate, setRate] = useState(3);
   const [years, setYears] = useState(20);
 
   const t = copy[lang];
+  const moneySuffix = currency === "KRW" ? "원" : "USD";
 
   const result = useMemo(() => {
     const rows: { year: number; needed: number; real: number }[] = [];
@@ -97,37 +100,6 @@ export default function InflationCalculatorPage() {
       maximumFractionDigits: 0,
     }).format(value);
 
-  const Field = ({
-    label,
-    value,
-    onChange,
-    suffix,
-  }: {
-    label: string;
-    value: number;
-    onChange: (v: number) => void;
-    suffix?: string;
-  }) => (
-    <div>
-      <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-        {label}
-      </label>
-      <div className="relative">
-        <input
-          type="number"
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
-          className="block w-full py-3 px-4 pr-12 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        {suffix && (
-          <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 text-sm">
-            {suffix}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
@@ -153,9 +125,9 @@ export default function InflationCalculatorPage() {
               <Calculator className="w-6 h-6 text-indigo-600" />
               <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
             </div>
-            <Field label={t.amount} value={amount} onChange={setAmount} />
-            <Field label={t.rate} value={rate} onChange={setRate} suffix="%" />
-            <Field
+            <NumberField label={t.amount} value={amount} onChange={setAmount} suffix={moneySuffix} />
+            <NumberField label={t.rate} value={rate} onChange={setRate} suffix="%" />
+            <NumberField
               label={t.years}
               value={years}
               onChange={setYears}
