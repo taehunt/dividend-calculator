@@ -16,6 +16,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT_PATH = ROOT / "public" / "data" / "income-pulse.json"
+HISTORY_MAX_DAYS = 365
 
 FRED_SERIES = {
     "dgs10": "DGS10",
@@ -277,6 +278,77 @@ def load_previous() -> dict[str, Any] | None:
         return None
 
 
+def utc_date_str(iso: str | None = None) -> str:
+    if iso:
+        try:
+            return datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(
+                timezone.utc
+            ).date().isoformat()
+        except ValueError:
+            pass
+    return datetime.now(timezone.utc).date().isoformat()
+
+
+def merge_history(
+    previous: dict[str, Any] | None,
+    *,
+    date: str,
+    score: int | None,
+    avg_etf_yield: float | None,
+    spread_vs_10y: float | None,
+    dgs10: float | None,
+    real_yield: float | None,
+) -> list[dict[str, Any]]:
+    """Upsert one daily snapshot and keep the latest HISTORY_MAX_DAYS points."""
+    rows: list[dict[str, Any]] = []
+    if previous and isinstance(previous.get("history"), list):
+        for item in previous["history"]:
+            if not isinstance(item, dict) or not item.get("date"):
+                continue
+            rows.append(
+                {
+                    "date": str(item["date"]),
+                    "score": item.get("score"),
+                    "avgEtfYield": item.get("avgEtfYield"),
+                    "spreadVs10y": item.get("spreadVs10y"),
+                    "dgs10": item.get("dgs10"),
+                    "realYield": item.get("realYield"),
+                }
+            )
+
+    # Seed from previous single-day payload if history was empty.
+    if not rows and previous and previous.get("updatedAt"):
+        prev_date = utc_date_str(str(previous.get("updatedAt")))
+        if prev_date != date:
+            rows.append(
+                {
+                    "date": prev_date,
+                    "score": previous.get("score"),
+                    "avgEtfYield": previous.get("avgEtfYield"),
+                    "spreadVs10y": previous.get("spreadVs10y"),
+                    "dgs10": (previous.get("rates") or {}).get("dgs10", {}).get("value"),
+                    "realYield": (previous.get("rates") or {})
+                    .get("real_yield", {})
+                    .get("value"),
+                }
+            )
+
+    point = {
+        "date": date,
+        "score": score,
+        "avgEtfYield": avg_etf_yield,
+        "spreadVs10y": spread_vs_10y,
+        "dgs10": dgs10,
+        "realYield": real_yield,
+    }
+    by_date = {r["date"]: r for r in rows}
+    by_date[date] = point
+    merged = [by_date[k] for k in sorted(by_date.keys())]
+    if len(merged) > HISTORY_MAX_DAYS:
+        merged = merged[-HISTORY_MAX_DAYS:]
+    return merged
+
+
 def main() -> int:
     api_key = os.environ.get("FRED_API_KEY", "").strip()
     if not api_key:
@@ -357,10 +429,25 @@ def main() -> int:
     regime = curve_regime(t10y2y)
     score = attractiveness_score(avg_etf_yield, dgs10, real_yield, vix)
     brief = build_brief(score, avg_etf_yield, dgs10, real_yield, regime)
+    spread_vs_10y = (
+        round(avg_etf_yield - dgs10, 3)
+        if avg_etf_yield is not None and dgs10 is not None
+        else None
+    )
+    updated_at = datetime.now(timezone.utc).isoformat()
+    history = merge_history(
+        previous,
+        date=utc_date_str(updated_at),
+        score=score,
+        avg_etf_yield=avg_etf_yield,
+        spread_vs_10y=spread_vs_10y,
+        dgs10=dgs10,
+        real_yield=real_yield,
+    )
 
     payload = {
         "version": 1,
-        "updatedAt": datetime.now(timezone.utc).isoformat(),
+        "updatedAt": updated_at,
         "score": score,
         "scoreLabel": {
             "en": brief.get("label_en", score_label(score)["en"]),
@@ -368,14 +455,11 @@ def main() -> int:
         },
         "brief": {"en": brief["en"], "ko": brief["ko"]},
         "avgEtfYield": avg_etf_yield,
-        "spreadVs10y": (
-            round(avg_etf_yield - dgs10, 3)
-            if avg_etf_yield is not None and dgs10 is not None
-            else None
-        ),
+        "spreadVs10y": spread_vs_10y,
         "curveRegime": regime,
         "rates": rates,
         "etfs": etfs,
+        "history": history,
         "sources": {
             "macro": "FRED (Federal Reserve Bank of St. Louis)",
             "etf": "Yahoo Finance chart dividends (TTM / price, delayed)",
@@ -393,7 +477,10 @@ def main() -> int:
         encoding="utf-8",
     )
     print(f"Wrote {OUT_PATH}")
-    print(f"Score={score} avgEtfYield={avg_etf_yield} errors={errors}")
+    print(
+        f"Score={score} avgEtfYield={avg_etf_yield} "
+        f"historyDays={len(history)} errors={errors}"
+    )
     return 0
 
 

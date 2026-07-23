@@ -104,6 +104,16 @@
       "ok": true
     }
   ],
+  "history": [
+    {
+      "date": "2026-07-23",
+      "score": 57,
+      "avgEtfYield": 5.507,
+      "spreadVs10y": 0.837,
+      "dgs10": 4.67,
+      "realYield": 0.943
+    }
+  ],
   "sources": {
     "macro": "FRED (Federal Reserve Bank of St. Louis)",
     "etf": "Yahoo Finance chart dividends (TTM / price, delayed)"

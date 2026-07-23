@@ -9,6 +9,7 @@ import {
   Target,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
+import PulseHistoryChart from "@/components/PulseHistoryChart";
 import { useLocale } from "@/components/LocaleProvider";
 import {
   formatNumber,
@@ -52,6 +53,10 @@ const copy = {
     board: "Dividend ETF Yield Board",
     boardSub:
       "Trailing twelve-month dividend yield ÷ latest price (delayed market data).",
+    historyTitle: "Score history",
+    historySub: "Daily Attractiveness Score — check back tomorrow to see the trend build.",
+    historyEmpty:
+      "History starts today. Come back tomorrow to see how the Attractiveness Score moves over time.",
     symbol: "Ticker",
     name: "Fund",
     price: "Price",
@@ -89,6 +94,10 @@ const copy = {
     board: "배당 ETF 수익률 보드",
     boardSub:
       "최근 1년 배당 합계 ÷ 최신 가격으로 계산한 트레일링 수익률입니다. (지연 시세)",
+    historyTitle: "점수 히스토리",
+    historySub: "매일 갱신되는 매력도 점수입니다. 내일부터 추이가 쌓입니다.",
+    historyEmpty:
+      "히스토리는 오늘부터 쌓입니다. 내일 다시 오면 점수 변화를 그래프로 볼 수 있습니다.",
     symbol: "티커",
     name: "상품명",
     price: "가격",
@@ -201,6 +210,15 @@ export default function PulseClient({ initialData }: Props) {
           <Card label={t.avgYield} value={formatPct(data.avgEtfYield)} />
           <Card label={t.spread} value={formatPct(data.spreadVs10y)} />
         </div>
+
+        <PulseHistoryChart
+          history={data.history ?? []}
+          lang={lang}
+          title={t.historyTitle}
+          subtitle={t.historySub}
+          emptyHint={t.historyEmpty}
+          scoreLabel={t.score}
+        />
 
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 mb-6 overflow-x-auto">
           <h2 className="text-xl font-bold text-slate-900">{t.board}</h2>

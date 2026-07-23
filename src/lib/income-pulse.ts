@@ -15,6 +15,15 @@ export type PulseEtf = {
   ok: boolean;
 };
 
+export type PulseHistoryPoint = {
+  date: string;
+  score: number | null;
+  avgEtfYield?: number | null;
+  spreadVs10y?: number | null;
+  dgs10?: number | null;
+  realYield?: number | null;
+};
+
 export type IncomePulse = {
   version: number;
   updatedAt: string;
@@ -38,6 +47,7 @@ export type IncomePulse = {
     real_yield: RatePoint;
   };
   etfs: PulseEtf[];
+  history?: PulseHistoryPoint[];
   sources: { macro: string; etf: string };
   disclaimer: { en: string; ko: string };
   errors?: string[];
