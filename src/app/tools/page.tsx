@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Calculator, Flame, LineChart } from "lucide-react";
+import { Calculator, Flame, LineChart, Percent } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 
 const tools = [
@@ -27,6 +27,14 @@ const tools = [
     descKo: "여러 번 매수 후 평균 단가와 평가손익 계산",
     icon: Calculator,
   },
+  {
+    href: "/tax",
+    title: "Dividend Tax Calculator",
+    titleKo: "배당세 계산기",
+    desc: "Estimate net dividend income after tax and reinvestment drag.",
+    descKo: "세후 배당 소득과 재투자 영향 계산",
+    icon: Percent,
+  },
 ];
 
 export default function ToolsPage() {
@@ -44,7 +52,7 @@ export default function ToolsPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (

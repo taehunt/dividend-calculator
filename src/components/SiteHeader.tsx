@@ -8,7 +8,7 @@ type Lang = "en" | "ko";
 type Currency = "USD" | "KRW";
 
 type SiteHeaderProps = {
-  active?: "dividend" | "fire" | "average" | "tools" | "blog" | "privacy";
+  active?: "dividend" | "fire" | "average" | "tax" | "tools" | "blog" | "privacy";
   lang?: Lang;
   currency?: Currency;
   onLangChange?: (lang: Lang) => void;
@@ -22,6 +22,7 @@ const labels = {
     dividend: "Dividend Calculator",
     fire: "FIRE Calculator",
     average: "Average Cost Calculator",
+    tax: "Dividend Tax Calculator",
     allTools: "All Tools",
     blog: "Blog",
   },
@@ -30,6 +31,7 @@ const labels = {
     dividend: "배당 계산기",
     fire: "FIRE 계산기",
     average: "평단가 계산기",
+    tax: "배당세 계산기",
     allTools: "전체 도구",
     blog: "블로그",
   },
@@ -50,6 +52,7 @@ export default function SiteHeader({
     active === "dividend" ||
     active === "fire" ||
     active === "average" ||
+    active === "tax" ||
     active === "tools";
 
   return (
@@ -130,6 +133,14 @@ export default function SiteHeader({
                       }`}
                     >
                       {t.average}
+                    </Link>
+                    <Link
+                      href="/tax"
+                      className={`block px-4 py-2.5 hover:bg-slate-50 ${
+                        active === "tax" ? "text-indigo-600 font-semibold" : ""
+                      }`}
+                    >
+                      {t.tax}
                     </Link>
                     <div className="border-t border-slate-100 my-1" />
                     <Link
