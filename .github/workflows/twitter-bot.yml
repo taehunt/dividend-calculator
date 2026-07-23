@@ -1,0 +1,32 @@
+name: Twitter Auto Posting Bot
+
+on:
+  schedule:
+    # 매일 UTC 기준 13시 (한국 시간 밤 10시)에 실행
+    - cron: '0 13 * * *'
+  workflow_dispatch: # 수동으로 실행할 수 있는 버튼 활성화
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tweepy
+
+      - name: Run Twitter Bot
+        env:
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        run: python bots/twitter/tweet.py
