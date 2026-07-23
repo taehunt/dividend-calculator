@@ -82,3 +82,43 @@ export function scoreTone(score: number | null): string {
   if (score >= 45) return "text-indigo-600";
   return "text-orange-600";
 }
+
+/** Score change vs previous history day (null if fewer than 2 scored days). */
+export function scoreDelta(history?: PulseHistoryPoint[] | null): number | null {
+  if (!history || history.length < 2) return null;
+  const scored = history.filter(
+    (h) => h.score !== null && h.score !== undefined && !Number.isNaN(h.score)
+  );
+  if (scored.length < 2) return null;
+  const prev = scored[scored.length - 2].score as number;
+  const curr = scored[scored.length - 1].score as number;
+  return curr - prev;
+}
+
+export function formatScoreDelta(delta: number, lang: PulseLang): string {
+  if (delta === 0) {
+    return lang === "ko" ? "전일 대비 변동 없음" : "Unchanged vs yesterday";
+  }
+  const sign = delta > 0 ? "+" : "";
+  return lang === "ko"
+    ? `전일 대비 ${sign}${delta}`
+    : `${sign}${delta} vs yesterday`;
+}
+
+export function deltaTone(delta: number | null): string {
+  if (delta === null || delta === 0) return "text-slate-500";
+  if (delta > 0) return "text-emerald-600";
+  return "text-orange-600";
+}
+
+/** Recent scores for sparkline (oldest → newest). */
+export function recentScores(
+  history?: PulseHistoryPoint[] | null,
+  limit = 14
+): number[] {
+  if (!history?.length) return [];
+  return history
+    .filter((h) => h.score != null && !Number.isNaN(h.score as number))
+    .slice(-limit)
+    .map((h) => h.score as number);
+}

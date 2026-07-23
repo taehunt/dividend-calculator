@@ -4,7 +4,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Activity, ArrowRight } from "lucide-react";
 import { useLocale } from "@/components/LocaleProvider";
-import { scoreTone, type IncomePulse } from "@/lib/income-pulse";
+import {
+  deltaTone,
+  formatScoreDelta,
+  scoreDelta,
+  scoreTone,
+  type IncomePulse,
+} from "@/lib/income-pulse";
 
 type Props = {
   /** compact = sidebar card; banner = full-width under hero */
@@ -37,6 +43,7 @@ export default function PulseCallout({ variant = "compact" }: Props) {
       ? "배당 ETF가 국채·물가 대비 얼마나 매력적인지 매일 갱신됩니다."
       : "See how attractive dividend ETF income looks vs Treasuries and inflation — updated daily.";
   const cta = lang === "ko" ? "점수 보기" : "View score";
+  const delta = data ? scoreDelta(data.history) : null;
 
   if (variant === "banner") {
     return (
@@ -58,6 +65,13 @@ export default function PulseCallout({ variant = "compact" }: Props) {
                     <span className="text-slate-500 font-semibold text-xs ml-1">
                       {data.scoreLabel[lang]}
                     </span>
+                    {delta !== null && (
+                      <span
+                        className={`ml-2 text-xs font-semibold ${deltaTone(delta)}`}
+                      >
+                        {formatScoreDelta(delta, lang)}
+                      </span>
+                    )}
                   </span>
                 )}
               </p>
@@ -91,6 +105,11 @@ export default function PulseCallout({ variant = "compact" }: Props) {
             <span className="text-sm font-semibold text-slate-500 ml-2">
               {data.scoreLabel[lang]}
             </span>
+          </p>
+        )}
+        {delta !== null && (
+          <p className={`text-xs font-semibold mb-2 ${deltaTone(delta)}`}>
+            {formatScoreDelta(delta, lang)}
           </p>
         )}
         <p className="text-sm text-slate-600 leading-relaxed mb-3">

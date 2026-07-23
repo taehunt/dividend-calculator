@@ -4,8 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Activity, ArrowRight } from "lucide-react";
 import { useLocale } from "@/components/LocaleProvider";
+import PulseSparkline from "@/components/PulseSparkline";
 import {
+  deltaTone,
+  formatScoreDelta,
   formatUpdatedAt,
+  recentScores,
+  scoreDelta,
   scoreTone,
   type IncomePulse,
 } from "@/lib/income-pulse";
@@ -27,10 +32,15 @@ export default function PulseTeaser() {
     };
   }, []);
 
-  const title = lang === "ko" ? "인컴 펄스" : "Income Pulse";
+  const title = lang === "ko" ? "오늘의 인컴 펄스" : "Today’s Income Pulse";
   const cta = lang === "ko" ? "자세히 보기" : "See today's score";
   const loading =
     lang === "ko" ? "오늘의 점수를 불러오는 중…" : "Loading today’s score…";
+  const deltaBuilding =
+    lang === "ko" ? "내일부터 전일 대비 표시" : "Day-over-day starts tomorrow";
+
+  const delta = data ? scoreDelta(data.history) : null;
+  const sparkScores = data ? recentScores(data.history, 14) : [];
 
   return (
     <Link
@@ -48,14 +58,21 @@ export default function PulseTeaser() {
                 {title}
               </p>
               {data ? (
-                <p
-                  className={`text-3xl font-extrabold leading-none ${scoreTone(data.score)}`}
-                >
-                  {data.score ?? "—"}
-                  <span className="text-sm font-semibold text-slate-500 ml-2">
-                    {data.scoreLabel[lang]}
-                  </span>
-                </p>
+                <>
+                  <p
+                    className={`text-3xl font-extrabold leading-none ${scoreTone(data.score)}`}
+                  >
+                    {data.score ?? "—"}
+                    <span className="text-sm font-semibold text-slate-500 ml-2">
+                      {data.scoreLabel[lang]}
+                    </span>
+                  </p>
+                  <p className={`text-xs font-semibold mt-1 ${deltaTone(delta)}`}>
+                    {delta === null
+                      ? deltaBuilding
+                      : formatScoreDelta(delta, lang)}
+                  </p>
+                </>
               ) : (
                 <p className="text-sm text-slate-500">{loading}</p>
               )}
@@ -66,9 +83,12 @@ export default function PulseTeaser() {
               {data ? data.brief[lang] : "—"}
             </p>
             {data && (
-              <p className="text-xs text-slate-400 mt-1">
-                {formatUpdatedAt(data.updatedAt, lang)}
-              </p>
+              <div className="flex items-center gap-3 mt-2">
+                <PulseSparkline scores={sparkScores} />
+                <p className="text-xs text-slate-400">
+                  {formatUpdatedAt(data.updatedAt, lang)}
+                </p>
+              </div>
             )}
           </div>
           <span className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 group-hover:gap-2 transition-all shrink-0">

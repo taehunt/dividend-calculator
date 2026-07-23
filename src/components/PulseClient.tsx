@@ -12,9 +12,12 @@ import SiteHeader from "@/components/SiteHeader";
 import PulseHistoryChart from "@/components/PulseHistoryChart";
 import { useLocale } from "@/components/LocaleProvider";
 import {
+  deltaTone,
   formatNumber,
   formatPct,
+  formatScoreDelta,
   formatUpdatedAt,
+  scoreDelta,
   scoreTone,
   type IncomePulse,
 } from "@/lib/income-pulse";
@@ -39,6 +42,8 @@ const copy = {
     subtitle:
       "A daily YieldGrower score that compares popular dividend ETF yields with Treasuries, inflation, and market stress — so you know why today’s income backdrop matters.",
     score: "Attractiveness Score",
+    today: "Today",
+    deltaBuilding: "Day-over-day change starts tomorrow",
     updated: "Updated",
     realYield: "Real Yield",
     realYieldSub: "10Y Treasury minus CPI YoY",
@@ -80,6 +85,8 @@ const copy = {
     subtitle:
       "대표 배당 ETF 수익률을 국채·물가·시장 스트레스와 비교해 YieldGrower가 매일 가공한 점수입니다. 숫자만 나열하지 않고, 오늘 인컴 환경이 왜 중요한지 한눈에 보여줍니다.",
     score: "매력도 점수",
+    today: "오늘",
+    deltaBuilding: "전일 대비 변화는 내일부터 표시됩니다",
     updated: "업데이트",
     realYield: "실질금리",
     realYieldSub: "미국 10년물 − CPI 전년비",
@@ -141,6 +148,7 @@ export default function PulseClient({ initialData }: Props) {
   const t = copy[lang];
   const regimeLabel =
     lang === "ko" ? data.curveRegime.label_ko : data.curveRegime.label_en;
+  const delta = scoreDelta(data.history);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
@@ -165,7 +173,9 @@ export default function PulseClient({ initialData }: Props) {
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 mb-6">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-slate-500 mb-2">{t.score}</p>
+              <p className="text-sm font-semibold text-slate-500 mb-2">
+                {t.today} · {t.score}
+              </p>
               <p
                 className={`text-6xl font-extrabold tracking-tight ${scoreTone(data.score)}`}
               >
@@ -173,6 +183,11 @@ export default function PulseClient({ initialData }: Props) {
               </p>
               <p className="text-lg font-semibold text-slate-700 mt-1">
                 {data.scoreLabel[lang]}
+              </p>
+              <p className={`text-sm font-semibold mt-2 ${deltaTone(delta)}`}>
+                {delta === null
+                  ? t.deltaBuilding
+                  : formatScoreDelta(delta, lang)}
               </p>
             </div>
             <div className="md:max-w-xl">
