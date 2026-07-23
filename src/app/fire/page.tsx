@@ -14,15 +14,14 @@ import {
 import {
   Calculator,
   Calendar,
-  DollarSign,
   Flame,
-  Target,
   TrendingUp,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
 import NumberField from "@/components/NumberField";
+import CurrencyIcon from "@/components/CurrencyIcon";
 import { useMoneyValue } from "@/hooks/useMoneyValue";
 
 const copy = {
@@ -173,21 +172,21 @@ export default function FireCalculatorPage() {
             </div>
             <NumberField
               label={t.currentSavings}
-              icon={DollarSign}
+              icon={CurrencyIcon}
               value={currentSavings}
               onChange={setCurrentSavings}
               suffix={moneySuffix}
             />
             <NumberField
               label={t.monthlyContribution}
-              icon={DollarSign}
+              icon={CurrencyIcon}
               value={monthlyContribution}
               onChange={setMonthlyContribution}
               suffix={moneySuffix}
             />
             <NumberField
               label={t.annualExpenses}
-              icon={Target}
+              icon={CurrencyIcon}
               value={annualExpenses}
               onChange={setAnnualExpenses}
               suffix={moneySuffix}

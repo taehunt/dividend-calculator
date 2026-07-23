@@ -12,11 +12,12 @@ import {
   AreaChart,
   Area
 } from 'recharts';
-import { Calculator, DollarSign, TrendingUp, Calendar, Percent, Info, Printer } from 'lucide-react';
+import { Calculator, TrendingUp, Calendar, Percent, Info, Printer } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SiteHeader from '@/components/SiteHeader';
 import { useLocale } from '@/components/LocaleProvider';
 import NumberField from '@/components/NumberField';
+import CurrencyIcon from '@/components/CurrencyIcon';
 import { useMoneyValue } from '@/hooks/useMoneyValue';
 import PulseTeaser from '@/components/PulseTeaser';
 
@@ -233,14 +234,14 @@ export default function DividendCalculator() {
               <div className="space-y-5">
                 <NumberField 
                   label={t.initInv} 
-                  icon={DollarSign} 
+                  icon={CurrencyIcon} 
                   value={initialInvestment} 
                   onChange={setInitialInvestment}
                   suffix={moneySuffix}
                 />
                 <NumberField 
                   label={t.moCont} 
-                  icon={DollarSign} 
+                  icon={CurrencyIcon} 
                   value={monthlyContribution} 
                   onChange={setMonthlyContribution}
                   suffix={moneySuffix}
