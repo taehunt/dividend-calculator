@@ -30,9 +30,9 @@ Before changing your portfolio, run a few scenarios with different contribution 
 
 Run the numbers before you change your plan.
 
-- [Dividend Income Goal Calculator](https://yieldgrower.com/goal)
-- [FIRE Calculator](https://yieldgrower.com/fire)
-- [Income Pulse](https://yieldgrower.com/pulse)
+- [Dividend Income Goal Calculator](https://www.yieldgrower.com/goal)
+- [FIRE Calculator](https://www.yieldgrower.com/fire)
+- [Income Pulse](https://www.yieldgrower.com/pulse)
 
 ---ko---
 
@@ -60,6 +60,6 @@ Run the numbers before you change your plan.
 
 숫자로 바로 확인해 보세요.
 
-- [배당 목표 소득 계산기](https://yieldgrower.com/goal)
-- [FIRE 조기은퇴 계산기](https://yieldgrower.com/fire)
-- [인컴 펄스](https://yieldgrower.com/pulse)
+- [배당 목표 소득 계산기](https://www.yieldgrower.com/goal)
+- [FIRE 조기은퇴 계산기](https://www.yieldgrower.com/fire)
+- [인컴 펄스](https://www.yieldgrower.com/pulse)

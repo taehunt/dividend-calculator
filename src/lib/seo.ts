@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-
-const SITE = "https://yieldgrower.com";
+import { SITE_URL } from "@/lib/site";
 
 type PageMetaInput = {
   title: string;
@@ -15,7 +14,7 @@ export function pageMeta({
   path,
   keywords,
 }: PageMetaInput): Metadata {
-  const url = `${SITE}${path === "/" ? "" : path}`;
+  const url = path === "/" ? SITE_URL : `${SITE_URL}${path}`;
 
   return {
     title,

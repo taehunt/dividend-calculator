@@ -37,7 +37,7 @@ ETF_WATCHLIST = [
 ]
 
 USER_AGENT = (
-    "Mozilla/5.0 (compatible; YieldGrowerPulse/1.0; +https://yieldgrower.com)"
+    "Mozilla/5.0 (compatible; YieldGrowerPulse/1.0; +https://www.yieldgrower.com)"
 )
 
 

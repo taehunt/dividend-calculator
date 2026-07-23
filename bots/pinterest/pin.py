@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 PINTEREST_ACCESS_TOKEN = os.environ.get("PINTEREST_ACCESS_TOKEN")
 BOARD_ID = os.environ.get("PINTEREST_BOARD_ID")
-SITE_URL = "https://yieldgrower.com"
+SITE_URL = "https://www.yieldgrower.com"
 
 TOPICS = [
     ("THE POWER OF\nDIVIDEND DRIP", "Turn $500/mo into a\nRetirement Fortune"),

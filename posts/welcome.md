@@ -22,9 +22,9 @@ Stay tuned for daily automated insights on:
 
 Run the numbers before you change your plan.
 
-- [Dividend Reinvestment Calculator](https://yieldgrower.com/)
-- [FIRE Calculator](https://yieldgrower.com/fire)
-- [Income Pulse](https://yieldgrower.com/pulse)
+- [Dividend Reinvestment Calculator](https://www.yieldgrower.com/)
+- [FIRE Calculator](https://www.yieldgrower.com/fire)
+- [Income Pulse](https://www.yieldgrower.com/pulse)
 
 ---ko---
 
@@ -44,6 +44,6 @@ Run the numbers before you change your plan.
 
 숫자로 바로 확인해 보세요.
 
-- [배당 재투자 계산기](https://yieldgrower.com/)
-- [FIRE 조기은퇴 계산기](https://yieldgrower.com/fire)
-- [인컴 펄스](https://yieldgrower.com/pulse)
+- [배당 재투자 계산기](https://www.yieldgrower.com/)
+- [FIRE 조기은퇴 계산기](https://www.yieldgrower.com/fire)
+- [인컴 펄스](https://www.yieldgrower.com/pulse)

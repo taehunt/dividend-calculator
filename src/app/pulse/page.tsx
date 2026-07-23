@@ -4,6 +4,7 @@ import path from "path";
 import PulseClient from "@/components/PulseClient";
 import type { IncomePulse } from "@/lib/income-pulse";
 import { pageMeta } from "@/lib/seo";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = pageMeta({
   title: "Income Pulse — Daily Dividend Attractiveness Score",
@@ -38,7 +39,7 @@ function jsonLd(data: IncomePulse) {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "YieldGrower Income Pulse",
-    url: "https://yieldgrower.com/pulse",
+    url: `${SITE_URL}/pulse`,
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     offers: {
@@ -52,7 +53,7 @@ function jsonLd(data: IncomePulse) {
     provider: {
       "@type": "Organization",
       name: "YieldGrower",
-      url: "https://yieldgrower.com",
+      url: SITE_URL,
     },
   };
 }

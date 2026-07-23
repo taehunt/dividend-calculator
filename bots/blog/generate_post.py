@@ -335,7 +335,7 @@ DEFAULT_CTA = [
     ("/pulse", "Income Pulse", "인컴 펄스"),
 ]
 
-SITE = "https://yieldgrower.com"
+SITE = "https://www.yieldgrower.com"
 
 
 def yaml_escape(text: str) -> str:

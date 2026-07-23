@@ -1,101 +1,107 @@
-import { MetadataRoute } from 'next'
-import { readFileSync } from 'fs'
-import path from 'path'
-import { getSortedPostsData } from '@/lib/posts'
+import { MetadataRoute } from "next";
+import { readFileSync } from "fs";
+import path from "path";
+import { getSortedPostsData } from "@/lib/posts";
+import { SITE_URL } from "@/lib/site";
 
 function pulseLastModified(): Date {
   try {
-    const filePath = path.join(process.cwd(), 'public', 'data', 'income-pulse.json')
-    const raw = readFileSync(filePath, 'utf-8')
-    const json = JSON.parse(raw) as { updatedAt?: string }
-    if (json.updatedAt) return new Date(json.updatedAt)
+    const filePath = path.join(
+      process.cwd(),
+      "public",
+      "data",
+      "income-pulse.json"
+    );
+    const raw = readFileSync(filePath, "utf-8");
+    const json = JSON.parse(raw) as { updatedAt?: string };
+    if (json.updatedAt) return new Date(json.updatedAt);
   } catch {
     // fall through
   }
-  return new Date()
+  return new Date();
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getSortedPostsData().map((post) => ({
-    url: `https://yieldgrower.com/blog/${post.slug}`,
+    url: `${SITE_URL}/blog/${post.slug}`,
     lastModified: new Date(post.date),
-    changeFrequency: 'monthly' as const,
+    changeFrequency: "monthly" as const,
     priority: 0.7,
-  }))
+  }));
 
   return [
     {
-      url: 'https://yieldgrower.com',
+      url: SITE_URL,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 1,
     },
     {
-      url: 'https://yieldgrower.com/pulse',
+      url: `${SITE_URL}/pulse`,
       lastModified: pulseLastModified(),
-      changeFrequency: 'daily',
+      changeFrequency: "daily",
       priority: 1,
     },
     {
-      url: 'https://yieldgrower.com/blog',
+      url: `${SITE_URL}/blog`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: "daily",
       priority: 0.8,
     },
     {
-      url: 'https://yieldgrower.com/fire',
+      url: `${SITE_URL}/fire`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: 'https://yieldgrower.com/average',
+      url: `${SITE_URL}/average`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: 'https://yieldgrower.com/tax',
+      url: `${SITE_URL}/tax`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: 'https://yieldgrower.com/compound',
+      url: `${SITE_URL}/compound`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: 'https://yieldgrower.com/goal',
+      url: `${SITE_URL}/goal`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: 'https://yieldgrower.com/cagr',
+      url: `${SITE_URL}/cagr`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: 'https://yieldgrower.com/inflation',
+      url: `${SITE_URL}/inflation`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: 'https://yieldgrower.com/tools',
+      url: `${SITE_URL}/tools`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: 'https://yieldgrower.com/privacy',
+      url: `${SITE_URL}/privacy`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: "yearly",
       priority: 0.3,
     },
     ...posts,
-  ]
+  ];
 }

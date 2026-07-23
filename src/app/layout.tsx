@@ -3,11 +3,12 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import SiteFooter from "@/components/SiteFooter";
+import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://yieldgrower.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Dividend Reinvestment & Compound Interest Calculator",
     template: "%s | YieldGrower",
@@ -17,13 +18,13 @@ export const metadata: Metadata = {
   keywords:
     "dividend calculator, compound interest, DRIP, investment calculator, FIRE movement, stock calculator, yield growth",
   alternates: {
-    canonical: "https://yieldgrower.com",
+    canonical: SITE_URL,
   },
   openGraph: {
     title: "Dividend Reinvestment & Compound Interest Calculator",
     description:
       "Visualize your dividend snowball. Calculate how your investments grow over time with the power of compound interest and DRIP.",
-    url: "https://yieldgrower.com",
+    url: SITE_URL,
     siteName: "YieldGrower",
     locale: "en_US",
     type: "website",

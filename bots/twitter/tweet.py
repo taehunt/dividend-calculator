@@ -17,7 +17,7 @@ ACCESS_TOKEN_SECRET = os.environ.get("TWITTER_ACCESS_TOKEN_SECRET")
 
 ROOT = Path(__file__).resolve().parents[2]
 PULSE_PATH = ROOT / "public" / "data" / "income-pulse.json"
-PULSE_URL = "https://yieldgrower.com/pulse"
+PULSE_URL = "https://www.yieldgrower.com/pulse"
 
 
 def get_twitter_client():
@@ -149,7 +149,7 @@ def generate_fallback_tweet() -> str:
     templates = [
         (
             "Wondering how much {ticker} you need for retirement income?\n\n"
-            "Model DRIP + contributions free → https://yieldgrower.com\n\n"
+            "Model DRIP + contributions free → https://www.yieldgrower.com\n\n"
             "#DividendInvesting #FIRE"
         ),
         (
