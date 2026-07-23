@@ -5,9 +5,22 @@ import PulseClient from "@/components/PulseClient";
 import type { IncomePulse } from "@/lib/income-pulse";
 
 export const metadata: Metadata = {
-  title: "Income Pulse — Is Dividend Income Attractive Today? | YieldGrower",
+  title: "Income Pulse — Daily Dividend Attractiveness Score | YieldGrower",
   description:
-    "Daily dividend attractiveness score vs Treasuries, inflation, and VIX. Track real yield, the yield curve, and popular dividend ETF yields — updated every day.",
+    "Free daily Income Pulse: YieldGrower’s dividend attractiveness score vs 10Y Treasuries, CPI inflation, VIX, and popular dividend ETF yields (SCHD, VYM, JEPI, and more).",
+  keywords: [
+    "income pulse",
+    "dividend attractiveness score",
+    "dividend ETF yield",
+    "treasury yield vs dividend",
+    "SCHD yield",
+    "real yield",
+    "FIRE income",
+    "YieldGrower",
+  ],
+  alternates: {
+    canonical: "https://yieldgrower.com/pulse",
+  },
   openGraph: {
     title: "Income Pulse — Dividend Attractiveness Score | YieldGrower",
     description:
@@ -15,6 +28,13 @@ export const metadata: Metadata = {
     url: "https://yieldgrower.com/pulse",
     siteName: "YieldGrower",
     type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Income Pulse — Dividend Attractiveness Score | YieldGrower",
+    description:
+      "Daily dividend attractiveness vs Treasuries, inflation, and VIX — free on YieldGrower.",
   },
 };
 
@@ -29,7 +49,41 @@ async function loadPulse(): Promise<IncomePulse> {
   return JSON.parse(raw) as IncomePulse;
 }
 
+function jsonLd(data: IncomePulse) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "YieldGrower Income Pulse",
+    url: "https://yieldgrower.com/pulse",
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Any",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    description:
+      "Daily dividend attractiveness score comparing dividend ETF yields with Treasuries, inflation, and market stress.",
+    dateModified: data.updatedAt,
+    provider: {
+      "@type": "Organization",
+      name: "YieldGrower",
+      url: "https://yieldgrower.com",
+    },
+  };
+}
+
 export default async function PulsePage() {
   const data = await loadPulse();
-  return <PulseClient initialData={data} />;
+  const ld = jsonLd(data);
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }}
+      />
+      <PulseClient initialData={data} />
+    </>
+  );
 }

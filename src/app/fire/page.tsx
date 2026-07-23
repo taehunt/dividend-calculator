@@ -22,6 +22,7 @@ import { useLocale } from "@/components/LocaleProvider";
 import NumberField from "@/components/NumberField";
 import CurrencyIcon from "@/components/CurrencyIcon";
 import { useMoneyValue } from "@/hooks/useMoneyValue";
+import PulseCallout from "@/components/PulseCallout";
 
 type TargetMode = "auto" | "manual";
 
@@ -235,6 +236,8 @@ export default function FireCalculatorPage() {
           </motion.h1>
           <p className="text-lg text-slate-600">{t.subtitle}</p>
         </div>
+
+        <PulseCallout variant="banner" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-5">

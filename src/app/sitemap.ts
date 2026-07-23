@@ -1,5 +1,19 @@
 import { MetadataRoute } from 'next'
+import { readFileSync } from 'fs'
+import path from 'path'
 import { getSortedPostsData } from '@/lib/posts'
+
+function pulseLastModified(): Date {
+  try {
+    const filePath = path.join(process.cwd(), 'public', 'data', 'income-pulse.json')
+    const raw = readFileSync(filePath, 'utf-8')
+    const json = JSON.parse(raw) as { updatedAt?: string }
+    if (json.updatedAt) return new Date(json.updatedAt)
+  } catch {
+    // fall through
+  }
+  return new Date()
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getSortedPostsData().map((post) => ({
@@ -18,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: 'https://yieldgrower.com/pulse',
-      lastModified: new Date(),
+      lastModified: pulseLastModified(),
       changeFrequency: 'daily',
       priority: 1,
     },
