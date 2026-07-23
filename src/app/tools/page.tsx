@@ -7,6 +7,7 @@ import {
   Sprout,
   Target,
   TrendingUp,
+  CircleDollarSign,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 
@@ -59,6 +60,13 @@ const tools = [
     titleKo: "CAGR 계산기",
     desc: "Measure annualized growth between a start and end portfolio value.",
     icon: TrendingUp,
+  },
+  {
+    href: "/inflation",
+    title: "Inflation Calculator",
+    titleKo: "인플레이션 계산기",
+    desc: "See how inflation changes purchasing power over time.",
+    icon: CircleDollarSign,
   },
 ];
 

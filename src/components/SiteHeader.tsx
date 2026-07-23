@@ -16,6 +16,7 @@ type SiteHeaderProps = {
     | "compound"
     | "goal"
     | "cagr"
+    | "inflation"
     | "tools"
     | "blog"
     | "privacy";
@@ -36,6 +37,7 @@ const labels = {
     compound: "Compound Interest Calculator",
     goal: "Dividend Income Goal",
     cagr: "CAGR Calculator",
+    inflation: "Inflation Calculator",
     allTools: "All Tools",
     blog: "Blog",
   },
@@ -48,6 +50,7 @@ const labels = {
     compound: "복리 계산기",
     goal: "배당 목표 소득",
     cagr: "CAGR 계산기",
+    inflation: "인플레이션 계산기",
     allTools: "전체 도구",
     blog: "블로그",
   },
@@ -72,6 +75,7 @@ export default function SiteHeader({
     active === "compound" ||
     active === "goal" ||
     active === "cagr" ||
+    active === "inflation" ||
     active === "tools";
 
   return (
@@ -184,6 +188,14 @@ export default function SiteHeader({
                       }`}
                     >
                       {t.cagr}
+                    </Link>
+                    <Link
+                      href="/inflation"
+                      className={`block px-4 py-2.5 hover:bg-slate-50 ${
+                        active === "inflation" ? "text-indigo-600 font-semibold" : ""
+                      }`}
+                    >
+                      {t.inflation}
                     </Link>
                     <div className="border-t border-slate-100 my-1" />
                     <Link
