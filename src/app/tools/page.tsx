@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Calculator, Flame, LineChart, Percent, Sprout } from "lucide-react";
+import { Calculator, Flame, LineChart, Percent, Sprout, Target } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 
 const tools = [
@@ -37,6 +37,13 @@ const tools = [
     titleKo: "복리 계산기",
     desc: "Visualize how principal and contributions grow with compound returns.",
     icon: Sprout,
+  },
+  {
+    href: "/goal",
+    title: "Dividend Income Goal Calculator",
+    titleKo: "배당 목표 소득 계산기",
+    desc: "Calculate how large a portfolio you need for a monthly dividend target.",
+    icon: Target,
   },
 ];
 

@@ -14,6 +14,7 @@ type SiteHeaderProps = {
     | "average"
     | "tax"
     | "compound"
+    | "goal"
     | "tools"
     | "blog"
     | "privacy";
@@ -32,6 +33,7 @@ const labels = {
     average: "Average Cost Calculator",
     tax: "Dividend Tax Calculator",
     compound: "Compound Interest Calculator",
+    goal: "Dividend Income Goal",
     allTools: "All Tools",
     blog: "Blog",
   },
@@ -42,6 +44,7 @@ const labels = {
     average: "평단가 계산기",
     tax: "배당세 계산기",
     compound: "복리 계산기",
+    goal: "배당 목표 소득",
     allTools: "전체 도구",
     blog: "블로그",
   },
@@ -64,6 +67,7 @@ export default function SiteHeader({
     active === "average" ||
     active === "tax" ||
     active === "compound" ||
+    active === "goal" ||
     active === "tools";
 
   return (
@@ -160,6 +164,14 @@ export default function SiteHeader({
                       }`}
                     >
                       {t.compound}
+                    </Link>
+                    <Link
+                      href="/goal"
+                      className={`block px-4 py-2.5 hover:bg-slate-50 ${
+                        active === "goal" ? "text-indigo-600 font-semibold" : ""
+                      }`}
+                    >
+                      {t.goal}
                     </Link>
                     <div className="border-t border-slate-100 my-1" />
                     <Link
