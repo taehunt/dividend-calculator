@@ -24,6 +24,7 @@ import CurrencyIcon from "@/components/CurrencyIcon";
 import { useMoneyValue } from "@/hooks/useMoneyValue";
 import PulseCallout from "@/components/PulseCallout";
 import CalculatorFaq from "@/components/CalculatorFaq";
+import RelatedTools from "@/components/RelatedTools";
 
 type TargetMode = "auto" | "manual";
 
@@ -450,6 +451,7 @@ export default function FireCalculatorPage() {
         </div>
 
         <CalculatorFaq page="fire" />
+        <RelatedTools page="fire" />
       </main>
     </div>
   );

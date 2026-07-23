@@ -9,6 +9,7 @@ import NumberField from "@/components/NumberField";
 import { useMoneyValue } from "@/hooks/useMoneyValue";
 import PulseCallout from "@/components/PulseCallout";
 import CalculatorFaq from "@/components/CalculatorFaq";
+import RelatedTools from "@/components/RelatedTools";
 
 const copy = {
   en: {
@@ -200,6 +201,7 @@ export default function DividendTaxPage() {
         </div>
 
         <CalculatorFaq page="tax" />
+        <RelatedTools page="tax" />
       </main>
     </div>
   );
