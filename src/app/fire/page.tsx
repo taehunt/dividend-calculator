@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import {
   Area,
   AreaChart,
@@ -17,12 +16,11 @@ import {
   Calendar,
   DollarSign,
   Flame,
-  Globe,
-  PieChart,
   Target,
   TrendingUp,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import SiteHeader from "@/components/SiteHeader";
 
 const copy = {
   en: {
@@ -50,9 +48,6 @@ const copy = {
     tipTitle: "How this calculator works",
     tipBody:
       "Your FIRE number is annual expenses divided by the safe withdrawal rate. The chart projects monthly contributions and compound growth until your portfolio crosses that target.",
-    navHome: "Dividend Calculator",
-    navFire: "FIRE Calculator",
-    navBlog: "Blog",
   },
   ko: {
     title: "FIRE 조기은퇴 계산기",
@@ -79,9 +74,6 @@ const copy = {
     tipTitle: "계산 방식",
     tipBody:
       "FIRE 목표 금액 = 연간 생활비 ÷ 안전 인출률입니다. 월 저축과 복리 수익을 반영해 목표가 넘는 시점을 찾습니다.",
-    navHome: "배당 계산기",
-    navFire: "FIRE 계산기",
-    navBlog: "블로그",
   },
 };
 
@@ -186,50 +178,14 @@ export default function FireCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="bg-indigo-600 p-2 rounded-lg">
-              <PieChart className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
-              YieldGrower
-            </span>
-          </Link>
-          <div className="flex items-center gap-3 sm:gap-6">
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1">
-              <div className="flex items-center pl-2 pr-1 border-r border-slate-200">
-                <Globe className="w-4 h-4 text-slate-400 mr-1" />
-                <select
-                  value={lang}
-                  onChange={(e) => setLang(e.target.value as "en" | "ko")}
-                  className="text-sm bg-transparent text-slate-700 py-1 pr-2 focus:outline-none cursor-pointer font-medium"
-                >
-                  <option value="en">EN</option>
-                  <option value="ko">한국어</option>
-                </select>
-              </div>
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value as "USD" | "KRW")}
-                className="text-sm bg-transparent text-slate-700 py-1 pl-2 pr-2 focus:outline-none cursor-pointer font-medium"
-              >
-                <option value="USD">USD ($)</option>
-                <option value="KRW">KRW (₩)</option>
-              </select>
-            </div>
-            <nav className="hidden md:flex gap-5 text-sm font-medium text-slate-600">
-              <Link href="/" className="hover:text-indigo-600">
-                {t.navHome}
-              </Link>
-              <span className="text-indigo-600">{t.navFire}</span>
-              <Link href="/blog" className="hover:text-indigo-600">
-                {t.navBlog}
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <SiteHeader
+        active="fire"
+        lang={lang}
+        currency={currency}
+        onLangChange={setLang}
+        onCurrencyChange={setCurrency}
+        showLocaleControls
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center max-w-3xl mx-auto mb-12">

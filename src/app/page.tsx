@@ -12,8 +12,9 @@ import {
   AreaChart,
   Area
 } from 'recharts';
-import { Calculator, DollarSign, TrendingUp, Calendar, Percent, PieChart, Info, Printer, Globe } from 'lucide-react';
+import { Calculator, DollarSign, TrendingUp, Calendar, Percent, Info, Printer } from 'lucide-react';
 import { motion } from 'framer-motion';
+import SiteHeader from '@/components/SiteHeader';
 
 const translations = {
   en: {
@@ -195,57 +196,14 @@ export default function DividendCalculator() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-indigo-100 selection:text-indigo-900">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10 print:hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div className="bg-indigo-600 p-2 rounded-lg">
-              <PieChart className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
-              YieldGrower
-            </span>
-          </div>
-          <div className="flex items-center gap-3 sm:gap-6">
-            {/* Language & Currency Controls */}
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1">
-              <div className="flex items-center pl-2 pr-1 border-r border-slate-200">
-                <Globe className="w-4 h-4 text-slate-400 mr-1" />
-                <select 
-                  value={lang} 
-                  onChange={(e) => setLang(e.target.value as 'en' | 'ko')}
-                  className="text-sm bg-transparent text-slate-700 py-1 pr-2 focus:outline-none cursor-pointer font-medium"
-                >
-                  <option value="en">EN</option>
-                  <option value="ko">한국어</option>
-                </select>
-              </div>
-              <select 
-                value={currency} 
-                onChange={(e) => setCurrency(e.target.value as 'USD' | 'KRW')}
-                className="text-sm bg-transparent text-slate-700 py-1 pl-2 pr-2 focus:outline-none cursor-pointer font-medium"
-              >
-                <option value="USD">USD ($)</option>
-                <option value="KRW">KRW (₩)</option>
-              </select>
-            </div>
-
-            <button 
-              onClick={() => window.print()} 
-              className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors"
-            >
-              <Printer className="w-4 h-4" /> {t.savePdf}
-            </button>
-            <nav className="hidden md:flex gap-6 text-sm font-medium text-slate-600 border-l border-slate-200 pl-6">
-              <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-indigo-600 transition-colors">{t.navCalc}</button>
-              <a href="/fire" className="hover:text-indigo-600 transition-colors">FIRE</a>
-              <a href="/blog" className="hover:text-indigo-600 transition-colors">Blog</a>
-              <button onClick={() => document.getElementById('resources')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-indigo-600 transition-colors">{t.navRes}</button>
-              <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-indigo-600 transition-colors">{t.navAbout}</button>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <SiteHeader
+        active="dividend"
+        lang={lang}
+        currency={currency}
+        onLangChange={setLang}
+        onCurrencyChange={setCurrency}
+        showLocaleControls
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
@@ -261,10 +219,16 @@ export default function DividendCalculator() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-slate-600 leading-relaxed mb-8"
+            className="text-lg text-slate-600 leading-relaxed mb-6"
           >
             {t.heroSub}
           </motion.p>
+          <button 
+            onClick={() => window.print()} 
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors mb-8 print:hidden"
+          >
+            <Printer className="w-4 h-4" /> {t.savePdf}
+          </button>
 
           {/* Top Ad Slot (Leaderboard) */}
           <div className="w-full max-w-3xl mx-auto h-[90px] bg-slate-100 border border-slate-200 border-dashed rounded-lg flex items-center justify-center text-slate-400 text-sm mb-8 print:hidden">
