@@ -386,35 +386,72 @@ export default function DividendCalculator() {
           [Google AdSense - Multiplex / Native Ads]
         </div>
 
-        {/* Resources Section */}
+        {/* Resources Section (SEO & AdSense Content) */}
         <div id="resources" className="mt-24 pt-16 border-t border-slate-200">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-slate-900">Investment Resources</h2>
-            <p className="mt-4 text-slate-600">Learn more about dividend investing and compound interest.</p>
+            <h2 className="text-3xl font-bold text-slate-900">The Power of Dividend Investing</h2>
+            <p className="mt-4 text-slate-600 max-w-2xl mx-auto">Master the fundamentals of wealth creation through compound interest and strategic dividend reinvestment.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-              <h3 className="text-lg font-bold text-indigo-600 mb-2">What is DRIP?</h3>
-              <p className="text-sm text-slate-600">A Dividend Reinvestment Plan (DRIP) allows investors to automatically reinvest cash dividends to purchase additional shares.</p>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="space-y-8">
+              <article className="prose prose-slate max-w-none">
+                <h3 className="text-xl font-bold text-indigo-600 flex items-center gap-2">
+                  <span className="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
+                  What is a DRIP (Dividend Reinvestment Plan)?
+                </h3>
+                <p className="text-slate-600 leading-relaxed mt-3">
+                  A Dividend Reinvestment Plan, commonly known as DRIP, is an investment strategy that allows shareholders to automatically reinvest their cash dividends into additional shares or fractional shares of the underlying stock on the dividend payment date. Instead of receiving a cash payout, the money is immediately put back to work. This systematic approach eliminates the temptation to spend the dividends and ensures that your capital continues to compound over time without incurring additional brokerage commissions.
+                </p>
+              </article>
+
+              <article className="prose prose-slate max-w-none">
+                <h3 className="text-xl font-bold text-indigo-600 flex items-center gap-2">
+                  <span className="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span>
+                  The Magic of Compound Interest
+                </h3>
+                <p className="text-slate-600 leading-relaxed mt-3">
+                  Albert Einstein famously referred to compound interest as the "eighth wonder of the world." In the context of dividend investing, compounding occurs when you earn returns not just on your initial principal, but also on the accumulated dividends from previous periods. As your share count grows through DRIP, your future dividend payments increase correspondingly. Over a 10, 20, or 30-year horizon, this "snowball effect" can transform a modest monthly contribution into a substantial portfolio capable of funding your retirement.
+                </p>
+              </article>
             </div>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-              <h3 className="text-lg font-bold text-indigo-600 mb-2">The Rule of 72</h3>
-              <p className="text-sm text-slate-600">A simple way to determine how long an investment will take to double given a fixed annual rate of interest.</p>
-            </div>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-              <h3 className="text-lg font-bold text-indigo-600 mb-2">High Yield vs Growth</h3>
-              <p className="text-sm text-slate-600">Understand the trade-offs between high initial dividend yields and companies with strong dividend growth histories.</p>
+
+            <div className="space-y-8">
+              <article className="prose prose-slate max-w-none">
+                <h3 className="text-xl font-bold text-indigo-600 flex items-center gap-2">
+                  <span className="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span>
+                  High Yield vs. Dividend Growth
+                </h3>
+                <p className="text-slate-600 leading-relaxed mt-3">
+                  Investors often face a dilemma: should they chase high initial dividend yields (e.g., 7-10%) or focus on companies with lower yields (e.g., 2-3%) but a strong history of annual dividend increases? While high yields are attractive for immediate income, they can sometimes indicate a distressed company. Conversely, Dividend Aristocrats—companies that have increased their payouts for 25+ consecutive years—offer a growing income stream that outpaces inflation. Our calculator helps you model both scenarios to find the right balance for your financial goals.
+                </p>
+              </article>
+
+              <article className="prose prose-slate max-w-none">
+                <h3 className="text-xl font-bold text-indigo-600 flex items-center gap-2">
+                  <span className="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span>
+                  Achieving FIRE (Financial Independence, Retire Early)
+                </h3>
+                <p className="text-slate-600 leading-relaxed mt-3">
+                  The FIRE movement relies heavily on creating passive income streams that exceed living expenses. Dividend investing is a cornerstone strategy for many FIRE practitioners. By consistently investing in broad-market index funds (like S&P 500 ETFs) or a diversified portfolio of blue-chip dividend stocks, you can build a reliable cash flow. Use our YieldGrower calculator to determine exactly how much you need to invest monthly, and for how long, to reach your "crossover point" where your dividends cover your lifestyle.
+                </p>
+              </article>
             </div>
           </div>
         </div>
 
         {/* About Section */}
         <div id="about" className="mt-24 pt-16 border-t border-slate-200 mb-12">
-          <div className="bg-indigo-50 rounded-3xl p-8 md:p-12 text-center">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">About YieldGrower</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              YieldGrower is a free tool designed to help investors visualize the long-term power of dividend reinvestment and compound interest. We believe that understanding these concepts is the first step towards financial independence.
-            </p>
+          <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-3xl p-8 md:p-12 text-center border border-indigo-100 shadow-sm">
+            <h2 className="text-3xl font-bold text-slate-900 mb-6">About YieldGrower Calculator</h2>
+            <div className="text-slate-600 max-w-3xl mx-auto leading-relaxed space-y-4">
+              <p>
+                YieldGrower is a comprehensive, free financial tool designed to help investors visualize the long-term trajectory of their portfolios. Whether you are a beginner taking your first steps into the stock market or a seasoned investor planning for early retirement, understanding the mathematical reality of your investment plan is crucial.
+              </p>
+              <p>
+                Our calculator takes into account essential variables including your initial principal, monthly contributions, expected market returns, dividend yields, and even tax implications. By toggling the DRIP feature, you can instantly see the dramatic difference that reinvesting makes over decades. We do not store your financial data; all calculations are performed securely within your browser. Start planning your financial freedom today.
+              </p>
+            </div>
           </div>
         </div>
       </main>
