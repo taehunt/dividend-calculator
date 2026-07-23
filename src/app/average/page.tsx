@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Calculator, Plus, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
+import { useLocale } from "@/components/LocaleProvider";
 
 type Purchase = {
   id: number;
@@ -51,8 +52,7 @@ const copy = {
 };
 
 export default function AverageCalculatorPage() {
-  const [lang, setLang] = useState<"en" | "ko">("en");
-  const [currency, setCurrency] = useState<"USD" | "KRW">("USD");
+  const { lang, currency } = useLocale();
   const [purchases, setPurchases] = useState<Purchase[]>([
     { id: 1, shares: 10, price: 100 },
     { id: 2, shares: 20, price: 80 },
@@ -101,10 +101,6 @@ export default function AverageCalculatorPage() {
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
         active="average"
-        lang={lang}
-        currency={currency}
-        onLangChange={setLang}
-        onCurrencyChange={setCurrency}
         showLocaleControls
       />
 

@@ -3,18 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Activity, ArrowRight } from "lucide-react";
+import { useLocale } from "@/components/LocaleProvider";
 import {
   formatUpdatedAt,
   scoreTone,
   type IncomePulse,
-  type PulseLang,
 } from "@/lib/income-pulse";
 
-type Props = {
-  lang?: PulseLang;
-};
-
-export default function PulseTeaser({ lang = "en" }: Props) {
+export default function PulseTeaser() {
+  const { lang } = useLocale();
   const [data, setData] = useState<IncomePulse | null>(null);
 
   useEffect(() => {

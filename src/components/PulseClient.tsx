@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import {
   Activity,
@@ -10,13 +9,13 @@ import {
   Target,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
+import { useLocale } from "@/components/LocaleProvider";
 import {
   formatNumber,
   formatPct,
   formatUpdatedAt,
   scoreTone,
   type IncomePulse,
-  type PulseLang,
 } from "@/lib/income-pulse";
 
 type Props = {
@@ -128,7 +127,7 @@ function Card({
 }
 
 export default function PulseClient({ initialData }: Props) {
-  const [lang, setLang] = useState<PulseLang>("en");
+  const { lang } = useLocale();
   const data = initialData;
   const t = copy[lang];
   const regimeLabel =
@@ -138,9 +137,8 @@ export default function PulseClient({ initialData }: Props) {
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
         active="pulse"
-        lang={lang}
-        onLangChange={setLang}
         showLocaleControls
+        showCurrencyControls={false}
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

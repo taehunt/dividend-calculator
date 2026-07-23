@@ -5,7 +5,7 @@ import SiteHeader from "@/components/SiteHeader";
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      <SiteHeader active="privacy" />
+      <SiteHeader active="privacy" showLocaleControls showCurrencyControls={false} />
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="mb-8">

@@ -81,7 +81,7 @@ const tools = [
 export default function ToolsPage() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      <SiteHeader active="tools" showLocaleControls={false} />
+      <SiteHeader active="tools" showLocaleControls showCurrencyControls={false} />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="text-center mb-12">

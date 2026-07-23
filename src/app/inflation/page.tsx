@@ -14,6 +14,7 @@ import {
 import { Calculator } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
+import { useLocale } from "@/components/LocaleProvider";
 
 const copy = {
   en: {
@@ -59,8 +60,7 @@ const copy = {
 };
 
 export default function InflationCalculatorPage() {
-  const [lang, setLang] = useState<"en" | "ko">("en");
-  const [currency, setCurrency] = useState<"USD" | "KRW">("USD");
+  const { lang, currency } = useLocale();
   const [amount, setAmount] = useState(50000);
   const [rate, setRate] = useState(3);
   const [years, setYears] = useState(20);
@@ -132,10 +132,6 @@ export default function InflationCalculatorPage() {
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
         active="inflation"
-        lang={lang}
-        currency={currency}
-        onLangChange={setLang}
-        onCurrencyChange={setCurrency}
         showLocaleControls
       />
 

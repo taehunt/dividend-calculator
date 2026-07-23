@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Calculator, Percent } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
+import { useLocale } from "@/components/LocaleProvider";
 
 const copy = {
   en: {
@@ -49,8 +50,7 @@ const copy = {
 };
 
 export default function DividendTaxPage() {
-  const [lang, setLang] = useState<"en" | "ko">("en");
-  const [currency, setCurrency] = useState<"USD" | "KRW">("USD");
+  const { lang, currency } = useLocale();
   const [portfolioValue, setPortfolioValue] = useState(100000);
   const [dividendYield, setDividendYield] = useState(3.5);
   const [taxRate, setTaxRate] = useState(15);
@@ -123,10 +123,6 @@ export default function DividendTaxPage() {
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
         active="tax"
-        lang={lang}
-        currency={currency}
-        onLangChange={setLang}
-        onCurrencyChange={setCurrency}
         showLocaleControls
       />
 

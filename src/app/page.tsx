@@ -15,6 +15,7 @@ import {
 import { Calculator, DollarSign, TrendingUp, Calendar, Percent, Info, Printer } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SiteHeader from '@/components/SiteHeader';
+import { useLocale } from '@/components/LocaleProvider';
 import PulseTeaser from '@/components/PulseTeaser';
 
 const translations = {
@@ -103,6 +104,7 @@ const translations = {
 };
 
 export default function DividendCalculator() {
+  const { lang, currency } = useLocale();
   const [initialInvestment, setInitialInvestment] = useState<number>(10000);
   const [monthlyContribution, setMonthlyContribution] = useState<number>(500);
   const [yearsToGrow, setYearsToGrow] = useState<number>(20);
@@ -110,8 +112,6 @@ export default function DividendCalculator() {
   const [dividendYield, setDividendYield] = useState<number>(3);
   const [dividendTaxRate, setDividendTaxRate] = useState<number>(15);
   const [dripEnabled, setDripEnabled] = useState<boolean>(true);
-  const [currency, setCurrency] = useState<'USD' | 'KRW'>('USD');
-  const [lang, setLang] = useState<'en' | 'ko'>('en');
 
   const t = translations[lang];
 
@@ -199,10 +199,6 @@ export default function DividendCalculator() {
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-indigo-100 selection:text-indigo-900">
       <SiteHeader
         active="dividend"
-        lang={lang}
-        currency={currency}
-        onLangChange={setLang}
-        onCurrencyChange={setCurrency}
         showLocaleControls
       />
 
@@ -231,7 +227,7 @@ export default function DividendCalculator() {
             <Printer className="w-4 h-4" /> {t.savePdf}
           </button>
 
-          <PulseTeaser lang={lang} />
+          <PulseTeaser />
 
           {/* Top Ad Slot (Leaderboard) */}
           <div className="w-full max-w-3xl mx-auto h-[90px] bg-slate-100 border border-slate-200 border-dashed rounded-lg flex items-center justify-center text-slate-400 text-sm mb-8 print:hidden">

@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ChevronDown, Globe, PieChart } from "lucide-react";
-
-type Lang = "en" | "ko";
-type Currency = "USD" | "KRW";
+import { useLocale, type Currency, type Lang } from "@/components/LocaleProvider";
 
 type SiteHeaderProps = {
   active?:
@@ -21,11 +19,8 @@ type SiteHeaderProps = {
     | "tools"
     | "blog"
     | "privacy";
-  lang?: Lang;
-  currency?: Currency;
-  onLangChange?: (lang: Lang) => void;
-  onCurrencyChange?: (currency: Currency) => void;
   showLocaleControls?: boolean;
+  showCurrencyControls?: boolean;
 };
 
 const labels = {
@@ -61,12 +56,10 @@ const labels = {
 
 export default function SiteHeader({
   active,
-  lang = "en",
-  currency = "USD",
-  onLangChange,
-  onCurrencyChange,
   showLocaleControls = false,
+  showCurrencyControls = true,
 }: SiteHeaderProps) {
+  const { lang, currency, setLang, setCurrency } = useLocale();
   const [open, setOpen] = useState(false);
   const t = labels[lang];
 
@@ -98,23 +91,23 @@ export default function SiteHeader({
             <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1">
               <div
                 className={`flex items-center pl-2 pr-1 ${
-                  onCurrencyChange ? "border-r border-slate-200" : ""
+                  showCurrencyControls ? "border-r border-slate-200" : ""
                 }`}
               >
                 <Globe className="w-4 h-4 text-slate-400 mr-1" />
                 <select
                   value={lang}
-                  onChange={(e) => onLangChange?.(e.target.value as Lang)}
+                  onChange={(e) => setLang(e.target.value as Lang)}
                   className="text-sm bg-transparent text-slate-700 py-1 pr-2 focus:outline-none cursor-pointer font-medium"
                 >
                   <option value="en">EN</option>
                   <option value="ko">한국어</option>
                 </select>
               </div>
-              {onCurrencyChange && (
+              {showCurrencyControls && (
                 <select
                   value={currency}
-                  onChange={(e) => onCurrencyChange(e.target.value as Currency)}
+                  onChange={(e) => setCurrency(e.target.value as Currency)}
                   className="text-sm bg-transparent text-slate-700 py-1 pl-2 pr-2 focus:outline-none cursor-pointer font-medium"
                 >
                   <option value="USD">USD ($)</option>
@@ -237,7 +230,6 @@ export default function SiteHeader({
             </Link>
           </nav>
 
-          {/* Mobile quick links */}
           <nav className="flex md:hidden items-center gap-3 text-sm font-medium text-slate-600">
             <Link href="/pulse" className={active === "pulse" ? "text-indigo-600" : ""}>
               {t.pulse}

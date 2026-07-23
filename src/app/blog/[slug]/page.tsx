@@ -20,7 +20,7 @@ export default async function Post({
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      <SiteHeader active="blog" />
+      <SiteHeader active="blog" showLocaleControls showCurrencyControls={false} />
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">

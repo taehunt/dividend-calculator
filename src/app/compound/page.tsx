@@ -14,6 +14,7 @@ import {
 import { Calculator } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
+import { useLocale } from "@/components/LocaleProvider";
 
 const copy = {
   en: {
@@ -61,8 +62,7 @@ const copy = {
 };
 
 export default function CompoundCalculatorPage() {
-  const [lang, setLang] = useState<"en" | "ko">("en");
-  const [currency, setCurrency] = useState<"USD" | "KRW">("USD");
+  const { lang, currency } = useLocale();
   const [initial, setInitial] = useState(10000);
   const [monthly, setMonthly] = useState(500);
   const [rate, setRate] = useState(7);
@@ -137,10 +137,6 @@ export default function CompoundCalculatorPage() {
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
         active="compound"
-        lang={lang}
-        currency={currency}
-        onLangChange={setLang}
-        onCurrencyChange={setCurrency}
         showLocaleControls
       />
 

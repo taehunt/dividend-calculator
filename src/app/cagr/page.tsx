@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Calculator, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
+import { useLocale } from "@/components/LocaleProvider";
 
 const copy = {
   en: {
@@ -41,8 +42,7 @@ const copy = {
 };
 
 export default function CagrCalculatorPage() {
-  const [lang, setLang] = useState<"en" | "ko">("en");
-  const [currency, setCurrency] = useState<"USD" | "KRW">("USD");
+  const { lang, currency } = useLocale();
   const [startValue, setStartValue] = useState(10000);
   const [endValue, setEndValue] = useState(25000);
   const [years, setYears] = useState(7);
@@ -111,10 +111,6 @@ export default function CagrCalculatorPage() {
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
         active="cagr"
-        lang={lang}
-        currency={currency}
-        onLangChange={setLang}
-        onCurrencyChange={setCurrency}
         showLocaleControls
       />
 

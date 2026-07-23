@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Calculator, Target } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
+import { useLocale } from "@/components/LocaleProvider";
 
 const copy = {
   en: {
@@ -43,8 +44,7 @@ const copy = {
 };
 
 export default function DividendGoalPage() {
-  const [lang, setLang] = useState<"en" | "ko">("en");
-  const [currency, setCurrency] = useState<"USD" | "KRW">("USD");
+  const { lang, currency } = useLocale();
   const [monthlyGoal, setMonthlyGoal] = useState(3000);
   const [yieldRate, setYieldRate] = useState(3.5);
   const [taxRate, setTaxRate] = useState(15);
@@ -115,10 +115,6 @@ export default function DividendGoalPage() {
     <div className="min-h-screen bg-slate-50 font-sans">
       <SiteHeader
         active="goal"
-        lang={lang}
-        currency={currency}
-        onLangChange={setLang}
-        onCurrencyChange={setCurrency}
         showLocaleControls
       />
 
