@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Calculator, Flame, LineChart, Percent } from "lucide-react";
+import { Calculator, Flame, LineChart, Percent, Sprout } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 
 const tools = [
@@ -8,7 +8,6 @@ const tools = [
     title: "Dividend Reinvestment Calculator",
     titleKo: "배당 재투자 계산기",
     desc: "Project long-term growth with DRIP, contributions, yield, and tax.",
-    descKo: "DRIP, 월 적립, 배당률, 세금을 반영한 장기 자산 성장 계산",
     icon: LineChart,
   },
   {
@@ -16,7 +15,6 @@ const tools = [
     title: "FIRE Calculator",
     titleKo: "FIRE 조기은퇴 계산기",
     desc: "Estimate when your portfolio can cover living expenses.",
-    descKo: "생활비를 충당하는 경제적 자유 도달 시점 계산",
     icon: Flame,
   },
   {
@@ -24,7 +22,6 @@ const tools = [
     title: "Average Cost Calculator",
     titleKo: "평단가(물타기) 계산기",
     desc: "Track cost basis across multiple buys and averaging strategies.",
-    descKo: "여러 번 매수 후 평균 단가와 평가손익 계산",
     icon: Calculator,
   },
   {
@@ -32,8 +29,14 @@ const tools = [
     title: "Dividend Tax Calculator",
     titleKo: "배당세 계산기",
     desc: "Estimate net dividend income after tax and reinvestment drag.",
-    descKo: "세후 배당 소득과 재투자 영향 계산",
     icon: Percent,
+  },
+  {
+    href: "/compound",
+    title: "Compound Interest Calculator",
+    titleKo: "복리 계산기",
+    desc: "Visualize how principal and contributions grow with compound returns.",
+    icon: Sprout,
   },
 ];
 
