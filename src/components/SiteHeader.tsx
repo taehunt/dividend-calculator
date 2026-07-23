@@ -15,6 +15,7 @@ type SiteHeaderProps = {
     | "tax"
     | "compound"
     | "goal"
+    | "cagr"
     | "tools"
     | "blog"
     | "privacy";
@@ -34,6 +35,7 @@ const labels = {
     tax: "Dividend Tax Calculator",
     compound: "Compound Interest Calculator",
     goal: "Dividend Income Goal",
+    cagr: "CAGR Calculator",
     allTools: "All Tools",
     blog: "Blog",
   },
@@ -45,6 +47,7 @@ const labels = {
     tax: "배당세 계산기",
     compound: "복리 계산기",
     goal: "배당 목표 소득",
+    cagr: "CAGR 계산기",
     allTools: "전체 도구",
     blog: "블로그",
   },
@@ -68,6 +71,7 @@ export default function SiteHeader({
     active === "tax" ||
     active === "compound" ||
     active === "goal" ||
+    active === "cagr" ||
     active === "tools";
 
   return (
@@ -172,6 +176,14 @@ export default function SiteHeader({
                       }`}
                     >
                       {t.goal}
+                    </Link>
+                    <Link
+                      href="/cagr"
+                      className={`block px-4 py-2.5 hover:bg-slate-50 ${
+                        active === "cagr" ? "text-indigo-600 font-semibold" : ""
+                      }`}
+                    >
+                      {t.cagr}
                     </Link>
                     <div className="border-t border-slate-100 my-1" />
                     <Link

@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { Calculator, Flame, LineChart, Percent, Sprout, Target } from "lucide-react";
+import {
+  Calculator,
+  Flame,
+  LineChart,
+  Percent,
+  Sprout,
+  Target,
+  TrendingUp,
+} from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 
 const tools = [
@@ -45,6 +53,13 @@ const tools = [
     desc: "Calculate how large a portfolio you need for a monthly dividend target.",
     icon: Target,
   },
+  {
+    href: "/cagr",
+    title: "CAGR Calculator",
+    titleKo: "CAGR 계산기",
+    desc: "Measure annualized growth between a start and end portfolio value.",
+    icon: TrendingUp,
+  },
 ];
 
 export default function ToolsPage() {
@@ -58,7 +73,7 @@ export default function ToolsPage() {
             Tools
           </h1>
           <p className="text-slate-600 text-lg">
-            Free calculators for dividend investing, FIRE planning, and cost basis tracking.
+            Free calculators for dividend investing, FIRE planning, and growth tracking.
           </p>
         </div>
 
