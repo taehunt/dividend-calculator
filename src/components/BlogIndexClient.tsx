@@ -9,7 +9,9 @@ type PostMeta = {
   slug: string;
   date: string;
   title: string;
+  titleKo?: string;
   excerpt: string;
+  excerptKo?: string;
 };
 
 const copy = {
@@ -34,14 +36,14 @@ export default function BlogIndexClient({ posts }: { posts: PostMeta[] }) {
   const t = copy[lang];
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
       <SiteHeader
         active="blog"
         showLocaleControls
         showCurrencyControls={false}
       />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
         <div className="mb-8">
           <Link
             href="/tools"
@@ -58,26 +60,32 @@ export default function BlogIndexClient({ posts }: { posts: PostMeta[] }) {
         </div>
 
         <div className="space-y-8">
-          {posts.map(({ slug, date, title, excerpt }) => (
-            <article
-              key={slug}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow"
-            >
-              <p className="text-sm text-slate-500 mb-2">{date}</p>
-              <Link href={`/blog/${slug}`}>
-                <h2 className="text-2xl font-bold text-slate-900 hover:text-indigo-600 transition-colors mb-3">
-                  {title}
-                </h2>
-              </Link>
-              <p className="text-slate-600 leading-relaxed mb-4">{excerpt}</p>
-              <Link
-                href={`/blog/${slug}`}
-                className="text-indigo-600 font-semibold text-sm hover:underline"
+          {posts.map((post) => {
+            const title =
+              lang === "ko" && post.titleKo ? post.titleKo : post.title;
+            const excerpt =
+              lang === "ko" && post.excerptKo ? post.excerptKo : post.excerpt;
+            return (
+              <article
+                key={post.slug}
+                className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow"
               >
-                {t.readMore}
-              </Link>
-            </article>
-          ))}
+                <p className="text-sm text-slate-500 mb-2">{post.date}</p>
+                <Link href={`/blog/${post.slug}`}>
+                  <h2 className="text-2xl font-bold text-slate-900 hover:text-indigo-600 transition-colors mb-3">
+                    {title}
+                  </h2>
+                </Link>
+                <p className="text-slate-600 leading-relaxed mb-4">{excerpt}</p>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="text-indigo-600 font-semibold text-sm hover:underline"
+                >
+                  {t.readMore}
+                </Link>
+              </article>
+            );
+          })}
         </div>
       </main>
     </div>

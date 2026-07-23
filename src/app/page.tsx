@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from 'react';
-import Link from 'next/link';
 import {
   XAxis,
   YAxis,
@@ -493,17 +492,6 @@ export default function DividendCalculator() {
             </div>
           </div>
         </div>
-        {/* Footer */}
-        <footer className="mt-24 pt-8 border-t border-slate-200 text-center pb-8 print:hidden">
-          <p className="text-sm text-slate-500 mb-4">
-            Disclaimer: YieldGrower is for informational and educational purposes only. It is not financial advice.
-          </p>
-          <div className="flex justify-center gap-6 text-sm">
-            <Link href="/privacy" className="text-slate-500 hover:text-indigo-600 transition-colors">Privacy Policy</Link>
-            <a href="#" className="text-slate-500 hover:text-indigo-600 transition-colors">Terms of Service</a>
-            <a href="mailto:support@yieldgrower.com" className="text-slate-500 hover:text-indigo-600 transition-colors">Contact</a>
-          </div>
-        </footer>
       </main>
     </div>
   );

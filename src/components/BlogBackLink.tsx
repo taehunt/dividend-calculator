@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
 
 export default function BlogBackLink() {
