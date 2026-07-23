@@ -24,6 +24,8 @@ import NumberField from "@/components/NumberField";
 import CurrencyIcon from "@/components/CurrencyIcon";
 import { useMoneyValue } from "@/hooks/useMoneyValue";
 
+type TargetMode = "auto" | "manual";
+
 const copy = {
   en: {
     title: "FIRE Calculator",
@@ -37,7 +39,7 @@ const copy = {
     safeWithdraw: "Safe Withdrawal Rate",
     maxYears: "Max Years to Project",
     years: "Yrs",
-    fireNumber: "FIRE Number",
+    fireNumber: "FIRE Target",
     yearsToFire: "Years to FIRE",
     monthlyIncome: "Passive Income at FIRE",
     portfolioAtFire: "Portfolio at FIRE",
@@ -48,9 +50,15 @@ const copy = {
     reached: "FIRE reached",
     notReached: "Not reached in projection window",
     invalidSwr: "Enter a withdrawal rate above 0%",
+    invalidTarget: "Enter a FIRE target above 0",
+    targetMode: "How to set your FIRE target",
+    modeAuto: "Calculate from expenses",
+    modeManual: "Enter target myself",
+    customTarget: "FIRE Target Amount",
+    autoHint: "Target = annual expenses ÷ safe withdrawal rate",
     tipTitle: "How this calculator works",
     tipBody:
-      "Your FIRE number is annual expenses divided by the safe withdrawal rate. The chart projects monthly contributions and compound growth until your portfolio crosses that target.",
+      "Choose automatic target (expenses ÷ withdrawal rate) or type your own FIRE number. The chart projects contributions and growth until your portfolio crosses that target.",
   },
   ko: {
     title: "FIRE 조기은퇴 계산기",
@@ -75,9 +83,15 @@ const copy = {
     reached: "FIRE 도달",
     notReached: "계산 기간 내 미도달",
     invalidSwr: "안전 인출률은 0%보다 커야 합니다",
+    invalidTarget: "FIRE 목표 금액은 0보다 커야 합니다",
+    targetMode: "FIRE 목표 설정 방식",
+    modeAuto: "생활비로 자동 계산",
+    modeManual: "목표 금액 직접 입력",
+    customTarget: "FIRE 목표 금액",
+    autoHint: "목표 = 연간 생활비 ÷ 안전 인출률",
     tipTitle: "계산 방식",
     tipBody:
-      "FIRE 목표 금액 = 연간 생활비 ÷ 안전 인출률입니다. 월 저축과 복리 수익을 반영해 목표가 넘는 시점을 찾습니다.",
+      "생활비÷인출률로 목표를 자동 계산하거나, 원하는 FIRE 목표 금액을 직접 입력할 수 있습니다. 월 저축과 복리로 그 목표에 도달하는 시점을 찾습니다.",
   },
 };
 
@@ -86,19 +100,30 @@ export default function FireCalculatorPage() {
   const [currentSavings, setCurrentSavings] = useMoneyValue(100000);
   const [monthlyContribution, setMonthlyContribution] = useMoneyValue(2000);
   const [annualExpenses, setAnnualExpenses] = useMoneyValue(40000);
+  const [customTarget, setCustomTarget] = useMoneyValue(1_000_000);
   const [expectedReturn, setExpectedReturn] = useState(7);
   const [safeWithdraw, setSafeWithdraw] = useState(4);
   const [maxYears, setMaxYears] = useState(40);
+  const [targetMode, setTargetMode] = useState<TargetMode>("auto");
 
   const t = copy[lang];
   const moneySuffix = currency === "KRW" ? "원" : "USD";
 
+  const calculatedTarget =
+    safeWithdraw > 0 ? annualExpenses / (safeWithdraw / 100) : null;
+
   const result = useMemo(() => {
-    // SWR of 0% makes FIRE number undefined (expenses ÷ 0).
     const swrValid = safeWithdraw > 0;
-    const fireNumber = swrValid
-      ? annualExpenses / (safeWithdraw / 100)
-      : null;
+    let fireNumber: number | null = null;
+
+    if (targetMode === "manual") {
+      fireNumber = customTarget > 0 ? customTarget : null;
+    } else if (swrValid) {
+      fireNumber = annualExpenses / (safeWithdraw / 100);
+    }
+
+    const targetValid =
+      fireNumber !== null && Number.isFinite(fireNumber) && fireNumber > 0;
 
     let balance = currentSavings;
     const monthlyRate = expectedReturn / 100 / 12;
@@ -120,44 +145,47 @@ export default function FireCalculatorPage() {
       rows.push({
         year,
         portfolio: rounded,
-        fireTarget:
-          fireNumber !== null && Number.isFinite(fireNumber)
-            ? Math.round(fireNumber)
-            : null,
+        fireTarget: targetValid ? Math.round(fireNumber!) : null,
       });
 
-      if (
-        fireNumber !== null &&
-        Number.isFinite(fireNumber) &&
-        yearsToFire === null &&
-        balance >= fireNumber
-      ) {
+      if (targetValid && yearsToFire === null && balance >= fireNumber!) {
         yearsToFire = year;
         portfolioAtFire = rounded;
       }
     }
 
+    // Passive income estimate at FIRE
+    let monthlyIncome = Math.round((annualExpenses || 0) / 12);
+    if (targetMode === "manual" && targetValid && swrValid) {
+      monthlyIncome = Math.round((fireNumber! * (safeWithdraw / 100)) / 12);
+    }
+
     return {
-      fireNumber:
-        fireNumber !== null && Number.isFinite(fireNumber)
-          ? Math.round(fireNumber)
-          : null,
+      fireNumber: targetValid ? Math.round(fireNumber!) : null,
       yearsToFire,
       portfolioAtFire:
         yearsToFire === null
           ? Math.round(rows[rows.length - 1]?.portfolio || currentSavings)
           : portfolioAtFire,
-      monthlyIncome: Math.round((annualExpenses || 0) / 12),
+      monthlyIncome,
       rows,
-      swrValid,
+      targetValid,
+      invalidReason:
+        targetMode === "auto" && !swrValid
+          ? ("swr" as const)
+          : targetMode === "manual" && !(customTarget > 0)
+            ? ("target" as const)
+            : null,
     };
   }, [
     annualExpenses,
     currentSavings,
+    customTarget,
     expectedReturn,
     maxYears,
     monthlyContribution,
     safeWithdraw,
+    targetMode,
   ]);
 
   const formatCurrency = (value: number) => {
@@ -179,6 +207,16 @@ export default function FireCalculatorPage() {
     if (Math.abs(value) >= 100_000_000)
       return `₩${(value / 100_000_000).toFixed(1)}억`;
     return `₩${(value / 10_000).toFixed(0)}만`;
+  };
+
+  const selectMode = (mode: TargetMode) => {
+    if (mode === "manual" && calculatedTarget !== null && Number.isFinite(calculatedTarget)) {
+      setCustomTarget(Math.round(calculatedTarget));
+    }
+    if (mode === "auto" && customTarget > 0 && safeWithdraw > 0) {
+      // optional: leave expenses as-is; user may have set custom independently
+    }
+    setTargetMode(mode);
   };
 
   return (
@@ -207,6 +245,37 @@ export default function FireCalculatorPage() {
               <Calculator className="w-6 h-6 text-indigo-600" />
               <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
             </div>
+
+            <div>
+              <p className="block text-sm font-semibold text-slate-700 mb-2">
+                {t.targetMode}
+              </p>
+              <div className="grid grid-cols-2 gap-2 p-1 bg-slate-50 border border-slate-200 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => selectMode("auto")}
+                  className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
+                    targetMode === "auto"
+                      ? "bg-white text-indigo-600 shadow-sm"
+                      : "text-slate-500 hover:text-slate-700"
+                  }`}
+                >
+                  {t.modeAuto}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => selectMode("manual")}
+                  className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
+                    targetMode === "manual"
+                      ? "bg-white text-indigo-600 shadow-sm"
+                      : "text-slate-500 hover:text-slate-700"
+                  }`}
+                >
+                  {t.modeManual}
+                </button>
+              </div>
+            </div>
+
             <NumberField
               label={t.currentSavings}
               icon={CurrencyIcon}
@@ -221,13 +290,28 @@ export default function FireCalculatorPage() {
               onChange={setMonthlyContribution}
               suffix={moneySuffix}
             />
-            <NumberField
-              label={t.annualExpenses}
-              icon={CurrencyIcon}
-              value={annualExpenses}
-              onChange={setAnnualExpenses}
-              suffix={moneySuffix}
-            />
+
+            {targetMode === "manual" ? (
+              <NumberField
+                label={t.customTarget}
+                icon={CurrencyIcon}
+                value={customTarget}
+                onChange={setCustomTarget}
+                suffix={moneySuffix}
+              />
+            ) : (
+              <>
+                <NumberField
+                  label={t.annualExpenses}
+                  icon={CurrencyIcon}
+                  value={annualExpenses}
+                  onChange={setAnnualExpenses}
+                  suffix={moneySuffix}
+                />
+                <p className="text-xs text-slate-400 -mt-3">{t.autoHint}</p>
+              </>
+            )}
+
             <NumberField
               label={t.expectedReturn}
               icon={TrendingUp}
@@ -259,11 +343,15 @@ export default function FireCalculatorPage() {
                 </p>
                 <p
                   className={`font-bold text-slate-900 ${
-                    result.fireNumber === null ? "text-base leading-snug" : "text-3xl"
+                    result.fireNumber === null
+                      ? "text-base leading-snug"
+                      : "text-3xl"
                   }`}
                 >
                   {result.fireNumber === null
-                    ? t.invalidSwr
+                    ? result.invalidReason === "swr"
+                      ? t.invalidSwr
+                      : t.invalidTarget
                     : formatCurrency(result.fireNumber)}
                 </p>
               </div>
@@ -272,7 +360,7 @@ export default function FireCalculatorPage() {
                   {t.yearsToFire}
                 </p>
                 <p className="text-3xl font-bold text-indigo-600">
-                  {!result.swrValid
+                  {!result.targetValid
                     ? "—"
                     : result.yearsToFire === null
                       ? t.notReached
@@ -344,7 +432,7 @@ export default function FireCalculatorPage() {
                       fill="#4f46e5"
                       strokeWidth={3}
                     />
-                    {result.swrValid && (
+                    {result.targetValid && (
                       <Area
                         type="monotone"
                         dataKey="fireTarget"
