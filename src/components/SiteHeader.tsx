@@ -17,6 +17,7 @@ type SiteHeaderProps = {
     | "goal"
     | "cagr"
     | "inflation"
+    | "pulse"
     | "tools"
     | "blog"
     | "privacy";
@@ -30,6 +31,7 @@ type SiteHeaderProps = {
 const labels = {
   en: {
     tools: "Tools",
+    pulse: "Pulse",
     dividend: "Dividend Calculator",
     fire: "FIRE Calculator",
     average: "Average Cost Calculator",
@@ -43,6 +45,7 @@ const labels = {
   },
   ko: {
     tools: "도구",
+    pulse: "Pulse",
     dividend: "배당 계산기",
     fire: "FIRE 계산기",
     average: "평단가 계산기",
@@ -116,6 +119,14 @@ export default function SiteHeader({
           )}
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+            <Link
+              href="/pulse"
+              className={`hover:text-indigo-600 transition-colors ${
+                active === "pulse" ? "text-indigo-600" : ""
+              }`}
+            >
+              {t.pulse}
+            </Link>
             <div
               className="relative"
               onMouseEnter={() => setOpen(true)}
@@ -222,6 +233,9 @@ export default function SiteHeader({
 
           {/* Mobile quick links */}
           <nav className="flex md:hidden items-center gap-3 text-sm font-medium text-slate-600">
+            <Link href="/pulse" className={active === "pulse" ? "text-indigo-600" : ""}>
+              {t.pulse}
+            </Link>
             <Link href="/tools" className={toolActive ? "text-indigo-600" : ""}>
               {t.tools}
             </Link>

@@ -8,10 +8,18 @@ import {
   Target,
   TrendingUp,
   CircleDollarSign,
+  Activity,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 
 const tools = [
+  {
+    href: "/pulse",
+    title: "Income Pulse",
+    titleKo: "인컴 펄스",
+    desc: "Daily dividend attractiveness score vs Treasuries, inflation, and VIX.",
+    icon: Activity,
+  },
   {
     href: "/",
     title: "Dividend Reinvestment Calculator",

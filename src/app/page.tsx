@@ -15,6 +15,7 @@ import {
 import { Calculator, DollarSign, TrendingUp, Calendar, Percent, Info, Printer } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SiteHeader from '@/components/SiteHeader';
+import PulseTeaser from '@/components/PulseTeaser';
 
 const translations = {
   en: {
@@ -229,6 +230,8 @@ export default function DividendCalculator() {
           >
             <Printer className="w-4 h-4" /> {t.savePdf}
           </button>
+
+          <PulseTeaser lang={lang} />
 
           {/* Top Ad Slot (Leaderboard) */}
           <div className="w-full max-w-3xl mx-auto h-[90px] bg-slate-100 border border-slate-200 border-dashed rounded-lg flex items-center justify-center text-slate-400 text-sm mb-8 print:hidden">

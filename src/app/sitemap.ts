@@ -17,6 +17,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: 'https://yieldgrower.com/pulse',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1,
+    },
+    {
       url: 'https://yieldgrower.com/blog',
       lastModified: new Date(),
       changeFrequency: 'daily',
