@@ -1,10 +1,21 @@
 import Link from 'next/link';
-import { getPostData } from '@/lib/posts';
+import { getPostData, getSortedPostsData } from '@/lib/posts';
 import ReactMarkdown from 'react-markdown';
 import { PieChart, ArrowLeft } from 'lucide-react';
 
-export default function Post({ params }: { params: { slug: string } }) {
-  const postData = getPostData(params.slug);
+export function generateStaticParams() {
+  return getSortedPostsData().map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export default async function Post({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const postData = getPostData(slug);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
