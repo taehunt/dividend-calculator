@@ -26,6 +26,14 @@ Before changing your portfolio, run a few scenarios with different contribution 
 
 *This article is for educational purposes only and is not financial advice.*
 
+## Try these free YieldGrower tools
+
+Run the numbers before you change your plan.
+
+- [Dividend Income Goal Calculator](https://yieldgrower.com/goal)
+- [FIRE Calculator](https://yieldgrower.com/fire)
+- [Income Pulse](https://yieldgrower.com/pulse)
+
 ---ko---
 
 이 글은 장기 투자자를 위해 배당으로 은퇴 소득을 추정하는 방법을 쉽게 설명합니다.
@@ -47,3 +55,11 @@ Before changing your portfolio, run a few scenarios with different contribution 
 포트폴리오를 바꾸기 전에 납입액, 배당률, 기간을 바꿔 가며 몇 가지 시나리오를 비교하세요. 무료 배당 재투자 계산기로 결과를 빠르게 비교하면, 헤드라인보다 숫자에 기반한 결정을 내릴 수 있습니다.
 
 *이 글은 교육 목적이며 투자 자문이 아닙니다.*
+
+## YieldGrower 무료 도구로 이어서 보기
+
+숫자로 바로 확인해 보세요.
+
+- [배당 목표 소득 계산기](https://yieldgrower.com/goal)
+- [FIRE 조기은퇴 계산기](https://yieldgrower.com/fire)
+- [인컴 펄스](https://yieldgrower.com/pulse)

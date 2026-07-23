@@ -18,6 +18,14 @@ Stay tuned for daily automated insights on:
 
 *This blog is updated daily to help you achieve financial freedom.*
 
+## Try these free YieldGrower tools
+
+Run the numbers before you change your plan.
+
+- [Dividend Reinvestment Calculator](https://yieldgrower.com/)
+- [FIRE Calculator](https://yieldgrower.com/fire)
+- [Income Pulse](https://yieldgrower.com/pulse)
+
 ---ko---
 
 # YieldGrower 블로그에 오신 것을 환영합니다
@@ -31,3 +39,11 @@ Stay tuned for daily automated insights on:
 - 패시브 인컴 전략
 
 *이 블로그는 경제적 자유를 돕는 정보를 매일 업데이트합니다.*
+
+## YieldGrower 무료 도구로 이어서 보기
+
+숫자로 바로 확인해 보세요.
+
+- [배당 재투자 계산기](https://yieldgrower.com/)
+- [FIRE 조기은퇴 계산기](https://yieldgrower.com/fire)
+- [인컴 펄스](https://yieldgrower.com/pulse)

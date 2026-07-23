@@ -285,9 +285,85 @@ TOPICS = [
     },
 ]
 
+# Related YieldGrower tools appended to every automated post (path, en label, ko label).
+CTA_BY_SLUG: dict[str, list[tuple[str, str, str]]] = {
+    "dividend-reinvestment-plans": [
+        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
+        ("/fire", "FIRE Calculator", "FIRE 조기은퇴 계산기"),
+        ("/pulse", "Income Pulse", "인컴 펄스"),
+    ],
+    "compound-interest-wealth-building": [
+        ("/compound", "Compound Interest Calculator", "복리 계산기"),
+        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
+        ("/pulse", "Income Pulse", "인컴 펄스"),
+    ],
+    "high-yield-vs-dividend-growth": [
+        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
+        ("/goal", "Dividend Income Goal Calculator", "배당 목표 소득 계산기"),
+        ("/pulse", "Income Pulse", "인컴 펄스"),
+    ],
+    "fire-passive-dividend-income": [
+        ("/fire", "FIRE Calculator", "FIRE 조기은퇴 계산기"),
+        ("/goal", "Dividend Income Goal Calculator", "배당 목표 소득 계산기"),
+        ("/pulse", "Income Pulse", "인컴 펄스"),
+    ],
+    "estimate-retirement-dividend-income": [
+        ("/goal", "Dividend Income Goal Calculator", "배당 목표 소득 계산기"),
+        ("/fire", "FIRE Calculator", "FIRE 조기은퇴 계산기"),
+        ("/pulse", "Income Pulse", "인컴 펄스"),
+    ],
+    "dividend-tax-considerations": [
+        ("/tax", "Dividend Tax Calculator", "배당세 계산기"),
+        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
+        ("/pulse", "Income Pulse", "인컴 펄스"),
+    ],
+    "monthly-contribution-dividend-snowball": [
+        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
+        ("/compound", "Compound Interest Calculator", "복리 계산기"),
+        ("/pulse", "Income Pulse", "인컴 펄스"),
+    ],
+    "common-dividend-investor-mistakes": [
+        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
+        ("/tax", "Dividend Tax Calculator", "배당세 계산기"),
+        ("/pulse", "Income Pulse", "인컴 펄스"),
+    ],
+}
+
+DEFAULT_CTA = [
+    ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
+    ("/fire", "FIRE Calculator", "FIRE 조기은퇴 계산기"),
+    ("/pulse", "Income Pulse", "인컴 펄스"),
+]
+
+SITE = "https://yieldgrower.com"
+
 
 def yaml_escape(text: str) -> str:
     return text.replace("\\", "\\\\").replace('"', "'").replace("\n", " ").strip()
+
+
+def build_cta(topic: dict, *, lang: str = "en") -> str:
+    links = CTA_BY_SLUG.get(topic["slug"], DEFAULT_CTA)
+    if lang == "ko":
+        lines = [
+            "## YieldGrower 무료 도구로 이어서 보기",
+            "",
+            "숫자로 바로 확인해 보세요.",
+            "",
+        ]
+        for path, _en, ko in links:
+            lines.append(f"- [{ko}]({SITE}{path})")
+    else:
+        lines = [
+            "## Try these free YieldGrower tools",
+            "",
+            "Run the numbers before you change your plan.",
+            "",
+        ]
+        for path, en, _ko in links:
+            lines.append(f"- [{en}]({SITE}{path})")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def build_content(topic: dict, *, lang: str = "en") -> str:
@@ -317,7 +393,9 @@ def build_content(topic: dict, *, lang: str = "en") -> str:
         parts.append(body)
         parts.append("")
 
-    parts.extend([next_heading, "", next_body, "", disclaimer])
+    parts.extend(
+        [next_heading, "", next_body, "", disclaimer, "", build_cta(topic, lang=lang)]
+    )
     return "\n".join(parts)
 
 

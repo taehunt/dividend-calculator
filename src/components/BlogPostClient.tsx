@@ -3,7 +3,9 @@
 import ReactMarkdown from "react-markdown";
 import SiteHeader from "@/components/SiteHeader";
 import BlogBackLink from "@/components/BlogBackLink";
+import RelatedTools from "@/components/RelatedTools";
 import { useLocale } from "@/components/LocaleProvider";
+import type { RelatedToolsKey } from "@/lib/related-tools";
 
 type Props = {
   title: string;
@@ -11,6 +13,7 @@ type Props = {
   date: string;
   content: string;
   contentKo?: string;
+  relatedPage?: RelatedToolsKey;
 };
 
 export default function BlogPostClient({
@@ -19,6 +22,7 @@ export default function BlogPostClient({
   date,
   content,
   contentKo,
+  relatedPage = "dividend",
 }: Props) {
   const { lang } = useLocale();
   const displayTitle = lang === "ko" && titleKo ? titleKo : title;
@@ -45,6 +49,7 @@ export default function BlogPostClient({
             <ReactMarkdown>{displayContent}</ReactMarkdown>
           </div>
         </article>
+        <RelatedTools page={relatedPage} />
       </main>
     </div>
   );

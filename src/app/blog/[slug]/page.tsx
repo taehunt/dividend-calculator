@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getPostData, getSortedPostsData } from "@/lib/posts";
 import BlogPostClient from "@/components/BlogPostClient";
+import { relatedToolsKeyFromSlug } from "@/lib/blog-related";
 import { pageMeta } from "@/lib/seo";
 
 export function generateStaticParams() {
@@ -38,6 +39,7 @@ export default async function Post({
       date={postData.date}
       content={postData.content}
       contentKo={postData.contentKo}
+      relatedPage={relatedToolsKeyFromSlug(slug)}
     />
   );
 }
