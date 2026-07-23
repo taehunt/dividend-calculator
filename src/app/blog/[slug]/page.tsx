@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { getPostData, getSortedPostsData } from "@/lib/posts";
 import ReactMarkdown from "react-markdown";
-import { ArrowLeft } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
+import BlogBackLink from "@/components/BlogBackLink";
 
 export function generateStaticParams() {
   return getSortedPostsData().map((post) => ({
@@ -20,17 +19,14 @@ export default async function Post({
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      <SiteHeader active="blog" showLocaleControls showCurrencyControls={false} />
+      <SiteHeader
+        active="blog"
+        showLocaleControls
+        showCurrencyControls={false}
+      />
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-8">
-          <Link
-            href="/blog"
-            className="text-sm font-medium text-slate-600 hover:text-indigo-600 inline-flex items-center gap-1"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to Blog
-          </Link>
-        </div>
+        <BlogBackLink />
         <article className="bg-white p-8 sm:p-12 rounded-2xl shadow-sm border border-slate-200">
           <header className="mb-10 text-center border-b border-slate-100 pb-8">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
