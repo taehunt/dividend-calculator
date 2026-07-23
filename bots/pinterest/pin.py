@@ -1,6 +1,6 @@
+import base64
 import os
 import random
-import time
 import requests
 from PIL import Image, ImageDraw, ImageFont
 
@@ -80,67 +80,39 @@ def generate_image():
     )
 
     image_path = "pinterest_pin.jpg"
-    image.save(image_path, quality=92)
+    image.save(image_path, quality=90)
     return image_path, title.replace("\n", " "), subtitle.replace("\n", " ")
 
 
-def register_media(headers):
-    response = requests.post(
-        "https://api.pinterest.com/v5/media",
-        headers=headers,
-        json={"media_type": "image"},
-        timeout=30,
-    )
-    response.raise_for_status()
-    data = response.json()
-    return data["media_id"], data["upload_url"]
-
-
-def upload_image(upload_url, image_path):
+def create_pin(image_path, title, description):
     with open(image_path, "rb") as file:
-        response = requests.put(
-            upload_url,
-            data=file,
-            headers={"Content-Type": "image/jpeg"},
-            timeout=60,
-        )
-    response.raise_for_status()
+        image_b64 = base64.b64encode(file.read()).decode("utf-8")
 
-
-def wait_for_media(headers, media_id, retries=10):
-    for _ in range(retries):
-        response = requests.get(
-            f"https://api.pinterest.com/v5/media/{media_id}",
-            headers=headers,
-            timeout=30,
-        )
-        response.raise_for_status()
-        status = response.json().get("status")
-        if status == "succeeded":
-            return
-        if status == "failed":
-            raise RuntimeError(f"Media processing failed: {response.text}")
-        time.sleep(2)
-    raise RuntimeError("Media processing timed out")
-
-
-def create_pin(headers, media_id, title, description):
+    headers = {
+        "Authorization": f"Bearer {PINTEREST_ACCESS_TOKEN}",
+        "Content-Type": "application/json",
+    }
     payload = {
         "board_id": BOARD_ID,
         "title": title[:100],
         "description": f"{description} Free dividend reinvestment calculator.",
         "link": SITE_URL,
+        "alt_text": title[:500],
         "media_source": {
-            "source_type": "image_upload",
-            "media_id": media_id,
+            "source_type": "image_base64",
+            "content_type": "image/jpeg",
+            "data": image_b64,
         },
     }
+
     response = requests.post(
         "https://api.pinterest.com/v5/pins",
         headers=headers,
         json=payload,
-        timeout=30,
+        timeout=60,
     )
+    print(f"Status: {response.status_code}")
+    print(f"Response: {response.text}")
     response.raise_for_status()
     return response.json()
 
@@ -149,25 +121,11 @@ def main():
     if not PINTEREST_ACCESS_TOKEN or not BOARD_ID:
         raise RuntimeError("Missing PINTEREST_ACCESS_TOKEN or PINTEREST_BOARD_ID")
 
-    headers = {
-        "Authorization": f"Bearer {PINTEREST_ACCESS_TOKEN}",
-        "Content-Type": "application/json",
-    }
-
     image_path, title, description = generate_image()
     print(f"Generated image: {image_path}")
     print(f"Title: {title}")
 
-    media_id, upload_url = register_media(headers)
-    print(f"Registered media: {media_id}")
-
-    upload_image(upload_url, image_path)
-    print("Uploaded image bytes")
-
-    wait_for_media(headers, media_id)
-    print("Media processing succeeded")
-
-    pin = create_pin(headers, media_id, title, description)
+    pin = create_pin(image_path, title, description)
     print(f"Pin created successfully: {pin.get('id')}")
 
 
