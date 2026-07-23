@@ -13,7 +13,6 @@ import {
 } from "recharts";
 import {
   Calculator,
-  Calendar,
   Flame,
   TrendingUp,
 } from "lucide-react";
@@ -26,6 +25,9 @@ import { useMoneyValue } from "@/hooks/useMoneyValue";
 
 type TargetMode = "auto" | "manual";
 
+/** Hard safety cap — projection stops at FIRE or this year. */
+const MAX_PROJECTION_YEARS = 80;
+
 const copy = {
   en: {
     title: "FIRE Calculator",
@@ -37,8 +39,6 @@ const copy = {
     annualExpenses: "Annual Living Expenses",
     expectedReturn: "Expected Annual Return",
     safeWithdraw: "Safe Withdrawal Rate",
-    maxYears: "Max Years to Project",
-    years: "Yrs",
     fireNumber: "FIRE Target",
     yearsToFire: "Years to FIRE",
     monthlyIncome: "Passive Income at FIRE",
@@ -48,7 +48,7 @@ const copy = {
     portfolio: "Portfolio",
     fireTarget: "FIRE Target",
     reached: "FIRE reached",
-    notReached: "Not reached in projection window",
+    notReached: "Not reachable with these inputs",
     invalidSwr: "Enter a withdrawal rate above 0%",
     invalidTarget: "Enter a FIRE target above 0",
     targetMode: "How to set your FIRE target",
@@ -70,8 +70,6 @@ const copy = {
     annualExpenses: "연간 생활비",
     expectedReturn: "예상 연수익률",
     safeWithdraw: "안전 인출률",
-    maxYears: "최대 계산 기간",
-    years: "년",
     fireNumber: "FIRE 목표 금액",
     yearsToFire: "FIRE까지 기간",
     monthlyIncome: "FIRE 시점 월 수동소득",
@@ -81,7 +79,7 @@ const copy = {
     portfolio: "자산",
     fireTarget: "FIRE 목표",
     reached: "FIRE 도달",
-    notReached: "계산 기간 내 미도달",
+    notReached: "현재 입력값으로는 도달하기 어려움",
     invalidSwr: "안전 인출률은 0%보다 커야 합니다",
     invalidTarget: "FIRE 목표 금액은 0보다 커야 합니다",
     targetMode: "FIRE 목표 설정 방식",
@@ -103,7 +101,6 @@ export default function FireCalculatorPage() {
   const [customTarget, setCustomTarget] = useMoneyValue(1_000_000);
   const [expectedReturn, setExpectedReturn] = useState(7);
   const [safeWithdraw, setSafeWithdraw] = useState(4);
-  const [maxYears, setMaxYears] = useState(40);
   const [targetMode, setTargetMode] = useState<TargetMode>("auto");
 
   const t = copy[lang];
@@ -135,7 +132,7 @@ export default function FireCalculatorPage() {
     let yearsToFire: number | null = null;
     let portfolioAtFire = currentSavings;
 
-    for (let year = 1; year <= maxYears; year++) {
+    for (let year = 1; year <= MAX_PROJECTION_YEARS; year++) {
       for (let month = 0; month < 12; month++) {
         balance += monthlyContribution;
         balance *= 1 + monthlyRate;
@@ -151,6 +148,7 @@ export default function FireCalculatorPage() {
       if (targetValid && yearsToFire === null && balance >= fireNumber!) {
         yearsToFire = year;
         portfolioAtFire = rounded;
+        break; // stop at FIRE — no need for a user-set max horizon
       }
     }
 
@@ -182,7 +180,6 @@ export default function FireCalculatorPage() {
     currentSavings,
     customTarget,
     expectedReturn,
-    maxYears,
     monthlyContribution,
     safeWithdraw,
     targetMode,
@@ -325,13 +322,6 @@ export default function FireCalculatorPage() {
               value={safeWithdraw}
               onChange={(v) => setSafeWithdraw(Math.max(0, v))}
               suffix="%"
-            />
-            <NumberField
-              label={t.maxYears}
-              icon={Calendar}
-              value={maxYears}
-              onChange={setMaxYears}
-              suffix={t.years}
             />
           </div>
 
