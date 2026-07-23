@@ -238,6 +238,7 @@ export default function DividendCalculator() {
             </button>
             <nav className="hidden md:flex gap-6 text-sm font-medium text-slate-600 border-l border-slate-200 pl-6">
               <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-indigo-600 transition-colors">{t.navCalc}</button>
+              <a href="/fire" className="hover:text-indigo-600 transition-colors">FIRE</a>
               <a href="/blog" className="hover:text-indigo-600 transition-colors">Blog</a>
               <button onClick={() => document.getElementById('resources')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-indigo-600 transition-colors">{t.navRes}</button>
               <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-indigo-600 transition-colors">{t.navAbout}</button>
