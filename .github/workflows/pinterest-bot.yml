@@ -2,7 +2,7 @@ name: Pinterest Auto Posting Bot
 
 on:
   schedule:
-    # 매일 UTC 기준 14시 (한국 시간 밤 11시)에 실행
+    # 매일 UTC 14:00 = 한국시간 23:00
     - cron: '0 14 * * *'
   workflow_dispatch:
 
