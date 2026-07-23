@@ -1,9 +1,9 @@
 name: Twitter Auto Posting Bot
 
 on:
-  schedule:
-    # Pulse 갱신(UTC 21:00) 직후 — 한국시간 오전 7시
-    - cron: '0 22 * * *'
+  # X API credits depleted — keep manual-only until paid access is restored.
+  # schedule:
+  #   - cron: '0 22 * * *'
   workflow_dispatch:
 
 jobs:
