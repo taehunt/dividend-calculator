@@ -211,11 +211,6 @@ export default function DividendCalculator() {
           </button>
 
           <PulseTeaser />
-
-          {/* Top Ad Slot (Leaderboard) */}
-          <div className="w-full max-w-3xl mx-auto h-[90px] bg-slate-100 border border-slate-200 border-dashed rounded-lg flex items-center justify-center text-slate-400 text-sm mb-8 print:hidden">
-            [Google AdSense - Top Leaderboard (728x90)]
-          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -345,13 +340,8 @@ export default function DividendCalculator() {
               </div>
             </div>
 
-            {/* Middle Ad Slot (In-article) */}
-            <div className="w-full h-[100px] bg-slate-100 border border-slate-200 border-dashed rounded-xl flex items-center justify-center text-slate-400 text-sm mt-6 mb-2 print:hidden">
-              [Google AdSense - In-article Ad (Responsive)]
-            </div>
-
             {/* Chart Area */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mt-6">
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <h3 className="text-xl font-bold text-slate-900">{t.chartTitle}</h3>
@@ -433,12 +423,7 @@ export default function DividendCalculator() {
           </motion.div>
         </div>
 
-        {/* Bottom Ad Slot (Multiplex/Native) */}
-        <div className="w-full max-w-7xl mx-auto h-[150px] bg-slate-100 border border-slate-200 border-dashed rounded-xl flex items-center justify-center text-slate-400 text-sm mt-16 print:hidden">
-          [Google AdSense - Multiplex / Native Ads]
-        </div>
-
-        {/* Resources Section (SEO & AdSense Content) */}
+        {/* Resources Section */}
         <div id="resources" className="mt-24 pt-16 border-t border-slate-200">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-slate-900">{t.resTitle}</h2>
