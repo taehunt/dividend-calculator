@@ -21,6 +21,7 @@ const copy = {
     subtitle:
       "Daily insights on dividend investing, compound interest, and financial independence.",
     readMore: "Read more →",
+    rss: "RSS feed",
   },
   ko: {
     back: "전체 도구로",
@@ -28,6 +29,7 @@ const copy = {
     subtitle:
       "배당 투자, 복리, 경제적 자립에 대한 인사이트를 제공합니다.",
     readMore: "더 읽기 →",
+    rss: "RSS 피드",
   },
 };
 
@@ -57,6 +59,12 @@ export default function BlogIndexClient({ posts }: { posts: PostMeta[] }) {
             {t.title}
           </h1>
           <p className="text-lg text-slate-600">{t.subtitle}</p>
+          <a
+            href="/feed.xml"
+            className="inline-block mt-3 text-sm font-medium text-indigo-600 hover:underline"
+          >
+            {t.rss}
+          </a>
         </div>
 
         <div className="space-y-8">
