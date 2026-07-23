@@ -77,6 +77,10 @@ Rules:
     return json.loads(text)
 
 
+def yaml_escape(text: str) -> str:
+    return text.replace("\\", "\\\\").replace('"', "'").replace("\n", " ").strip()
+
+
 def write_post(article: dict) -> Path:
     today = date.today().isoformat()
     slug = f"{today}-{slugify(article['title'])}"
@@ -88,12 +92,14 @@ def write_post(article: dict) -> Path:
         print(f"Post already exists: {path}")
         return path
 
+    title = yaml_escape(article["title"])
+    excerpt = yaml_escape(article["excerpt"])
     frontmatter = (
-        f"---\n"
-        f"title: \"{article['title'].replace('\"', \"'\")}\"\n"
-        f"date: \"{today}\"\n"
-        f"excerpt: \"{article['excerpt'].replace('\"', \"'")}\"\n"
-        f"---\n\n"
+        "---\n"
+        f'title: "{title}"\n'
+        f'date: "{today}"\n'
+        f'excerpt: "{excerpt}"\n'
+        "---\n\n"
     )
     path.write_text(frontmatter + article["content"].strip() + "\n", encoding="utf-8")
     print(f"Created post: {path}")
