@@ -47,6 +47,7 @@ const copy = {
     fireTarget: "FIRE Target",
     reached: "FIRE reached",
     notReached: "Not reached in projection window",
+    invalidSwr: "Enter a withdrawal rate above 0%",
     tipTitle: "How this calculator works",
     tipBody:
       "Your FIRE number is annual expenses divided by the safe withdrawal rate. The chart projects monthly contributions and compound growth until your portfolio crosses that target.",
@@ -73,6 +74,7 @@ const copy = {
     fireTarget: "FIRE 목표",
     reached: "FIRE 도달",
     notReached: "계산 기간 내 미도달",
+    invalidSwr: "안전 인출률은 0%보다 커야 합니다",
     tipTitle: "계산 방식",
     tipBody:
       "FIRE 목표 금액 = 연간 생활비 ÷ 안전 인출률입니다. 월 저축과 복리 수익을 반영해 목표가 넘는 시점을 찾습니다.",
@@ -92,10 +94,19 @@ export default function FireCalculatorPage() {
   const moneySuffix = currency === "KRW" ? "원" : "USD";
 
   const result = useMemo(() => {
-    const fireNumber = annualExpenses / (safeWithdraw / 100);
+    // SWR of 0% makes FIRE number undefined (expenses ÷ 0).
+    const swrValid = safeWithdraw > 0;
+    const fireNumber = swrValid
+      ? annualExpenses / (safeWithdraw / 100)
+      : null;
+
     let balance = currentSavings;
     const monthlyRate = expectedReturn / 100 / 12;
-    const rows: { year: number; portfolio: number; fireTarget: number }[] = [];
+    const rows: {
+      year: number;
+      portfolio: number;
+      fireTarget: number | null;
+    }[] = [];
     let yearsToFire: number | null = null;
     let portfolioAtFire = currentSavings;
 
@@ -109,17 +120,28 @@ export default function FireCalculatorPage() {
       rows.push({
         year,
         portfolio: rounded,
-        fireTarget: Math.round(fireNumber),
+        fireTarget:
+          fireNumber !== null && Number.isFinite(fireNumber)
+            ? Math.round(fireNumber)
+            : null,
       });
 
-      if (yearsToFire === null && balance >= fireNumber) {
+      if (
+        fireNumber !== null &&
+        Number.isFinite(fireNumber) &&
+        yearsToFire === null &&
+        balance >= fireNumber
+      ) {
         yearsToFire = year;
         portfolioAtFire = rounded;
       }
     }
 
     return {
-      fireNumber: Math.round(fireNumber),
+      fireNumber:
+        fireNumber !== null && Number.isFinite(fireNumber)
+          ? Math.round(fireNumber)
+          : null,
       yearsToFire,
       portfolioAtFire:
         yearsToFire === null
@@ -127,6 +149,7 @@ export default function FireCalculatorPage() {
           : portfolioAtFire,
       monthlyIncome: Math.round((annualExpenses || 0) / 12),
       rows,
+      swrValid,
     };
   }, [
     annualExpenses,
@@ -137,12 +160,26 @@ export default function FireCalculatorPage() {
     safeWithdraw,
   ]);
 
-  const formatCurrency = (value: number) =>
-    new Intl.NumberFormat(currency === "USD" ? "en-US" : "ko-KR", {
+  const formatCurrency = (value: number) => {
+    if (!Number.isFinite(value)) return "—";
+    return new Intl.NumberFormat(currency === "USD" ? "en-US" : "ko-KR", {
       style: "currency",
       currency,
       maximumFractionDigits: 0,
     }).format(value);
+  };
+
+  const formatAxis = (value: number) => {
+    if (!Number.isFinite(value)) return "—";
+    if (currency === "USD") {
+      if (Math.abs(value) >= 1_000_000)
+        return `$${(value / 1_000_000).toFixed(1)}M`;
+      return `$${(value / 1000).toFixed(0)}k`;
+    }
+    if (Math.abs(value) >= 100_000_000)
+      return `₩${(value / 100_000_000).toFixed(1)}억`;
+    return `₩${(value / 10_000).toFixed(0)}만`;
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
@@ -202,7 +239,7 @@ export default function FireCalculatorPage() {
               label={t.safeWithdraw}
               icon={TrendingUp}
               value={safeWithdraw}
-              onChange={setSafeWithdraw}
+              onChange={(v) => setSafeWithdraw(Math.max(0, v))}
               suffix="%"
             />
             <NumberField
@@ -220,8 +257,14 @@ export default function FireCalculatorPage() {
                 <p className="text-sm font-semibold text-slate-500 mb-1">
                   {t.fireNumber}
                 </p>
-                <p className="text-3xl font-bold text-slate-900">
-                  {formatCurrency(result.fireNumber)}
+                <p
+                  className={`font-bold text-slate-900 ${
+                    result.fireNumber === null ? "text-base leading-snug" : "text-3xl"
+                  }`}
+                >
+                  {result.fireNumber === null
+                    ? t.invalidSwr
+                    : formatCurrency(result.fireNumber)}
                 </p>
               </div>
               <div className="bg-white rounded-2xl border border-slate-200 p-6">
@@ -229,9 +272,11 @@ export default function FireCalculatorPage() {
                   {t.yearsToFire}
                 </p>
                 <p className="text-3xl font-bold text-indigo-600">
-                  {result.yearsToFire === null
-                    ? t.notReached
-                    : `${result.yearsToFire}${lang === "ko" ? "년" : " yrs"}`}
+                  {!result.swrValid
+                    ? "—"
+                    : result.yearsToFire === null
+                      ? t.notReached
+                      : `${result.yearsToFire}${lang === "ko" ? "년" : " yrs"}`}
                 </p>
                 {result.yearsToFire !== null && (
                   <p className="text-xs text-emerald-600 mt-1 font-medium">
@@ -273,17 +318,15 @@ export default function FireCalculatorPage() {
                       tickLine={false}
                     />
                     <YAxis
-                      tickFormatter={(v) =>
-                        currency === "USD"
-                          ? `$${(v / 1000).toFixed(0)}k`
-                          : `₩${(v / 10000).toFixed(0)}만`
-                      }
+                      tickFormatter={formatAxis}
                       axisLine={false}
                       tickLine={false}
                     />
                     <Tooltip
                       formatter={(value: any, name: any) => [
-                        formatCurrency(Number(value)),
+                        value == null || !Number.isFinite(Number(value))
+                          ? "—"
+                          : formatCurrency(Number(value)),
                         name === "portfolio" ? t.portfolio : t.fireTarget,
                       ]}
                     />
@@ -301,15 +344,17 @@ export default function FireCalculatorPage() {
                       fill="#4f46e5"
                       strokeWidth={3}
                     />
-                    <Area
-                      type="monotone"
-                      dataKey="fireTarget"
-                      name="fireTarget"
-                      stroke="#f97316"
-                      fillOpacity={0}
-                      strokeWidth={2}
-                      strokeDasharray="6 4"
-                    />
+                    {result.swrValid && (
+                      <Area
+                        type="monotone"
+                        dataKey="fireTarget"
+                        name="fireTarget"
+                        stroke="#f97316"
+                        fillOpacity={0}
+                        strokeWidth={2}
+                        strokeDasharray="6 4"
+                      />
+                    )}
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
