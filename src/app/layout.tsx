@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import SiteFooter from "@/components/SiteFooter";
+import JsonLd from "@/components/JsonLd";
+import { organizationJsonLd, webSiteJsonLd } from "@/lib/json-ld";
 import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -43,8 +45,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ colorScheme: "light" }}>
       <head>
+        <meta name="color-scheme" content="light" />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8003367600295337"
@@ -52,6 +55,7 @@ export default function RootLayout({
         ></script>
       </head>
       <body className={`${inter.className} bg-slate-50 text-slate-900`}>
+        <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
         <LocaleProvider>
           {children}
           <SiteFooter />

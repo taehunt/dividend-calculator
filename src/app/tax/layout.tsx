@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
+import { webAppJsonLd } from "@/lib/json-ld";
 import { pageMeta } from "@/lib/seo";
 
+const title = "Dividend Tax Calculator — Net Yield After Tax";
+const description =
+  "Estimate net dividend income after tax and see how tax drag affects DRIP reinvestment. Free after-tax dividend calculator.";
+
 export const metadata: Metadata = pageMeta({
-  title: "Dividend Tax Calculator — Net Yield After Tax",
-  description:
-    "Estimate net dividend income after tax and see how tax drag affects DRIP reinvestment. Free after-tax dividend calculator.",
+  title,
+  description,
   path: "/tax",
   keywords: [
     "dividend tax calculator",
@@ -19,5 +24,16 @@ export default function TaxLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <JsonLd
+        data={webAppJsonLd({
+          name: "YieldGrower Dividend Tax Calculator",
+          path: "/tax",
+          description,
+        })}
+      />
+      {children}
+    </>
+  );
 }

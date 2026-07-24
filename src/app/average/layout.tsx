@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
+import { webAppJsonLd } from "@/lib/json-ld";
 import { pageMeta } from "@/lib/seo";
 
+const title = "Average Cost Calculator — Stock & DCA Cost Basis";
+const description =
+  "Free average cost calculator for stocks and ETFs. Track cost basis across multiple buys, averaging down or up, and see unrealized P/L.";
+
 export const metadata: Metadata = pageMeta({
-  title: "Average Cost Calculator — Stock & DCA Cost Basis",
-  description:
-    "Free average cost calculator for stocks and ETFs. Track cost basis across multiple buys, averaging down or up, and see unrealized P/L.",
+  title,
+  description,
   path: "/average",
   keywords: [
     "average cost calculator",
@@ -20,5 +25,16 @@ export default function AverageLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <JsonLd
+        data={webAppJsonLd({
+          name: "YieldGrower Average Cost Calculator",
+          path: "/average",
+          description,
+        })}
+      />
+      {children}
+    </>
+  );
 }

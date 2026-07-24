@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
+import { webAppJsonLd } from "@/lib/json-ld";
 import { pageMeta } from "@/lib/seo";
 
+const title = "CAGR Calculator — Compound Annual Growth Rate";
+const description =
+  "Free CAGR calculator: measure annualized growth between a starting and ending portfolio value over any time period.";
+
 export const metadata: Metadata = pageMeta({
-  title: "CAGR Calculator — Compound Annual Growth Rate",
-  description:
-    "Free CAGR calculator: measure annualized growth between a starting and ending portfolio value over any time period.",
+  title,
+  description,
   path: "/cagr",
   keywords: [
     "CAGR calculator",
@@ -19,5 +24,16 @@ export default function CagrLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <JsonLd
+        data={webAppJsonLd({
+          name: "YieldGrower CAGR Calculator",
+          path: "/cagr",
+          description,
+        })}
+      />
+      {children}
+    </>
+  );
 }

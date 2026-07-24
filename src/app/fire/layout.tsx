@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
+import { webAppJsonLd } from "@/lib/json-ld";
 import { pageMeta } from "@/lib/seo";
 
+const title = "FIRE Calculator — When Can You Retire Early?";
+const description =
+  "Free FIRE calculator: estimate when your portfolio can cover living expenses with contributions, expected returns, and safe withdrawal rate. Plan Financial Independence, Retire Early.";
+
 export const metadata: Metadata = pageMeta({
-  title: "FIRE Calculator — When Can You Retire Early?",
-  description:
-    "Free FIRE calculator: estimate when your portfolio can cover living expenses with contributions, expected returns, and safe withdrawal rate. Plan Financial Independence, Retire Early.",
+  title,
+  description,
   path: "/fire",
   keywords: [
     "FIRE calculator",
@@ -20,5 +25,16 @@ export default function FireLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <JsonLd
+        data={webAppJsonLd({
+          name: "YieldGrower FIRE Calculator",
+          path: "/fire",
+          description,
+        })}
+      />
+      {children}
+    </>
+  );
 }

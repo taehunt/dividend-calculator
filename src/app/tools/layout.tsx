@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
+import { webAppJsonLd } from "@/lib/json-ld";
 import { pageMeta } from "@/lib/seo";
 
+const title = "Investment Tools — Dividend, FIRE & Growth Calculators";
+const description =
+  "Free YieldGrower tools: Income Pulse, DRIP dividend calculator, FIRE planner, compound interest, tax, CAGR, inflation, and more.";
+
 export const metadata: Metadata = pageMeta({
-  title: "Investment Tools — Dividend, FIRE & Growth Calculators",
-  description:
-    "Free YieldGrower tools: Income Pulse, DRIP dividend calculator, FIRE planner, compound interest, tax, CAGR, inflation, and more.",
+  title,
+  description,
   path: "/tools",
   keywords: [
     "investment calculators",
@@ -19,5 +24,16 @@ export default function ToolsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <JsonLd
+        data={webAppJsonLd({
+          name: "YieldGrower Investment Tools",
+          path: "/tools",
+          description,
+        })}
+      />
+      {children}
+    </>
+  );
 }

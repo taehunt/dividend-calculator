@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
+import { webAppJsonLd } from "@/lib/json-ld";
 import { pageMeta } from "@/lib/seo";
 
+const title = "Dividend Income Goal Calculator — Portfolio Size Needed";
+const description =
+  "Calculate how large a portfolio you need for a target monthly dividend income, including yield and tax assumptions.";
+
 export const metadata: Metadata = pageMeta({
-  title: "Dividend Income Goal Calculator — Portfolio Size Needed",
-  description:
-    "Calculate how large a portfolio you need for a target monthly dividend income, including yield and tax assumptions.",
+  title,
+  description,
   path: "/goal",
   keywords: [
     "dividend income goal calculator",
@@ -19,5 +24,16 @@ export default function GoalLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <JsonLd
+        data={webAppJsonLd({
+          name: "YieldGrower Dividend Income Goal Calculator",
+          path: "/goal",
+          description,
+        })}
+      />
+      {children}
+    </>
+  );
 }
