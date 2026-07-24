@@ -6,23 +6,6 @@ import type { IncomePulse } from "@/lib/income-pulse";
 import { pageMeta } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
-export const metadata: Metadata = pageMeta({
-  title: "Income Pulse — Daily Dividend Attractiveness Score",
-  description:
-    "Free daily Income Pulse: YieldGrower’s dividend attractiveness score vs 10Y Treasuries, CPI inflation, VIX, and popular dividend ETF yields (SCHD, VYM, JEPI, and more).",
-  path: "/pulse",
-  keywords: [
-    "income pulse",
-    "dividend attractiveness score",
-    "dividend ETF yield",
-    "treasury yield vs dividend",
-    "SCHD yield",
-    "real yield",
-    "FIRE income",
-    "YieldGrower",
-  ],
-});
-
 async function loadPulse(): Promise<IncomePulse> {
   const filePath = path.join(
     process.cwd(),
@@ -34,7 +17,36 @@ async function loadPulse(): Promise<IncomePulse> {
   return JSON.parse(raw) as IncomePulse;
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await loadPulse();
+  const score = data.score ?? "—";
+  const label = data.scoreLabel.en;
+  const title = `Income Pulse ${score}/100 (${label}) — Daily Dividend Score`;
+  const description =
+    data.brief.en.length > 155
+      ? `${data.brief.en.slice(0, 152)}...`
+      : data.brief.en;
+
+  return pageMeta({
+    title,
+    description,
+    path: "/pulse",
+    keywords: [
+      "income pulse",
+      "dividend attractiveness score",
+      `dividend score ${score}`,
+      "dividend ETF yield",
+      "treasury yield vs dividend",
+      "SCHD yield",
+      "real yield",
+      "FIRE income",
+      "YieldGrower",
+    ],
+  });
+}
+
 function jsonLd(data: IncomePulse) {
+  const score = data.score ?? "—";
   return {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -47,8 +59,7 @@ function jsonLd(data: IncomePulse) {
       price: "0",
       priceCurrency: "USD",
     },
-    description:
-      "Daily dividend attractiveness score comparing dividend ETF yields with Treasuries, inflation, and market stress.",
+    description: `Today’s Attractiveness Score: ${score}/100 (${data.scoreLabel.en}). ${data.brief.en}`,
     dateModified: data.updatedAt,
     provider: {
       "@type": "Organization",
