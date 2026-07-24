@@ -107,3 +107,33 @@ export function breadcrumbJsonLd(
     })),
   };
 }
+
+export function blogIndexJsonLd(
+  posts: { slug: string; title: string; date: string }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "YieldGrower Investment Blog",
+    description:
+      "Articles on dividend investing, DRIP, compound interest, and financial independence.",
+    url: `${SITE_URL}/blog`,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "YieldGrower",
+      url: SITE_URL,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: posts.map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${SITE_URL}/blog/${post.slug}`,
+        name: post.title,
+        datePublished: post.date.includes("T")
+          ? post.date
+          : `${post.date}T00:00:00.000Z`,
+      })),
+    },
+  };
+}

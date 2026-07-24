@@ -1,5 +1,7 @@
 import { getSortedPostsData } from "@/lib/posts";
 import BlogIndexClient from "@/components/BlogIndexClient";
+import JsonLd from "@/components/JsonLd";
+import { blogIndexJsonLd, breadcrumbJsonLd } from "@/lib/json-ld";
 
 export default function BlogIndex() {
   const posts = getSortedPostsData().map(
@@ -13,5 +15,20 @@ export default function BlogIndex() {
     })
   );
 
-  return <BlogIndexClient posts={posts} />;
+  return (
+    <>
+      <JsonLd
+        data={[
+          blogIndexJsonLd(
+            posts.map(({ slug, title, date }) => ({ slug, title, date }))
+          ),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+          ]),
+        ]}
+      />
+      <BlogIndexClient posts={posts} />
+    </>
+  );
 }
