@@ -1,3 +1,4 @@
+import type { RelatedTool } from "@/lib/related-tools";
 import { SITE_URL } from "@/lib/site";
 
 export function organizationJsonLd() {
@@ -133,6 +134,32 @@ export function blogIndexJsonLd(
         datePublished: post.date.includes("T")
           ? post.date
           : `${post.date}T00:00:00.000Z`,
+      })),
+    },
+  };
+}
+
+export function toolsIndexJsonLd(tools: RelatedTool[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "YieldGrower Investment Tools",
+    description:
+      "Free dividend, FIRE, compound, tax, and income planning calculators.",
+    url: `${SITE_URL}/tools`,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "YieldGrower",
+      url: SITE_URL,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: tools.map((tool, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: tool.href === "/" ? SITE_URL : `${SITE_URL}${tool.href}`,
+        name: tool.title.en,
+        description: tool.desc.en,
       })),
     },
   };

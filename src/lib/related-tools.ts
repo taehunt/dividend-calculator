@@ -104,6 +104,19 @@ export type RelatedToolsKey =
   | "inflation"
   | "pulse";
 
+/** Full catalog for /tools hub structured data and menus. */
+export const catalogTools: RelatedTool[] = [
+  tools.pulse,
+  tools.dividend,
+  tools.fire,
+  tools.average,
+  tools.tax,
+  tools.compound,
+  tools.goal,
+  tools.cagr,
+  tools.inflation,
+];
+
 export const relatedToolsMap: Record<RelatedToolsKey, RelatedTool[]> = {
   dividend: [tools.fire, tools.goal, tools.pulse],
   fire: [tools.goal, tools.compound, tools.pulse],

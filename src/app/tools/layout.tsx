@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
-import { webAppJsonLd } from "@/lib/json-ld";
+import {
+  breadcrumbJsonLd,
+  toolsIndexJsonLd,
+  webAppJsonLd,
+} from "@/lib/json-ld";
+import { catalogTools } from "@/lib/related-tools";
 import { pageMeta } from "@/lib/seo";
 
 const title = "Investment Tools — Dividend, FIRE & Growth Calculators";
@@ -27,11 +32,18 @@ export default function ToolsLayout({
   return (
     <>
       <JsonLd
-        data={webAppJsonLd({
-          name: "YieldGrower Investment Tools",
-          path: "/tools",
-          description,
-        })}
+        data={[
+          webAppJsonLd({
+            name: "YieldGrower Investment Tools",
+            path: "/tools",
+            description,
+          }),
+          toolsIndexJsonLd(catalogTools),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Tools", path: "/tools" },
+          ]),
+        ]}
       />
       {children}
     </>
