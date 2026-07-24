@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { usePersistedState } from "@/hooks/usePersistedState";
+import { calcStorageKey } from "@/lib/calculator-storage";
 import { Calculator, Percent } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
@@ -56,10 +58,22 @@ const copy = {
 
 export default function DividendTaxPage() {
   const { lang, currency } = useLocale();
-  const [portfolioValue, setPortfolioValue] = useMoneyValue(100000);
-  const [dividendYield, setDividendYield] = useState(3.5);
-  const [taxRate, setTaxRate] = useState(15);
-  const [years, setYears] = useState(10);
+  const [portfolioValue, setPortfolioValue] = useMoneyValue(
+    100000,
+    calcStorageKey("tax", "portfolioValue")
+  );
+  const [dividendYield, setDividendYield] = usePersistedState(
+    calcStorageKey("tax", "dividendYield"),
+    3.5
+  );
+  const [taxRate, setTaxRate] = usePersistedState(
+    calcStorageKey("tax", "taxRate"),
+    15
+  );
+  const [years, setYears] = usePersistedState(
+    calcStorageKey("tax", "years"),
+    10
+  );
 
   const t = copy[lang];
   const moneySuffix = currency === "KRW" ? "원" : "USD";

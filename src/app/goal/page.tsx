@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { usePersistedState } from "@/hooks/usePersistedState";
+import { calcStorageKey } from "@/lib/calculator-storage";
 import { Calculator, Target } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
@@ -50,10 +52,26 @@ const copy = {
 
 export default function DividendGoalPage() {
   const { lang, currency } = useLocale();
-  const [monthlyGoal, setMonthlyGoal] = useMoneyValue(3000);
-  const [yieldRate, setYieldRate] = useState(3.5);
-  const [taxRate, setTaxRate] = useState(15);
-  const [currentPortfolio, setCurrentPortfolio] = useMoneyValue(50000);
+  const [monthlyGoal, setMonthlyGoal] = useMoneyValue(
+    3000,
+    calcStorageKey("goal", "monthlyGoal"),
+    { urlParam: "g" }
+  );
+  const [yieldRate, setYieldRate] = usePersistedState(
+    calcStorageKey("goal", "yieldRate"),
+    3.5,
+    { urlParam: "y" }
+  );
+  const [taxRate, setTaxRate] = usePersistedState(
+    calcStorageKey("goal", "taxRate"),
+    15,
+    { urlParam: "t" }
+  );
+  const [currentPortfolio, setCurrentPortfolio] = useMoneyValue(
+    50000,
+    calcStorageKey("goal", "currentPortfolio"),
+    { urlParam: "p" }
+  );
 
   const t = copy[lang];
   const moneySuffix = currency === "KRW" ? "원" : "USD";

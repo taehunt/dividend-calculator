@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { usePersistedState } from "@/hooks/usePersistedState";
+import { calcStorageKey } from "@/lib/calculator-storage";
 import {
   Area,
   AreaChart,
@@ -68,10 +70,22 @@ const copy = {
 
 export default function CompoundCalculatorPage() {
   const { lang, currency } = useLocale();
-  const [initial, setInitial] = useMoneyValue(10000);
-  const [monthly, setMonthly] = useMoneyValue(500);
-  const [rate, setRate] = useState(7);
-  const [years, setYears] = useState(20);
+  const [initial, setInitial] = useMoneyValue(
+    10000,
+    calcStorageKey("compound", "initial")
+  );
+  const [monthly, setMonthly] = useMoneyValue(
+    500,
+    calcStorageKey("compound", "monthly")
+  );
+  const [rate, setRate] = usePersistedState(
+    calcStorageKey("compound", "rate"),
+    7
+  );
+  const [years, setYears] = usePersistedState(
+    calcStorageKey("compound", "years"),
+    20
+  );
 
   const t = copy[lang];
   const moneySuffix = currency === "KRW" ? "원" : "USD";

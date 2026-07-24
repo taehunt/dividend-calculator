@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { usePersistedState } from "@/hooks/usePersistedState";
+import { calcStorageKey } from "@/lib/calculator-storage";
 import {
   Area,
   AreaChart,
@@ -98,13 +100,41 @@ const copy = {
 
 export default function FireCalculatorPage() {
   const { lang, currency } = useLocale();
-  const [currentSavings, setCurrentSavings] = useMoneyValue(100000);
-  const [monthlyContribution, setMonthlyContribution] = useMoneyValue(2000);
-  const [annualExpenses, setAnnualExpenses] = useMoneyValue(40000);
-  const [customTarget, setCustomTarget] = useMoneyValue(1_000_000);
-  const [expectedReturn, setExpectedReturn] = useState(7);
-  const [safeWithdraw, setSafeWithdraw] = useState(4);
-  const [targetMode, setTargetMode] = useState<TargetMode>("auto");
+  const [currentSavings, setCurrentSavings] = useMoneyValue(
+    100000,
+    calcStorageKey("fire", "currentSavings"),
+    { urlParam: "s" }
+  );
+  const [monthlyContribution, setMonthlyContribution] = useMoneyValue(
+    2000,
+    calcStorageKey("fire", "monthlyContribution"),
+    { urlParam: "m" }
+  );
+  const [annualExpenses, setAnnualExpenses] = useMoneyValue(
+    40000,
+    calcStorageKey("fire", "annualExpenses"),
+    { urlParam: "e" }
+  );
+  const [customTarget, setCustomTarget] = useMoneyValue(
+    1_000_000,
+    calcStorageKey("fire", "customTarget"),
+    { urlParam: "ct" }
+  );
+  const [expectedReturn, setExpectedReturn] = usePersistedState(
+    calcStorageKey("fire", "expectedReturn"),
+    7,
+    { urlParam: "r" }
+  );
+  const [safeWithdraw, setSafeWithdraw] = usePersistedState(
+    calcStorageKey("fire", "safeWithdraw"),
+    4,
+    { urlParam: "sw" }
+  );
+  const [targetMode, setTargetMode] = usePersistedState<TargetMode>(
+    calcStorageKey("fire", "targetMode"),
+    "auto",
+    { urlParam: "mode", urlType: "string" }
+  );
 
   const t = copy[lang];
   const moneySuffix = currency === "KRW" ? "원" : "USD";

@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { usePersistedState } from "@/hooks/usePersistedState";
+import { calcStorageKey } from "@/lib/calculator-storage";
 import {
   Area,
   AreaChart,
@@ -66,9 +68,18 @@ const copy = {
 
 export default function InflationCalculatorPage() {
   const { lang, currency } = useLocale();
-  const [amount, setAmount] = useMoneyValue(50000);
-  const [rate, setRate] = useState(3);
-  const [years, setYears] = useState(20);
+  const [amount, setAmount] = useMoneyValue(
+    50000,
+    calcStorageKey("inflation", "amount")
+  );
+  const [rate, setRate] = usePersistedState(
+    calcStorageKey("inflation", "rate"),
+    3
+  );
+  const [years, setYears] = usePersistedState(
+    calcStorageKey("inflation", "years"),
+    20
+  );
 
   const t = copy[lang];
   const moneySuffix = currency === "KRW" ? "원" : "USD";

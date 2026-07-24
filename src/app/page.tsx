@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
+import { usePersistedState } from '@/hooks/usePersistedState';
+import { calcStorageKey } from '@/lib/calculator-storage';
 import {
   XAxis,
   YAxis,
@@ -109,13 +111,41 @@ const translations = {
 
 export default function DividendCalculator() {
   const { lang, currency } = useLocale();
-  const [initialInvestment, setInitialInvestment] = useMoneyValue(10000);
-  const [monthlyContribution, setMonthlyContribution] = useMoneyValue(500);
-  const [yearsToGrow, setYearsToGrow] = useState<number>(20);
-  const [expectedAnnualReturn, setExpectedAnnualReturn] = useState<number>(7);
-  const [dividendYield, setDividendYield] = useState<number>(3);
-  const [dividendTaxRate, setDividendTaxRate] = useState<number>(15);
-  const [dripEnabled, setDripEnabled] = useState<boolean>(true);
+  const [initialInvestment, setInitialInvestment] = useMoneyValue(
+    10000,
+    calcStorageKey("dividend", "initialInvestment"),
+    { urlParam: "i" }
+  );
+  const [monthlyContribution, setMonthlyContribution] = useMoneyValue(
+    500,
+    calcStorageKey("dividend", "monthlyContribution"),
+    { urlParam: "m" }
+  );
+  const [yearsToGrow, setYearsToGrow] = usePersistedState(
+    calcStorageKey("dividend", "yearsToGrow"),
+    20,
+    { urlParam: "y" }
+  );
+  const [expectedAnnualReturn, setExpectedAnnualReturn] = usePersistedState(
+    calcStorageKey("dividend", "expectedAnnualReturn"),
+    7,
+    { urlParam: "r" }
+  );
+  const [dividendYield, setDividendYield] = usePersistedState(
+    calcStorageKey("dividend", "dividendYield"),
+    3,
+    { urlParam: "dy" }
+  );
+  const [dividendTaxRate, setDividendTaxRate] = usePersistedState(
+    calcStorageKey("dividend", "dividendTaxRate"),
+    15,
+    { urlParam: "t" }
+  );
+  const [dripEnabled, setDripEnabled] = usePersistedState(
+    calcStorageKey("dividend", "dripEnabled"),
+    true,
+    { urlParam: "drip", urlType: "boolean" }
+  );
 
   const t = translations[lang];
   const moneySuffix = currency === 'KRW' ? '원' : 'USD';

@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { usePersistedState } from "@/hooks/usePersistedState";
+import { calcStorageKey } from "@/lib/calculator-storage";
 import { Calculator, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
@@ -47,9 +49,18 @@ const copy = {
 
 export default function CagrCalculatorPage() {
   const { lang, currency } = useLocale();
-  const [startValue, setStartValue] = useMoneyValue(10000);
-  const [endValue, setEndValue] = useMoneyValue(25000);
-  const [years, setYears] = useState(7);
+  const [startValue, setStartValue] = useMoneyValue(
+    10000,
+    calcStorageKey("cagr", "startValue")
+  );
+  const [endValue, setEndValue] = useMoneyValue(
+    25000,
+    calcStorageKey("cagr", "endValue")
+  );
+  const [years, setYears] = usePersistedState(
+    calcStorageKey("cagr", "years"),
+    7
+  );
 
   const t = copy[lang];
   const moneySuffix = currency === "KRW" ? "원" : "USD";

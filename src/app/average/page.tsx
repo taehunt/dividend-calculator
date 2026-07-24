@@ -9,11 +9,21 @@ import RelatedTools from "@/components/RelatedTools";
 import { useLocale } from "@/components/LocaleProvider";
 import DraftNumberInput from "@/components/DraftNumberInput";
 import { convertMoney, toDisplayMoney, type MoneyCurrency } from "@/lib/money";
+import {
+  calcStorageKey,
+  readStoredJson,
+  writeStoredJson,
+} from "@/lib/calculator-storage";
 
 type Purchase = {
   id: number;
   shares: number;
   price: number;
+};
+
+type StoredAverage = {
+  purchases: { id: number; shares: number; priceUsd: number }[];
+  currentPriceUsd: number;
 };
 
 const copy = {
@@ -56,7 +66,7 @@ const copy = {
 };
 
 export default function AverageCalculatorPage() {
-  const { lang, currency } = useLocale();
+  const { lang, currency, ready } = useLocale();
   const [purchases, setPurchases] = useState<Purchase[]>(() => [
     { id: 1, shares: 10, price: toDisplayMoney(100, currency) },
     { id: 2, shares: 20, price: toDisplayMoney(80, currency) },
@@ -65,6 +75,28 @@ export default function AverageCalculatorPage() {
     toDisplayMoney(90, currency)
   );
   const prevCurrency = useRef<MoneyCurrency>(currency);
+  const hydrated = useRef(false);
+
+  useEffect(() => {
+    if (!ready || hydrated.current) return;
+    const stored = readStoredJson<StoredAverage>(
+      calcStorageKey("average", "draft")
+    );
+    if (stored?.purchases?.length) {
+      setPurchases(
+        stored.purchases.map((p) => ({
+          id: p.id,
+          shares: p.shares,
+          price: toDisplayMoney(p.priceUsd, currency),
+        }))
+      );
+      if (typeof stored.currentPriceUsd === "number") {
+        setCurrentPrice(toDisplayMoney(stored.currentPriceUsd, currency));
+      }
+      prevCurrency.current = currency;
+    }
+    hydrated.current = true;
+  }, [ready, currency]);
 
   useEffect(() => {
     if (prevCurrency.current === currency) return;
@@ -78,6 +110,19 @@ export default function AverageCalculatorPage() {
     setCurrentPrice((v) => convertMoney(v, from, currency));
     prevCurrency.current = currency;
   }, [currency]);
+
+  useEffect(() => {
+    if (!ready || !hydrated.current) return;
+    const payload: StoredAverage = {
+      purchases: purchases.map((p) => ({
+        id: p.id,
+        shares: p.shares,
+        priceUsd: convertMoney(p.price, currency, "USD"),
+      })),
+      currentPriceUsd: convertMoney(currentPrice, currency, "USD"),
+    };
+    writeStoredJson(calcStorageKey("average", "draft"), payload);
+  }, [ready, purchases, currentPrice, currency]);
 
   const t = copy[lang];
 
