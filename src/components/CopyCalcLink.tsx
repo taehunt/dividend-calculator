@@ -3,41 +3,50 @@
 import { useState } from "react";
 import { Check, Link2 } from "lucide-react";
 import { useLocale } from "@/components/LocaleProvider";
+import { shareOrCopy } from "@/lib/share";
 import { SITE_URL } from "@/lib/site";
 
 /**
- * Copies the current calculator URL (with synced query params) for sharing.
+ * Shares or copies the current calculator URL (with synced query params).
  */
 export default function CopyCalcLink() {
   const { lang } = useLocale();
-  const [copied, setCopied] = useState(false);
+  const [feedback, setFeedback] = useState<"copied" | "shared" | null>(null);
 
-  const label = lang === "ko" ? "링크 복사" : "Copy link";
-  const done = lang === "ko" ? "복사됨" : "Copied";
+  const label = lang === "ko" ? "링크 공유" : "Share link";
+  const done =
+    feedback === "shared"
+      ? lang === "ko"
+        ? "공유됨"
+        : "Shared"
+      : lang === "ko"
+        ? "복사됨"
+        : "Copied";
 
-  const handleCopy = async () => {
+  const handleShare = async () => {
     const path = `${window.location.pathname}${window.location.search}`;
     const url = `${SITE_URL}${path}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      window.prompt(
-        lang === "ko" ? "아래 링크를 복사하세요" : "Copy the link below",
-        url
-      );
-    }
+    const title =
+      lang === "ko" ? "YieldGrower 계산기" : "YieldGrower Calculator";
+    const result = await shareOrCopy({
+      title,
+      text: title,
+      url,
+      clipboardText: url,
+    });
+    if (result === "cancelled") return;
+    setFeedback(result);
+    window.setTimeout(() => setFeedback(null), 2000);
   };
 
   return (
     <button
       type="button"
-      onClick={handleCopy}
+      onClick={handleShare}
       className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors print:hidden"
     >
-      {copied ? <Check className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}
-      {copied ? done : label}
+      {feedback ? <Check className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}
+      {feedback ? done : label}
     </button>
   );
 }

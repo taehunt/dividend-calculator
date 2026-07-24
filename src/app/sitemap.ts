@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { readFileSync } from "fs";
+import { readFileSync, statSync } from "fs";
 import path from "path";
 import { getSortedPostsData } from "@/lib/posts";
 import { SITE_URL } from "@/lib/site";
@@ -21,7 +21,26 @@ function pulseLastModified(): Date {
   return new Date();
 }
 
+function fileLastModified(relativePath: string): Date {
+  try {
+    return statSync(path.join(process.cwd(), relativePath)).mtime;
+  } catch {
+    return new Date();
+  }
+}
+
+function latestPostDate(): Date {
+  const posts = getSortedPostsData();
+  if (!posts.length) return new Date();
+  return new Date(posts[0].date);
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
+  const pulseDate = pulseLastModified();
+  const blogDate = latestPostDate();
+  const homeDate =
+    pulseDate > blogDate ? pulseDate : blogDate;
+
   const posts = getSortedPostsData().map((post) => ({
     url: `${SITE_URL}/blog/${post.slug}`,
     lastModified: new Date(post.date),
@@ -29,85 +48,56 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  const calculators: {
+    path: string;
+    file: string;
+    priority: number;
+  }[] = [
+    { path: "/fire", file: "src/app/fire/page.tsx", priority: 0.9 },
+    { path: "/average", file: "src/app/average/page.tsx", priority: 0.9 },
+    { path: "/tax", file: "src/app/tax/page.tsx", priority: 0.9 },
+    { path: "/compound", file: "src/app/compound/page.tsx", priority: 0.9 },
+    { path: "/goal", file: "src/app/goal/page.tsx", priority: 0.9 },
+    { path: "/cagr", file: "src/app/cagr/page.tsx", priority: 0.9 },
+    { path: "/inflation", file: "src/app/inflation/page.tsx", priority: 0.9 },
+    { path: "/tools", file: "src/app/tools/page.tsx", priority: 0.8 },
+    { path: "/privacy", file: "src/app/privacy/page.tsx", priority: 0.3 },
+  ];
+
   return [
     {
       url: SITE_URL,
-      lastModified: new Date(),
+      lastModified: homeDate,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: `${SITE_URL}/pulse`,
-      lastModified: pulseLastModified(),
+      lastModified: pulseDate,
       changeFrequency: "daily",
       priority: 1,
     },
     {
       url: `${SITE_URL}/blog`,
-      lastModified: new Date(),
+      lastModified: blogDate,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
       url: `${SITE_URL}/feed.xml`,
-      lastModified: new Date(),
+      lastModified: blogDate,
       changeFrequency: "daily",
       priority: 0.5,
     },
-    {
-      url: `${SITE_URL}/fire`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/average`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/tax`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/compound`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/goal`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/cagr`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/inflation`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/tools`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
+    ...calculators.map((c) => ({
+      url: `${SITE_URL}${c.path}`,
+      lastModified: fileLastModified(c.file),
+      changeFrequency:
+        c.path === "/privacy"
+          ? ("yearly" as const)
+          : ("weekly" as const),
+      priority: c.priority,
+    })),
     ...posts,
   ];
 }

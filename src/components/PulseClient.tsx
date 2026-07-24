@@ -6,8 +6,8 @@ import {
   Activity,
   ArrowRight,
   Check,
-  Copy,
   Flame,
+  Share2,
   Sprout,
   Target,
 } from "lucide-react";
@@ -27,6 +27,7 @@ import {
   type PulseLang,
 } from "@/lib/income-pulse";
 import { formatVisitDelta } from "@/lib/pulse-visit";
+import { shareOrCopy } from "@/lib/share";
 import { SITE_URL } from "@/lib/site";
 
 type Props = {
@@ -52,8 +53,9 @@ const copy = {
     today: "Today",
     deltaBuilding: "Day-over-day change starts tomorrow",
     visitHint: "Come back later to see change since your visit",
-    copyScore: "Copy today’s score",
+    copyScore: "Share today’s score",
     copied: "Copied",
+    shared: "Shared",
     updated: "Updated",
     realYield: "Real Yield",
     realYieldSub: "10Y Treasury minus CPI YoY",
@@ -98,8 +100,9 @@ const copy = {
     today: "오늘",
     deltaBuilding: "전일 대비 변화는 내일부터 표시됩니다",
     visitHint: "다시 방문하면 마지막 방문 대비 변화를 보여줍니다",
-    copyScore: "오늘 점수 복사",
+    copyScore: "오늘 점수 공유",
     copied: "복사됨",
+    shared: "공유됨",
     updated: "업데이트",
     realYield: "실질금리",
     realYieldSub: "미국 10년물 − CPI 전년비",
@@ -194,27 +197,29 @@ export default function PulseClient({ initialData }: Props) {
   const { lang } = useLocale();
   const data = initialData;
   const t = copy[lang];
-  const [copied, setCopied] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState<"copied" | "shared" | null>(
+    null
+  );
   const regimeLabel =
     lang === "ko" ? data.curveRegime.label_ko : data.curveRegime.label_en;
   const delta = scoreDelta(data.history);
   const visitState = usePulseVisitDelta(data);
-  const visitDelta =
-    visitState.status === "changed" ? visitState.delta : null;
 
-  const handleCopy = async () => {
+  const handleShare = async () => {
     const text = buildShareText(data, lang, delta);
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback for older browsers / denied permission
-      window.prompt(
-        lang === "ko" ? "아래 텍스트를 복사하세요" : "Copy the text below",
-        text
-      );
-    }
+    const score = data.score ?? "—";
+    const result = await shareOrCopy({
+      title:
+        lang === "ko"
+          ? `YieldGrower 인컴 펄스 ${score}/100`
+          : `YieldGrower Income Pulse ${score}/100`,
+      text,
+      url: `${SITE_URL}/pulse`,
+      clipboardText: text,
+    });
+    if (result === "cancelled") return;
+    setShareFeedback(result);
+    window.setTimeout(() => setShareFeedback(null), 2000);
   };
 
   return (
@@ -278,15 +283,19 @@ export default function PulseClient({ initialData }: Props) {
               </p>
               <button
                 type="button"
-                onClick={handleCopy}
+                onClick={handleShare}
                 className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
               >
-                {copied ? (
+                {shareFeedback ? (
                   <Check className="w-4 h-4" />
                 ) : (
-                  <Copy className="w-4 h-4" />
+                  <Share2 className="w-4 h-4" />
                 )}
-                {copied ? t.copied : t.copyScore}
+                {shareFeedback === "shared"
+                  ? t.shared
+                  : shareFeedback === "copied"
+                    ? t.copied
+                    : t.copyScore}
               </button>
             </div>
           </div>
