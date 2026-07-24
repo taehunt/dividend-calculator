@@ -22,6 +22,7 @@ import { useMoneyValue } from "@/hooks/useMoneyValue";
 import PulseCallout from "@/components/PulseCallout";
 import CalculatorFaq from "@/components/CalculatorFaq";
 import RelatedTools from "@/components/RelatedTools";
+import CopyCalcLink from "@/components/CopyCalcLink";
 
 const copy = {
   en: {
@@ -70,15 +71,18 @@ export default function InflationCalculatorPage() {
   const { lang, currency } = useLocale();
   const [amount, setAmount] = useMoneyValue(
     50000,
-    calcStorageKey("inflation", "amount")
+    calcStorageKey("inflation", "amount"),
+    { urlParam: "a" }
   );
   const [rate, setRate] = usePersistedState(
     calcStorageKey("inflation", "rate"),
-    3
+    3,
+    { urlParam: "r" }
   );
   const [years, setYears] = usePersistedState(
     calcStorageKey("inflation", "years"),
-    20
+    20,
+    { urlParam: "y" }
   );
 
   const t = copy[lang];
@@ -137,9 +141,12 @@ export default function InflationCalculatorPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 space-y-5">
-            <div className="flex items-center gap-2 mb-2">
-              <Calculator className="w-6 h-6 text-indigo-600" />
-              <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Calculator className="w-6 h-6 text-indigo-600 shrink-0" />
+                <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
+              </div>
+              <CopyCalcLink />
             </div>
             <NumberField label={t.amount} value={amount} onChange={setAmount} suffix={moneySuffix} />
             <NumberField label={t.rate} value={rate} onChange={setRate} suffix="%" />

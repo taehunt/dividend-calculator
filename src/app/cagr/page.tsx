@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
 import CalculatorFaq from "@/components/CalculatorFaq";
 import RelatedTools from "@/components/RelatedTools";
+import CopyCalcLink from "@/components/CopyCalcLink";
 import { useLocale } from "@/components/LocaleProvider";
 import NumberField from "@/components/NumberField";
 import { useMoneyValue } from "@/hooks/useMoneyValue";
@@ -51,15 +52,18 @@ export default function CagrCalculatorPage() {
   const { lang, currency } = useLocale();
   const [startValue, setStartValue] = useMoneyValue(
     10000,
-    calcStorageKey("cagr", "startValue")
+    calcStorageKey("cagr", "startValue"),
+    { urlParam: "s" }
   );
   const [endValue, setEndValue] = useMoneyValue(
     25000,
-    calcStorageKey("cagr", "endValue")
+    calcStorageKey("cagr", "endValue"),
+    { urlParam: "e" }
   );
   const [years, setYears] = usePersistedState(
     calcStorageKey("cagr", "years"),
-    7
+    7,
+    { urlParam: "y" }
   );
 
   const t = copy[lang];
@@ -113,9 +117,12 @@ export default function CagrCalculatorPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 space-y-5">
-            <div className="flex items-center gap-2 mb-2">
-              <Calculator className="w-6 h-6 text-indigo-600" />
-              <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Calculator className="w-6 h-6 text-indigo-600 shrink-0" />
+                <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
+              </div>
+              <CopyCalcLink />
             </div>
             <NumberField
               label={t.startValue}

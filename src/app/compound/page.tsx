@@ -22,6 +22,7 @@ import { useMoneyValue } from "@/hooks/useMoneyValue";
 import PulseCallout from "@/components/PulseCallout";
 import CalculatorFaq from "@/components/CalculatorFaq";
 import RelatedTools from "@/components/RelatedTools";
+import CopyCalcLink from "@/components/CopyCalcLink";
 
 const copy = {
   en: {
@@ -72,19 +73,23 @@ export default function CompoundCalculatorPage() {
   const { lang, currency } = useLocale();
   const [initial, setInitial] = useMoneyValue(
     10000,
-    calcStorageKey("compound", "initial")
+    calcStorageKey("compound", "initial"),
+    { urlParam: "i" }
   );
   const [monthly, setMonthly] = useMoneyValue(
     500,
-    calcStorageKey("compound", "monthly")
+    calcStorageKey("compound", "monthly"),
+    { urlParam: "m" }
   );
   const [rate, setRate] = usePersistedState(
     calcStorageKey("compound", "rate"),
-    7
+    7,
+    { urlParam: "r" }
   );
   const [years, setYears] = usePersistedState(
     calcStorageKey("compound", "years"),
-    20
+    20,
+    { urlParam: "y" }
   );
 
   const t = copy[lang];
@@ -149,9 +154,12 @@ export default function CompoundCalculatorPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 space-y-5">
-            <div className="flex items-center gap-2 mb-2">
-              <Calculator className="w-6 h-6 text-indigo-600" />
-              <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Calculator className="w-6 h-6 text-indigo-600 shrink-0" />
+                <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
+              </div>
+              <CopyCalcLink />
             </div>
             <NumberField label={t.initial} value={initial} onChange={setInitial} suffix={moneySuffix} />
             <NumberField label={t.monthly} value={monthly} onChange={setMonthly} suffix={moneySuffix} />

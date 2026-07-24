@@ -12,6 +12,7 @@ import { useMoneyValue } from "@/hooks/useMoneyValue";
 import PulseCallout from "@/components/PulseCallout";
 import CalculatorFaq from "@/components/CalculatorFaq";
 import RelatedTools from "@/components/RelatedTools";
+import CopyCalcLink from "@/components/CopyCalcLink";
 
 const copy = {
   en: {
@@ -60,19 +61,23 @@ export default function DividendTaxPage() {
   const { lang, currency } = useLocale();
   const [portfolioValue, setPortfolioValue] = useMoneyValue(
     100000,
-    calcStorageKey("tax", "portfolioValue")
+    calcStorageKey("tax", "portfolioValue"),
+    { urlParam: "p" }
   );
   const [dividendYield, setDividendYield] = usePersistedState(
     calcStorageKey("tax", "dividendYield"),
-    3.5
+    3.5,
+    { urlParam: "dy" }
   );
   const [taxRate, setTaxRate] = usePersistedState(
     calcStorageKey("tax", "taxRate"),
-    15
+    15,
+    { urlParam: "t" }
   );
   const [years, setYears] = usePersistedState(
     calcStorageKey("tax", "years"),
-    10
+    10,
+    { urlParam: "y" }
   );
 
   const t = copy[lang];
@@ -131,9 +136,12 @@ export default function DividendTaxPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 space-y-5">
-            <div className="flex items-center gap-2 mb-2">
-              <Calculator className="w-6 h-6 text-indigo-600" />
-              <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Calculator className="w-6 h-6 text-indigo-600 shrink-0" />
+                <h2 className="text-xl font-bold text-slate-900">{t.inputs}</h2>
+              </div>
+              <CopyCalcLink />
             </div>
             <NumberField
               label={t.portfolioValue}
