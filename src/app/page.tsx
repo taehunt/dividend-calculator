@@ -23,6 +23,7 @@ import { useMoneyValue } from '@/hooks/useMoneyValue';
 import PulseTeaser from '@/components/PulseTeaser';
 import CalculatorFaq from '@/components/CalculatorFaq';
 import RelatedTools from '@/components/RelatedTools';
+import CopyCalcLink from '@/components/CopyCalcLink';
 
 const translations = {
   en: {
@@ -252,9 +253,12 @@ export default function DividendCalculator() {
             className="lg:col-span-4 space-y-6"
           >
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
-              <div className="flex items-center gap-2 mb-8">
-                <Calculator className="w-6 h-6 text-indigo-600" />
-                <h2 className="text-xl font-bold text-slate-900">{t.invDetails}</h2>
+              <div className="flex items-center justify-between gap-3 mb-8">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Calculator className="w-6 h-6 text-indigo-600 shrink-0" />
+                  <h2 className="text-xl font-bold text-slate-900">{t.invDetails}</h2>
+                </div>
+                <CopyCalcLink />
               </div>
               
               <div className="space-y-5">
