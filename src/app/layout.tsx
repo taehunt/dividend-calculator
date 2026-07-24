@@ -51,7 +51,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         ></script>
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-slate-50 text-slate-900`}>
         <LocaleProvider>
           {children}
           <SiteFooter />

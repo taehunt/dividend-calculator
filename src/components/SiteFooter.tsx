@@ -23,7 +23,7 @@ export default function SiteFooter() {
   const t = copy[lang];
 
   return (
-    <footer className="mt-16 pt-8 border-t border-slate-200 text-center pb-8 print:hidden">
+    <footer className="mt-16 border-t border-slate-200 bg-slate-50 text-center pt-8 pb-8 print:hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-sm text-slate-500 mb-4">{t.disclaimer}</p>
         <div className="flex justify-center gap-6 text-sm">
