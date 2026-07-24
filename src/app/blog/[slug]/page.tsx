@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { getPostData, getSortedPostsData } from "@/lib/posts";
 import BlogPostClient from "@/components/BlogPostClient";
 import JsonLd from "@/components/JsonLd";
-import { relatedToolsKeyFromSlug } from "@/lib/blog-related";
+import {
+  getRelatedPosts,
+  relatedToolsKeyFromSlug,
+} from "@/lib/blog-related";
 import { articleJsonLd, breadcrumbJsonLd } from "@/lib/json-ld";
 import { pageMeta } from "@/lib/seo";
 
@@ -59,6 +62,7 @@ export default async function Post({
         content={postData.content}
         contentKo={postData.contentKo}
         relatedPage={relatedToolsKeyFromSlug(slug)}
+        relatedPosts={getRelatedPosts(slug, 3)}
       />
     </>
   );

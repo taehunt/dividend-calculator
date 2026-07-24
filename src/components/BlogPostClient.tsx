@@ -3,8 +3,10 @@
 import ReactMarkdown from "react-markdown";
 import SiteHeader from "@/components/SiteHeader";
 import BlogBreadcrumb from "@/components/BlogBreadcrumb";
+import RelatedPosts from "@/components/RelatedPosts";
 import RelatedTools from "@/components/RelatedTools";
 import { useLocale } from "@/components/LocaleProvider";
+import type { PostMeta } from "@/lib/posts";
 import type { RelatedToolsKey } from "@/lib/related-tools";
 
 type Props = {
@@ -14,6 +16,7 @@ type Props = {
   content: string;
   contentKo?: string;
   relatedPage?: RelatedToolsKey;
+  relatedPosts?: PostMeta[];
 };
 
 export default function BlogPostClient({
@@ -23,6 +26,7 @@ export default function BlogPostClient({
   content,
   contentKo,
   relatedPage = "dividend",
+  relatedPosts = [],
 }: Props) {
   const { lang } = useLocale();
   const displayTitle = lang === "ko" && titleKo ? titleKo : title;
@@ -49,6 +53,7 @@ export default function BlogPostClient({
             <ReactMarkdown>{displayContent}</ReactMarkdown>
           </div>
         </article>
+        <RelatedPosts posts={relatedPosts} />
         <RelatedTools page={relatedPage} />
       </main>
     </div>
