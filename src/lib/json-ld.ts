@@ -56,3 +56,54 @@ export function webAppJsonLd(input: {
     },
   };
 }
+
+export function articleJsonLd(input: {
+  title: string;
+  description: string;
+  slug: string;
+  date: string;
+}) {
+  const url = `${SITE_URL}/blog/${input.slug}`;
+  const datePublished = input.date.includes("T")
+    ? input.date
+    : `${input.date}T00:00:00.000Z`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: input.title,
+    description: input.description,
+    datePublished,
+    dateModified: datePublished,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url,
+    },
+    author: {
+      "@type": "Organization",
+      name: "YieldGrower",
+      url: SITE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "YieldGrower",
+      url: SITE_URL,
+    },
+    url,
+  };
+}
+
+export function breadcrumbJsonLd(
+  items: { name: string; path: string }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.path === "/" ? SITE_URL : `${SITE_URL}${item.path}`,
+    })),
+  };
+}

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { getPostData, getSortedPostsData } from "@/lib/posts";
 import BlogPostClient from "@/components/BlogPostClient";
+import JsonLd from "@/components/JsonLd";
 import { relatedToolsKeyFromSlug } from "@/lib/blog-related";
+import { articleJsonLd, breadcrumbJsonLd } from "@/lib/json-ld";
 import { pageMeta } from "@/lib/seo";
 
 export function generateStaticParams() {
@@ -31,15 +33,33 @@ export default async function Post({
 }) {
   const { slug } = await params;
   const postData = getPostData(slug);
+  const description = postData.excerpt || postData.title;
 
   return (
-    <BlogPostClient
-      title={postData.title}
-      titleKo={postData.titleKo}
-      date={postData.date}
-      content={postData.content}
-      contentKo={postData.contentKo}
-      relatedPage={relatedToolsKeyFromSlug(slug)}
-    />
+    <>
+      <JsonLd
+        data={[
+          articleJsonLd({
+            title: postData.title,
+            description,
+            slug,
+            date: postData.date,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: postData.title, path: `/blog/${slug}` },
+          ]),
+        ]}
+      />
+      <BlogPostClient
+        title={postData.title}
+        titleKo={postData.titleKo}
+        date={postData.date}
+        content={postData.content}
+        contentKo={postData.contentKo}
+        relatedPage={relatedToolsKeyFromSlug(slug)}
+      />
+    </>
   );
 }
