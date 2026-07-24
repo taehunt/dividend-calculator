@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   Activity,
   ArrowRight,
+  Check,
+  Copy,
   Flame,
   Sprout,
   Target,
@@ -20,7 +23,9 @@ import {
   scoreDelta,
   scoreTone,
   type IncomePulse,
+  type PulseLang,
 } from "@/lib/income-pulse";
+import { SITE_URL } from "@/lib/site";
 
 type Props = {
   initialData: IncomePulse;
@@ -44,6 +49,8 @@ const copy = {
     score: "Attractiveness Score",
     today: "Today",
     deltaBuilding: "Day-over-day change starts tomorrow",
+    copyScore: "Copy today’s score",
+    copied: "Copied",
     updated: "Updated",
     realYield: "Real Yield",
     realYieldSub: "10Y Treasury minus CPI YoY",
@@ -87,6 +94,8 @@ const copy = {
     score: "매력도 점수",
     today: "오늘",
     deltaBuilding: "전일 대비 변화는 내일부터 표시됩니다",
+    copyScore: "오늘 점수 복사",
+    copied: "복사됨",
     updated: "업데이트",
     realYield: "실질금리",
     realYieldSub: "미국 10년물 − CPI 전년비",
@@ -142,13 +151,64 @@ function Card({
   );
 }
 
+function buildShareText(
+  data: IncomePulse,
+  lang: PulseLang,
+  delta: number | null
+): string {
+  const score = data.score ?? "—";
+  const label = data.scoreLabel[lang];
+  const deltaLine =
+    delta === null
+      ? lang === "ko"
+        ? "전일 대비: (내일부터)"
+        : "vs yesterday: (starts tomorrow)"
+      : formatScoreDelta(delta, lang);
+  const brief = data.brief[lang];
+  const url = `${SITE_URL}/pulse`;
+
+  if (lang === "ko") {
+    return [
+      `YieldGrower 인컴 펄스`,
+      `오늘 매력도 점수: ${score}/100 (${label})`,
+      deltaLine,
+      brief,
+      url,
+    ].join("\n");
+  }
+
+  return [
+    `YieldGrower Income Pulse`,
+    `Today’s Attractiveness Score: ${score}/100 (${label})`,
+    deltaLine,
+    brief,
+    url,
+  ].join("\n");
+}
+
 export default function PulseClient({ initialData }: Props) {
   const { lang } = useLocale();
   const data = initialData;
   const t = copy[lang];
+  const [copied, setCopied] = useState(false);
   const regimeLabel =
     lang === "ko" ? data.curveRegime.label_ko : data.curveRegime.label_en;
   const delta = scoreDelta(data.history);
+
+  const handleCopy = async () => {
+    const text = buildShareText(data, lang, delta);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers / denied permission
+      window.prompt(
+        lang === "ko" ? "아래 텍스트를 복사하세요" : "Copy the text below",
+        text
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
@@ -197,6 +257,18 @@ export default function PulseClient({ initialData }: Props) {
               <p className="text-xs text-slate-400 mt-3">
                 {t.updated}: {formatUpdatedAt(data.updatedAt, lang)}
               </p>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+              >
+                {copied ? (
+                  <Check className="w-4 h-4" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+                {copied ? t.copied : t.copyScore}
+              </button>
             </div>
           </div>
         </div>
