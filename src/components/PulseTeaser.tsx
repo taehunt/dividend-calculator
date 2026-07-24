@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Activity, ArrowRight } from "lucide-react";
 import { useLocale } from "@/components/LocaleProvider";
 import PulseSparkline from "@/components/PulseSparkline";
+import { usePulseVisitDelta } from "@/hooks/usePulseVisitDelta";
 import {
   deltaTone,
   formatScoreDelta,
@@ -14,10 +15,14 @@ import {
   scoreTone,
   type IncomePulse,
 } from "@/lib/income-pulse";
+import { formatVisitDelta } from "@/lib/pulse-visit";
 
 export default function PulseTeaser() {
   const { lang } = useLocale();
   const [data, setData] = useState<IncomePulse | null>(null);
+  const visitState = usePulseVisitDelta(data);
+  const visitDelta =
+    visitState.status === "changed" ? visitState.delta : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -72,6 +77,13 @@ export default function PulseTeaser() {
                       ? deltaBuilding
                       : formatScoreDelta(delta, lang)}
                   </p>
+                  {visitDelta !== null && (
+                    <p
+                      className={`text-xs font-semibold mt-0.5 ${deltaTone(visitDelta)}`}
+                    >
+                      {formatVisitDelta(visitDelta, lang)}
+                    </p>
+                  )}
                 </>
               ) : (
                 <p className="text-sm text-slate-500">{loading}</p>

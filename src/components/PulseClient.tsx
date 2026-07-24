@@ -14,6 +14,7 @@ import {
 import SiteHeader from "@/components/SiteHeader";
 import PulseHistoryChart from "@/components/PulseHistoryChart";
 import { useLocale } from "@/components/LocaleProvider";
+import { usePulseVisitDelta } from "@/hooks/usePulseVisitDelta";
 import {
   deltaTone,
   formatNumber,
@@ -25,6 +26,7 @@ import {
   type IncomePulse,
   type PulseLang,
 } from "@/lib/income-pulse";
+import { formatVisitDelta } from "@/lib/pulse-visit";
 import { SITE_URL } from "@/lib/site";
 
 type Props = {
@@ -49,6 +51,7 @@ const copy = {
     score: "Attractiveness Score",
     today: "Today",
     deltaBuilding: "Day-over-day change starts tomorrow",
+    visitHint: "Come back later to see change since your visit",
     copyScore: "Copy today’s score",
     copied: "Copied",
     updated: "Updated",
@@ -94,6 +97,7 @@ const copy = {
     score: "매력도 점수",
     today: "오늘",
     deltaBuilding: "전일 대비 변화는 내일부터 표시됩니다",
+    visitHint: "다시 방문하면 마지막 방문 대비 변화를 보여줍니다",
     copyScore: "오늘 점수 복사",
     copied: "복사됨",
     updated: "업데이트",
@@ -194,6 +198,9 @@ export default function PulseClient({ initialData }: Props) {
   const regimeLabel =
     lang === "ko" ? data.curveRegime.label_ko : data.curveRegime.label_en;
   const delta = scoreDelta(data.history);
+  const visitState = usePulseVisitDelta(data);
+  const visitDelta =
+    visitState.status === "changed" ? visitState.delta : null;
 
   const handleCopy = async () => {
     const text = buildShareText(data, lang, delta);
@@ -249,6 +256,18 @@ export default function PulseClient({ initialData }: Props) {
                   ? t.deltaBuilding
                   : formatScoreDelta(delta, lang)}
               </p>
+              {visitState.status === "first" && (
+                <p className="text-sm font-semibold mt-1 text-slate-500">
+                  {t.visitHint}
+                </p>
+              )}
+              {visitState.status === "changed" && (
+                <p
+                  className={`text-sm font-semibold mt-1 ${deltaTone(visitState.delta)}`}
+                >
+                  {formatVisitDelta(visitState.delta, lang)}
+                </p>
+              )}
             </div>
             <div className="md:max-w-xl">
               <p className="text-slate-700 leading-relaxed text-[15px] sm:text-base">

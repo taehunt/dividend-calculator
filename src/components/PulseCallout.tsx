@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Activity, ArrowRight } from "lucide-react";
 import { useLocale } from "@/components/LocaleProvider";
+import { usePulseVisitDelta } from "@/hooks/usePulseVisitDelta";
 import {
   deltaTone,
   formatScoreDelta,
@@ -11,6 +12,7 @@ import {
   scoreTone,
   type IncomePulse,
 } from "@/lib/income-pulse";
+import { formatVisitDelta } from "@/lib/pulse-visit";
 
 type Props = {
   /** compact = sidebar card; banner = full-width under hero */
@@ -44,6 +46,9 @@ export default function PulseCallout({ variant = "compact" }: Props) {
       : "See how attractive dividend ETF income looks vs Treasuries and inflation — updated daily.";
   const cta = lang === "ko" ? "점수 보기" : "View score";
   const delta = data ? scoreDelta(data.history) : null;
+  const visitState = usePulseVisitDelta(data);
+  const visitDelta =
+    visitState.status === "changed" ? visitState.delta : null;
 
   if (variant === "banner") {
     return (
@@ -70,6 +75,13 @@ export default function PulseCallout({ variant = "compact" }: Props) {
                         className={`ml-2 text-xs font-semibold ${deltaTone(delta)}`}
                       >
                         {formatScoreDelta(delta, lang)}
+                      </span>
+                    )}
+                    {visitDelta !== null && (
+                      <span
+                        className={`ml-2 text-xs font-semibold ${deltaTone(visitDelta)}`}
+                      >
+                        {formatVisitDelta(visitDelta, lang)}
                       </span>
                     )}
                   </span>
@@ -108,8 +120,13 @@ export default function PulseCallout({ variant = "compact" }: Props) {
           </p>
         )}
         {delta !== null && (
-          <p className={`text-xs font-semibold mb-2 ${deltaTone(delta)}`}>
+          <p className={`text-xs font-semibold mb-1 ${deltaTone(delta)}`}>
             {formatScoreDelta(delta, lang)}
+          </p>
+        )}
+        {visitDelta !== null && (
+          <p className={`text-xs font-semibold mb-2 ${deltaTone(visitDelta)}`}>
+            {formatVisitDelta(visitDelta, lang)}
           </p>
         )}
         <p className="text-sm text-slate-600 leading-relaxed mb-3">
