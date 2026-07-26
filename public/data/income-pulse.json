@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-25T21:47:20.487339+00:00",
+  "updatedAt": "2026-07-26T21:52:47.727619+00:00",
   "score": 56,
   "scoreLabel": {
     "en": "Neutral",
@@ -123,6 +123,14 @@
     },
     {
       "date": "2026-07-25",
+      "score": 56,
+      "avgEtfYield": 5.492,
+      "spreadVs10y": 0.782,
+      "dgs10": 4.71,
+      "realYield": 0.983
+    },
+    {
+      "date": "2026-07-26",
       "score": 56,
       "avgEtfYield": 5.492,
       "spreadVs10y": 0.782,
