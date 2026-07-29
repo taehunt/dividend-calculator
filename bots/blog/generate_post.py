@@ -1,446 +1,645 @@
-import random
-from datetime import date
+import argparse
+import json
+import os
+import re
+import sys
+from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Any
 
-TOPICS = [
-    {
-        "slug": "dividend-reinvestment-plans",
-        "title": "Dividend Reinvestment Plans (DRIP) for Beginners",
-        "title_ko": "초보자를 위한 배당 재투자(DRIP) 가이드",
-        "excerpt": "Learn how DRIP investing turns small dividends into long-term compounding growth.",
-        "excerpt_ko": "소액 배당이 장기 복리 성장으로 이어지는 DRIP 투자 원리를 알아봅니다.",
-        "sections": [
-            (
-                "What a DRIP Actually Does",
-                "A Dividend Reinvestment Plan automatically uses cash dividends to buy more shares instead of paying you cash. Over time, those extra shares produce more dividends, which buy even more shares. That feedback loop is the core of the dividend snowball.",
-            ),
-            (
-                "Why Consistency Matters More Than Timing",
-                "Most investors focus on picking the perfect entry price. With DRIP investing, the bigger advantage is staying invested and reinvesting through multiple market cycles. Regular contributions plus reinvested dividends usually outperform occasional lump-sum timing attempts.",
-            ),
-            (
-                "How to Stress-Test Your Plan",
-                "Before committing money, model different starting balances, monthly contributions, yields, and tax rates. A simple dividend calculator helps you see how small input changes affect long-term portfolio value and annual dividend income.",
-            ),
-        ],
-        "sections_ko": [
-            (
-                "DRIP가 실제로 하는 일",
-                "배당 재투자 계획(DRIP)은 현금 배당을 받지 않고 자동으로 추가 주식을 매수합니다. 늘어난 주식이 다시 배당을 만들고, 그 배당이 또 주식을 사는 순환이 배당 눈덩이의 핵심입니다.",
-            ),
-            (
-                "타이밍보다 꾸준함이 중요한 이유",
-                "많은 투자자가 완벽한 매수 시점을 찾습니다. DRIP에서는 여러 시장 사이클에 걸쳐 투자를 유지하고 재투자하는 편이 더 큰 이점입니다. 정기 납입과 배당 재투자는 가끔의 타이밍 시도보다 보통 더 나은 결과를 냅니다.",
-            ),
-            (
-                "계획을 스트레스 테스트하는 방법",
-                "자금을 넣기 전에 초기 원금, 월 납입, 배당률, 세율을 바꿔 가며 모델링하세요. 간단한 배당 계산기로 입력 변화가 장기 자산과 연간 배당 소득에 미치는 영향을 확인할 수 있습니다.",
-            ),
-        ],
-    },
-    {
-        "slug": "compound-interest-wealth-building",
-        "title": "Compound Interest and Long-Term Wealth Building",
-        "title_ko": "복리와 장기 자산 형성",
-        "excerpt": "See why time in the market and reinvested returns matter more than chasing short-term gains.",
-        "excerpt_ko": "단기 수익 추격보다 시장에 머무는 시간과 재투자가 왜 더 중요한지 살펴봅니다.",
-        "sections": [
-            (
-                "The Math Behind Compounding",
-                "Compounding means your returns begin earning their own returns. In dividend investing, that happens when payouts are reinvested. Early years look slow, then growth accelerates as the base gets larger.",
-            ),
-            (
-                "Time Is the Real Multiplier",
-                "A 20-year horizon gives compounding room to work. Extending the plan by five or ten years often increases outcomes more than slightly raising the expected return. That is why starting earlier usually beats waiting for a perfect strategy.",
-            ),
-            (
-                "Use Numbers, Not Guesswork",
-                "Write down your contribution schedule and expected yield assumptions. Then run the scenario in a DRIP or compound interest calculator so you can compare outcomes before adjusting your plan.",
-            ),
-        ],
-        "sections_ko": [
-            (
-                "복리의 수학",
-                "복리는 수익이 다시 수익을 내는 구조입니다. 배당 투자에서는 배당을 재투자할 때 일어납니다. 초반에는 느려 보이지만, 원금 베이스가 커질수록 성장 속도가 빨라집니다.",
-            ),
-            (
-                "시간이 진짜 배수",
-                "20년 같은 긴 기간이 있어야 복리가 작동할 공간이 생깁니다. 기대 수익률을 조금 올리는 것보다 기간을 5~10년 늘리는 편이 결과를 더 크게 바꾸는 경우가 많습니다. 그래서 완벽한 전략을 기다리다 시작하는 것보다 일찍 시작하는 편이 보통 유리합니다.",
-            ),
-            (
-                "감이 아니라 숫자로",
-                "납입 일정과 기대 배당률 가정을 적어 두고, DRIP·복리 계산기로 시나리오를 돌려 보세요. 계획을 바꾸기 전에 결과를 비교할 수 있습니다.",
-            ),
-        ],
-    },
-    {
-        "slug": "high-yield-vs-dividend-growth",
-        "title": "High Yield vs Dividend Growth: Which Fits Your Goals?",
-        "title_ko": "고배당 vs 배당성장: 목표에 맞는 선택은?",
-        "excerpt": "Compare immediate income strategies with long-term dividend growth approaches.",
-        "excerpt_ko": "당장의 현금 소득 전략과 장기 배당성장 접근을 비교합니다.",
-        "sections": [
-            (
-                "High Yield Trade-Offs",
-                "Higher starting yields can produce more cash income today. The risk is that some high-yield companies cut dividends when business conditions weaken. Income reliability matters as much as the percentage shown on a quote screen.",
-            ),
-            (
-                "Dividend Growth Advantages",
-                "Lower-yield companies that raise dividends every year can create stronger long-term income streams. The starting payout looks smaller, but rising dividends plus share price growth can outperform static high-yield holdings.",
-            ),
-            (
-                "Build a Hybrid Approach",
-                "Many investors combine both styles: stable growers for compounding and selected higher-yield names for cash flow. Model both paths with a calculator so you can see how income and total value evolve over 10 to 30 years.",
-            ),
-        ],
-        "sections_ko": [
-            (
-                "고배당의 트레이드오프",
-                "시작 배당률이 높으면 당장의 현금 소득이 커질 수 있습니다. 다만 일부 고배당 기업은 업황이 나빠지면 배당을 줄일 수 있습니다. 화면의 퍼센트만큼 소득의 안정성도 중요합니다.",
-            ),
-            (
-                "배당성장의 장점",
-                "매년 배당을 올리는 저배당 기업은 장기적으로 더 강한 소득 흐름을 만들 수 있습니다. 초기 지급액은 작아 보여도, 배당 증가와 주가 성장이 합쳐지면 정체된 고배당 보유를 앞지를 수 있습니다.",
-            ),
-            (
-                "하이브리드로 구성하기",
-                "많은 투자자가 복리용 안정 성장주와 현금흐름용 고배당을 섞습니다. 계산기로 두 경로를 모델링하면 10~30년 동안 소득과 총자산이 어떻게 변하는지 볼 수 있습니다.",
-            ),
-        ],
-    },
-    {
-        "slug": "fire-passive-dividend-income",
-        "title": "FIRE Movement and Passive Dividend Income",
-        "title_ko": "FIRE 운동과 패시브 배당 소득",
-        "excerpt": "Understand how dividend income can support Financial Independence, Retire Early goals.",
-        "excerpt_ko": "배당 소득이 경제적 자립·조기 은퇴(FIRE) 목표를 어떻게 뒷받침하는지 이해합니다.",
-        "sections": [
-            (
-                "Define Your Crossover Point",
-                "FIRE planning usually starts with one question: when can passive income cover living expenses? Dividend income is one path to that crossover point because payouts can arrive whether or not you sell shares.",
-            ),
-            (
-                "Contribution Rate Beats Perfect Stock Picking",
-                "Raising your monthly contribution often moves the FIRE date more than chasing tiny yield improvements. Savings rate, investing consistency, and reinvestment discipline are the main levers.",
-            ),
-            (
-                "Track Progress With Clear Inputs",
-                "Estimate required annual dividends, then reverse-engineer the portfolio size and yield needed. A visual calculator makes it easier to adjust contributions until the timeline looks realistic.",
-            ),
-        ],
-        "sections_ko": [
-            (
-                "크로스오버 시점 정의하기",
-                "FIRE 계획은 보통 한 질문에서 시작합니다. 언제 패시브 소득이 생활비를 덮을까? 배당은 주식을 팔지 않아도 현금이 들어올 수 있어 그 시점에 도달하는 한 경로입니다.",
-            ),
-            (
-                "종목 선정 완벽함보다 납입률",
-                "배당률을 조금 올리는 것보다 월 납입을 늘리는 편이 FIRE 날짜를 더 앞당기는 경우가 많습니다. 저축률, 투자 꾸준함, 재투자 습관이 핵심 레버입니다.",
-            ),
-            (
-                "명확한 입력으로 진행 추적",
-                "필요한 연간 배당을 추정한 뒤, 필요한 포트폴리오 규모와 배당률을 역산하세요. 시각 계산기로 납입을 조정하면 현실적인 타임라인을 만들기 쉽습니다.",
-            ),
-        ],
-    },
-    {
-        "slug": "estimate-retirement-dividend-income",
-        "title": "How to Estimate Retirement Income From Dividends",
-        "title_ko": "배당으로 은퇴 소득 추정하기",
-        "excerpt": "A practical framework for projecting future dividend income with conservative assumptions.",
-        "excerpt_ko": "보수적 가정으로 미래 배당 소득을 추정하는 실전 프레임워크입니다.",
-        "sections": [
-            (
-                "Start With Annual Spending Needs",
-                "Write down the annual income you want dividends to cover. Separate needs from wants. This gives you a target instead of a vague hope that the portfolio will be large enough someday.",
-            ),
-            (
-                "Translate Income Goals Into Portfolio Size",
-                "If you want $40,000 a year and assume a 3% net yield after tax, you need roughly $1.33 million in dividend-producing assets. Changing yield or tax assumptions changes that number quickly, so run multiple scenarios.",
-            ),
-            (
-                "Recheck Assumptions Every Year",
-                "Inflation, tax rules, and dividend policies change. Recalculate annually and adjust contributions. Tools like a dividend reinvestment calculator help you keep the plan grounded in numbers.",
-            ),
-        ],
-        "sections_ko": [
-            (
-                "연간 생활비부터 정하기",
-                "배당으로 커버하고 싶은 연간 소득을 적으세요. 필수와 여유를 구분하면 막연한 기대 대신 목표가 생깁니다.",
-            ),
-            (
-                "소득 목표를 포트폴리오 규모로 환산하기",
-                "연간 $40,000이 필요하고 세후 순수익률을 3%로 가정하면 대략 133만 달러 규모의 배당 자산이 필요합니다. 가정에 따라 숫자가 크게 달라지므로 여러 시나리오를 돌리세요.",
-            ),
-            (
-                "가정을 매년 재점검하기",
-                "물가, 세법, 배당 정책은 변합니다. 매년 다시 계산하고 납입을 조정하세요. 배당 재투자 계산기가 계획을 숫자 기준으로 유지하는 데 도움이 됩니다.",
-            ),
-        ],
-    },
-    {
-        "slug": "dividend-tax-considerations",
-        "title": "Tax Considerations for Dividend Investors",
-        "title_ko": "배당 투자자가 알아둘 세금 이슈",
-        "excerpt": "Why after-tax yield matters more than headline dividend percentages.",
-        "excerpt_ko": "헤드라인 배당률보다 세후 수익률이 중요한 이유를 설명합니다.",
-        "sections": [
-            (
-                "Gross Yield Is Not Take-Home Yield",
-                "A 4% dividend yield can become meaningfully lower after withholding and income tax. Your real compounding rate depends on what remains after tax, especially if you reinvest every payout.",
-            ),
-            (
-                "Account Location Matters",
-                "Where you hold dividend stocks can change outcomes. Tax-advantaged accounts, taxable brokerage accounts, and cross-border withholding rules all affect net cash flow. Compare after-tax results, not just sticker yields.",
-            ),
-            (
-                "Model Tax Drag Explicitly",
-                "Include a tax rate assumption in your long-term projections. Even a simple calculator with a tax input can show how much reinvestment speed changes when taxes rise or fall.",
-            ),
-        ],
-        "sections_ko": [
-            (
-                "표면 배당률 ≠ 실제 수령률",
-                "4% 배당률도 원천징수·소득세 후에는 꽤 낮아질 수 있습니다. 특히 매번 재투자한다면, 진짜 복리 속도는 세후 잔액에 달립니다.",
-            ),
-            (
-                "계좌 위치가 결과를 바꾼다",
-                "배당주를 어디에 담느냐에 따라 결과가 달라집니다. 절세 계좌, 과세 계좌, 국경 간 원천징수 규칙이 순현금흐름에 영향을 줍니다. 표면 수익률이 아니라 세후 결과를 비교하세요.",
-            ),
-            (
-                "세금 드래그를 명시적으로 모델링",
-                "장기 전망에 세율 가정을 넣으세요. 세금 입력이 있는 간단한 계산기만으로도 세율이 오르내릴 때 재투자 속도가 얼마나 바뀌는지 볼 수 있습니다.",
-            ),
-        ],
-    },
-    {
-        "slug": "monthly-contribution-dividend-snowball",
-        "title": "Building a Dividend Snowball With Monthly Contributions",
-        "title_ko": "월 납입으로 배당 눈덩이 키우기",
-        "excerpt": "How steady monthly investing and DRIP reinvestment create accelerating dividend income.",
-        "excerpt_ko": "꾸준한 월 투자와 DRIP 재투자가 배당 소득을 가속시키는 방식을 설명합니다.",
-        "sections": [
-            (
-                "Small Contributions Still Matter",
-                "A few hundred dollars a month looks minor in year one. After a decade of contributions plus reinvested dividends, the portfolio base can be large enough that annual income becomes meaningful.",
-            ),
-            (
-                "Automate the Process",
-                "Automation removes decision fatigue. Schedule monthly buys and enable dividend reinvestment so the plan continues even when markets feel boring or stressful.",
-            ),
-            (
-                "Measure Progress by Income Growth",
-                "Track yearly dividend income, not just account balance. Watching the income line rise is often more motivating than staring at short-term price swings. A projection chart helps set expectations.",
-            ),
-        ],
-        "sections_ko": [
-            (
-                "소액 납입도 의미가 있다",
-                "매달 수십만 원은 1년 차에는 작아 보입니다. 10년의 납입과 배당 재투자 후에는 연간 소득이 의미 있을 만큼 베이스가 커질 수 있습니다.",
-            ),
-            (
-                "프로세스를 자동화하기",
-                "자동화는 결정 피로를 줄입니다. 월 매수를 예약하고 배당 재투자를 켜 두면, 시장이 지루하거나 스트레스일 때도 계획이 이어집니다.",
-            ),
-            (
-                "잔고보다 소득 성장으로 측정",
-                "계좌 잔고만이 아니라 연간 배당 소득을 추적하세요. 소득 라인이 올라가는 모습을 보는 편이 단기 가격 변동을 보는 것보다 동기부여가 되는 경우가 많습니다.",
-            ),
-        ],
-    },
-    {
-        "slug": "common-dividend-investor-mistakes",
-        "title": "Common Mistakes New Dividend Investors Make",
-        "title_ko": "초보 배당 투자자가 자주 하는 실수",
-        "excerpt": "Avoid yield chasing, overconcentration, and ignoring taxes when building a dividend plan.",
-        "excerpt_ko": "배당 계획을 세울 때 고배당 추격, 과집중, 세금 무시를 피하세요.",
-        "sections": [
-            (
-                "Chasing the Highest Yield",
-                "The largest yield on a screen is not always the best investment. Unsustainable payouts can be cut, and the share price can fall at the same time. Prefer durability over flashy percentages.",
-            ),
-            (
-                "Ignoring Concentration Risk",
-                "Owning only a few high-paying names can create fragile income. Diversifying across sectors and dividend styles reduces the chance that one cut derails your entire plan.",
-            ),
-            (
-                "Skipping a Written Plan",
-                "Without targets for contribution size, timeline, and desired income, it is easy to quit early. Write the plan down and test it with a calculator before you scale contributions.",
-            ),
-        ],
-        "sections_ko": [
-            (
-                "최고 배당률만 쫓기",
-                "화면에서 가장 높은 배당률이 항상 최선의 투자는 아닙니다. 지속 불가능한 배당은 삭감될 수 있고 주가도 같이 떨어질 수 있습니다. 화려한 퍼센트보다 지속 가능성을 우선하세요.",
-            ),
-            (
-                "집중 위험 무시하기",
-                "고배당 몇 종목만 보유하면 소득이 취약해질 수 있습니다. 섹터와 배당 스타일을 분산하면 한 번의 삭감이 전체 계획을 무너뜨릴 확률이 줄어듭니다.",
-            ),
-            (
-                "문서화된 계획 없이 시작하기",
-                "납입 규모, 기간, 목표 소득이 없으면 중도 포기하기 쉽습니다. 납입을 늘리기 전에 계획을 적어 두고 계산기로 검증하세요.",
-            ),
-        ],
-    },
-]
+import requests
 
-# Related YieldGrower tools appended to every automated post (path, en label, ko label).
-CTA_BY_SLUG: dict[str, list[tuple[str, str, str]]] = {
-    "dividend-reinvestment-plans": [
-        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
-        ("/fire", "FIRE Calculator", "FIRE 조기은퇴 계산기"),
-        ("/pulse", "Income Pulse", "인컴 펄스"),
-    ],
-    "compound-interest-wealth-building": [
-        ("/compound", "Compound Interest Calculator", "복리 계산기"),
-        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
-        ("/pulse", "Income Pulse", "인컴 펄스"),
-    ],
-    "high-yield-vs-dividend-growth": [
-        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
-        ("/goal", "Dividend Income Goal Calculator", "배당 목표 소득 계산기"),
-        ("/pulse", "Income Pulse", "인컴 펄스"),
-    ],
-    "fire-passive-dividend-income": [
-        ("/fire", "FIRE Calculator", "FIRE 조기은퇴 계산기"),
-        ("/goal", "Dividend Income Goal Calculator", "배당 목표 소득 계산기"),
-        ("/pulse", "Income Pulse", "인컴 펄스"),
-    ],
-    "estimate-retirement-dividend-income": [
-        ("/goal", "Dividend Income Goal Calculator", "배당 목표 소득 계산기"),
-        ("/fire", "FIRE Calculator", "FIRE 조기은퇴 계산기"),
-        ("/pulse", "Income Pulse", "인컴 펄스"),
-    ],
-    "dividend-tax-considerations": [
-        ("/tax", "Dividend Tax Calculator", "배당세 계산기"),
-        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
-        ("/pulse", "Income Pulse", "인컴 펄스"),
-    ],
-    "monthly-contribution-dividend-snowball": [
-        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
-        ("/compound", "Compound Interest Calculator", "복리 계산기"),
-        ("/pulse", "Income Pulse", "인컴 펄스"),
-    ],
-    "common-dividend-investor-mistakes": [
-        ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
-        ("/tax", "Dividend Tax Calculator", "배당세 계산기"),
-        ("/pulse", "Income Pulse", "인컴 펄스"),
-    ],
+
+SITE_URL = "https://www.yieldgrower.com"
+POSTS_DIR = Path("posts")
+SEOUL = timezone(timedelta(hours=9), name="Asia/Seoul")
+DEFAULT_MODELS = ("gemini-3.6-flash", "gemini-2.5-flash")
+MIN_ENGLISH_WORDS = 900
+MAX_ENGLISH_WORDS = 1_700
+MIN_KOREAN_WORDS = 550
+MAX_KOREAN_WORDS = 1_600
+MAX_SIMILARITY = 0.24
+
+SOURCES = {
+    "investing": {
+        "label": "Investor.gov — Introduction to Investing",
+        "url": "https://www.investor.gov/introduction-investing",
+        "scope": "compound growth, regular investing, risk, asset allocation, and diversification",
+    },
+    "compound": {
+        "label": "Investor.gov — Compound Interest",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/compound-interest",
+        "scope": "the definition of compound interest",
+    },
+    "diversification": {
+        "label": "Investor.gov — Diversify Your Investments",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/save-and-invest/diversify-your-investments",
+        "scope": "what diversification can and cannot do",
+    },
+    "performance": {
+        "label": "FINRA — Evaluating Performance",
+        "url": "https://www.finra.org/investors/investing/investing-basics/evaluating-performance",
+        "scope": "dividend yield and total return definitions",
+    },
+    "risk": {
+        "label": "FINRA — Risk",
+        "url": "https://www.finra.org/investors/investing/investing-basics/risk",
+        "scope": "investment risk, time horizon, asset allocation, and diversification",
+    },
+    "tax": {
+        "label": "IRS — Topic No. 404, Dividends",
+        "url": "https://www.irs.gov/taxtopics/tc404",
+        "scope": "United States dividend classifications and reporting; do not generalize to other countries",
+    },
 }
 
-DEFAULT_CTA = [
-    ("/", "Dividend Reinvestment Calculator", "배당 재투자 계산기"),
-    ("/fire", "FIRE Calculator", "FIRE 조기은퇴 계산기"),
-    ("/pulse", "Income Pulse", "인컴 펄스"),
-]
+THEMES = (
+    {
+        "name": "DRIP mechanics and realistic compounding",
+        "hint": "Answer a specific beginner question about reinvesting after-tax dividends without promising returns.",
+        "tool": "/",
+        "sources": ("investing", "compound", "performance"),
+    },
+    {
+        "name": "dividend yield versus total return",
+        "hint": "Explain how price appreciation and dividends differ, and prevent double-counting in projections.",
+        "tool": "/",
+        "sources": ("performance", "risk", "investing"),
+    },
+    {
+        "name": "monthly contribution planning",
+        "hint": "Show how contribution size and time horizon change a projection using a concrete scenario.",
+        "tool": "/compound",
+        "sources": ("investing", "compound", "risk"),
+    },
+    {
+        "name": "dividend income goal planning",
+        "hint": "Work backward from an annual income goal while stressing yield and tax uncertainty.",
+        "tool": "/goal",
+        "sources": ("performance", "risk", "diversification"),
+    },
+    {
+        "name": "FIRE scenario planning",
+        "hint": "Discuss a crossover target as a scenario, not a guarantee, and include spending flexibility.",
+        "tool": "/fire",
+        "sources": ("investing", "risk", "diversification"),
+    },
+    {
+        "name": "high-yield risk",
+        "hint": "Explain why a high displayed yield can reflect a falling price or payout risk.",
+        "tool": "/",
+        "sources": ("performance", "risk", "diversification"),
+    },
+    {
+        "name": "diversification for income investors",
+        "hint": "Explain concentration risk across companies, sectors, and income sources.",
+        "tool": "/average",
+        "sources": ("diversification", "risk", "investing"),
+    },
+    {
+        "name": "inflation and future income",
+        "hint": "Separate nominal income from purchasing power and use conservative scenario language.",
+        "tool": "/inflation",
+        "sources": ("investing", "risk", "compound"),
+    },
+    {
+        "name": "average cost and recurring purchases",
+        "hint": "Explain weighted average cost and why a lower break-even price does not remove investment risk.",
+        "tool": "/average",
+        "sources": ("risk", "diversification", "investing"),
+    },
+    {
+        "name": "dividend tax drag",
+        "hint": "Explain after-tax compounding and clearly label any US tax discussion as US-specific.",
+        "tool": "/tax",
+        "sources": ("tax", "performance", "investing"),
+    },
+    {
+        "name": "CAGR interpretation",
+        "hint": "Explain CAGR as a smoothed historical or scenario rate, not a promise of steady annual returns.",
+        "tool": "/cagr",
+        "sources": ("performance", "risk", "compound"),
+    },
+    {
+        "name": "assumption stress testing",
+        "hint": "Compare conservative, base, and optimistic assumptions without recommending a security.",
+        "tool": "/tools",
+        "sources": ("risk", "investing", "diversification"),
+    },
+)
 
-SITE = "https://www.yieldgrower.com"
+PROHIBITED_PHRASES = (
+    "guaranteed return",
+    "guaranteed income",
+    "risk-free investment",
+    "always outperforms",
+    "can't lose",
+    "cannot lose",
+    "확정 수익",
+    "수익 보장",
+    "원금 보장",
+    "무위험 투자",
+    "반드시 오른",
+)
 
 
-def yaml_escape(text: str) -> str:
-    return text.replace("\\", "\\\\").replace('"', "'").replace("\n", " ").strip()
+@dataclass(frozen=True)
+class Projection:
+    balance: int
+    contributions: int
+    annual_dividend: int
 
 
-def build_cta(topic: dict, *, lang: str = "en") -> str:
-    links = CTA_BY_SLUG.get(topic["slug"], DEFAULT_CTA)
-    if lang == "ko":
-        lines = [
-            "## YieldGrower 무료 도구로 이어서 보기",
-            "",
-            "숫자로 바로 확인해 보세요.",
-            "",
-        ]
-        for path, _en, ko in links:
-            lines.append(f"- [{ko}]({SITE}{path})")
-    else:
-        lines = [
-            "## Try these free YieldGrower tools",
-            "",
-            "Run the numbers before you change your plan.",
-            "",
-        ]
-        for path, en, _ko in links:
-            lines.append(f"- [{en}]({SITE}{path})")
-    lines.append("")
+def project_portfolio(
+    initial: float = 10_000,
+    monthly: float = 500,
+    years: int = 20,
+    price_growth: float = 7,
+    dividend_yield: float = 3,
+    dividend_tax: float = 15,
+) -> Projection:
+    balance = initial
+    contributions = initial
+    annual_dividend = 0.0
+    for _year in range(years):
+        annual_dividend = 0.0
+        for _month in range(12):
+            balance += monthly
+            contributions += monthly
+            balance += balance * (price_growth / 12 / 100)
+            dividend = balance * (dividend_yield / 12 / 100)
+            after_tax_dividend = dividend * (1 - dividend_tax / 100)
+            balance += after_tax_dividend
+            annual_dividend += after_tax_dividend
+    return Projection(
+        balance=round(balance),
+        contributions=round(contributions),
+        annual_dividend=round(annual_dividend),
+    )
+
+
+def scheduled_date() -> str:
+    return datetime.now(SEOUL).date().isoformat()
+
+
+def yaml_escape(value: str) -> str:
+    return value.replace("\\", "\\\\").replace('"', "'").replace("\n", " ").strip()
+
+
+def slugify(value: str) -> str:
+    slug = re.sub(r"[^a-z0-9\s-]", "", value.lower())
+    slug = re.sub(r"[\s_-]+", "-", slug).strip("-")
+    return slug[:72] or "dividend-planning-guide"
+
+
+def markdown_words(value: str) -> list[str]:
+    plain = re.sub(r"https?://\S+", " ", value)
+    plain = re.sub(r"[#*`>\[\]()|]", " ", plain)
+    return re.findall(r"[A-Za-z0-9][A-Za-z0-9'’-]*|[가-힣]+", plain)
+
+
+def shingles(value: str, size: int = 5) -> set[tuple[str, ...]]:
+    words = [word.lower() for word in markdown_words(value)]
+    return {tuple(words[i : i + size]) for i in range(max(0, len(words) - size + 1))}
+
+
+def similarity(left: str, right: str) -> float:
+    left_set = shingles(left)
+    right_set = shingles(right)
+    if not left_set or not right_set:
+        return 0.0
+    return len(left_set & right_set) / len(left_set | right_set)
+
+
+def existing_post_data() -> tuple[list[str], list[str]]:
+    titles: list[str] = []
+    bodies: list[str] = []
+    if not POSTS_DIR.exists():
+        return titles, bodies
+    for path in sorted(POSTS_DIR.glob("*.md")):
+        raw = path.read_text(encoding="utf-8")
+        title_match = re.search(r'^title:\s*"?(.*?)"?\s*$', raw, re.MULTILINE)
+        if title_match:
+            titles.append(title_match.group(1).strip('"'))
+        parts = re.split(r"\n---ko---\n", raw, maxsplit=1)
+        bodies.append(re.sub(r"\A---.*?---\s*", "", parts[0], flags=re.DOTALL))
+    return titles, bodies
+
+
+def extract_json(text: str) -> dict[str, Any]:
+    cleaned = text.strip()
+    cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
+    cleaned = re.sub(r"\s*```$", "", cleaned)
+    try:
+        data = json.loads(cleaned)
+    except json.JSONDecodeError:
+        match = re.search(r"\{.*\}", cleaned, re.DOTALL)
+        if not match:
+            raise
+        data = json.loads(match.group(0))
+    if not isinstance(data, dict):
+        raise ValueError("Gemini response must be a JSON object")
+    return data
+
+
+def source_block(source_ids: tuple[str, ...], *, lang: str) -> str:
+    heading = "## Sources and further reading" if lang == "en" else "## 출처 및 추가 자료"
+    lines = [heading, ""]
+    for source_id in source_ids:
+        source = SOURCES[source_id]
+        lines.append(f"- [{source['label']}]({source['url']})")
     return "\n".join(lines)
 
 
-def build_content(topic: dict, *, lang: str = "en") -> str:
+def footer_block(tool_path: str, *, lang: str) -> str:
+    tool_url = f"{SITE_URL}{tool_path}"
     if lang == "ko":
-        intro = f"이 글은 장기 투자자를 위해 '{topic['title_ko']}'을(를) 쉽게 설명합니다."
-        sections = topic["sections_ko"]
-        next_heading = "## 실전 다음 단계"
-        next_body = (
-            "포트폴리오를 바꾸기 전에 납입액, 배당률, 기간을 바꿔 가며 시나리오를 비교하세요. "
-            "무료 배당 재투자 계산기로 결과를 빠르게 비교하면, 헤드라인보다 숫자에 기반한 결정을 내릴 수 있습니다."
+        return "\n".join(
+            [
+                "## 계산기로 직접 확인하기",
+                "",
+                f"- [YieldGrower 계산기에서 같은 가정을 바꿔 보기]({tool_url})",
+                "",
+                "이 글은 자동화된 초안 생성과 구조·중복·계산값 검사를 거쳐 발행되었습니다. 사람의 개별 투자 검토를 대신하지 않습니다.",
+                "",
+                "*이 글은 정보·교육 목적이며 투자·세무 자문이 아닙니다.*",
+            ]
         )
-        disclaimer = "*이 글은 교육 목적이며 투자 자문이 아닙니다.*"
-    else:
-        intro = f"This guide explains {topic['title'].lower()} in plain language for long-term investors."
-        sections = topic["sections"]
-        next_heading = "## Practical Next Step"
-        next_body = (
-            "Before changing your portfolio, run a few scenarios with different contribution amounts, yields, and timelines. "
-            "A free dividend reinvestment calculator can help you compare outcomes quickly and keep decisions grounded in numbers rather than headlines."
-        )
-        disclaimer = "*This article is for educational purposes only and is not financial advice.*"
-
-    parts = [intro, ""]
-    for heading, body in sections:
-        parts.append(f"## {heading}")
-        parts.append("")
-        parts.append(body)
-        parts.append("")
-
-    parts.extend(
-        [next_heading, "", next_body, "", disclaimer, "", build_cta(topic, lang=lang)]
+    return "\n".join(
+        [
+            "## Test the assumptions yourself",
+            "",
+            f"- [Change the same assumptions in the YieldGrower calculator]({tool_url})",
+            "",
+            "This article was published after automated drafting plus structural, duplication, and calculation checks. It is not a substitute for individual human investment review.",
+            "",
+            "*This article is for informational and educational purposes only. It is not investment or tax advice.*",
+        ]
     )
-    return "\n".join(parts)
 
 
-def write_post() -> Path:
-    today = date.today().isoformat()
-    day_index = date.today().timetuple().tm_yday % len(TOPICS)
-    topic = TOPICS[day_index]
+def finalize_content(
+    body: str, source_ids: tuple[str, ...], tool_path: str, *, lang: str
+) -> str:
+    return "\n\n".join(
+        [body.strip(), source_block(source_ids, lang=lang), footer_block(tool_path, lang=lang)]
+    ).strip()
 
-    # Keep daily uniqueness even if the same topic rotates yearly.
-    suffix = random.choice(["guide", "overview", "checklist", "framework"])
-    suffix_ko = {"guide": "가이드", "overview": "개요", "checklist": "체크리스트", "framework": "프레임워크"}[
-        suffix
+
+def validate_article(
+    article: dict[str, Any],
+    source_ids: tuple[str, ...],
+    tool_path: str,
+    existing_bodies: list[str],
+) -> list[str]:
+    errors: list[str] = []
+    required = ("title", "titleKo", "excerpt", "excerptKo", "contentEn", "contentKo")
+    for key in required:
+        if not isinstance(article.get(key), str) or not article[key].strip():
+            errors.append(f"{key} must be a non-empty string")
+    if errors:
+        return errors
+
+    if len(article["title"]) > 70:
+        errors.append("English title exceeds 70 characters")
+    if len(article["excerpt"]) > 160:
+        errors.append("English excerpt exceeds 160 characters")
+    if len(article["excerptKo"]) > 160:
+        errors.append("Korean excerpt exceeds 160 characters")
+
+    content_en = finalize_content(article["contentEn"], source_ids, tool_path, lang="en")
+    content_ko = finalize_content(article["contentKo"], source_ids, tool_path, lang="ko")
+    en_count = len(markdown_words(content_en))
+    ko_count = len(markdown_words(content_ko))
+    if not MIN_ENGLISH_WORDS <= en_count <= MAX_ENGLISH_WORDS:
+        errors.append(
+            f"English word count {en_count} is outside {MIN_ENGLISH_WORDS}-{MAX_ENGLISH_WORDS}"
+        )
+    if not MIN_KOREAN_WORDS <= ko_count <= MAX_KOREAN_WORDS:
+        errors.append(
+            f"Korean word count {ko_count} is outside {MIN_KOREAN_WORDS}-{MAX_KOREAN_WORDS}"
+        )
+
+    for label, content in (("English", content_en), ("Korean", content_ko)):
+        headings = re.findall(r"^##\s+\S.+$", content, re.MULTILINE)
+        if not 6 <= len(headings) <= 12:
+            errors.append(f"{label} content must have 6-12 H2 sections, found {len(headings)}")
+        if re.search(r"^#\s+", content, re.MULTILINE):
+            errors.append(f"{label} content contains an H1 heading")
+        if "<script" in content.lower() or "<iframe" in content.lower():
+            errors.append(f"{label} content contains prohibited raw HTML")
+        for source_id in source_ids:
+            if SOURCES[source_id]["url"] not in content:
+                errors.append(f"{label} content is missing source {source_id}")
+        if f"{SITE_URL}{tool_path}" not in content:
+            errors.append(f"{label} content is missing its calculator link")
+
+    combined = f"{content_en}\n{content_ko}".lower()
+    for phrase in PROHIBITED_PHRASES:
+        if phrase in combined:
+            errors.append(f"Prohibited phrase found: {phrase}")
+
+    max_similarity = max(
+        (similarity(content_en, existing) for existing in existing_bodies),
+        default=0.0,
+    )
+    if max_similarity > MAX_SIMILARITY:
+        errors.append(
+            f"English content similarity {max_similarity:.3f} exceeds {MAX_SIMILARITY:.2f}"
+        )
+    return errors
+
+
+def build_prompt(
+    theme: dict[str, Any],
+    existing_titles: list[str],
+    validation_feedback: list[str] | None = None,
+) -> str:
+    projection = project_portfolio()
+    sources = [
+        {
+            "id": source_id,
+            "label": SOURCES[source_id]["label"],
+            "url": SOURCES[source_id]["url"],
+            "allowed_scope": SOURCES[source_id]["scope"],
+        }
+        for source_id in theme["sources"]
     ]
-    title = f"{topic['title']}: {suffix.title()}"
-    title_ko = f"{topic['title_ko']}: {suffix_ko}"
-    slug = f"{today}-{topic['slug']}-{suffix}"
-    path = Path("posts") / f"{slug}.md"
-    Path("posts").mkdir(exist_ok=True)
+    feedback = validation_feedback or []
+    return f"""
+You write for YieldGrower, a bilingual educational calculator website.
+Create one original, people-first article in English and a faithful natural Korean version.
 
-    if path.exists():
-        print(f"Post already exists: {path}")
-        return path
+Theme: {theme["name"]}
+Specific direction: {theme["hint"]}
+Related calculator: {SITE_URL}{theme["tool"]}
+Recent titles that must not be repeated or lightly reworded:
+{json.dumps(existing_titles[-60:], ensure_ascii=False, indent=2)}
 
-    content_en = build_content(topic, lang="en")
-    content_ko = build_content(topic, lang="ko")
-    frontmatter = (
-        "---\n"
-        f'title: "{yaml_escape(title)}"\n'
-        f'titleKo: "{yaml_escape(title_ko)}"\n'
-        f'date: "{today}"\n'
-        f'excerpt: "{yaml_escape(topic["excerpt"])}"\n'
-        f'excerptKo: "{yaml_escape(topic["excerpt_ko"])}"\n'
-        "---\n\n"
+Use only these sources for factual claims:
+{json.dumps(sources, ensure_ascii=False, indent=2)}
+
+Use this calculator-generated example exactly and explain that it is a scenario, not a forecast:
+- Initial investment: $10,000
+- Monthly contribution: $500
+- Period: 20 years
+- Annual price growth excluding dividends: 7%
+- Dividend yield: 3%
+- Dividend tax assumption: 15%
+- DRIP: enabled
+- Final portfolio value: ${projection.balance:,}
+- Total contributions: ${projection.contributions:,}
+- Final-year after-tax dividend income: ${projection.annual_dividend:,}
+
+Return only valid JSON:
+{{
+  "title": "specific English title under 70 characters",
+  "titleKo": "natural Korean title",
+  "excerpt": "English excerpt under 160 characters",
+  "excerptKo": "Korean excerpt under 160 characters",
+  "contentEn": "900-1400 English words in Markdown with 5-9 ## sections and no H1",
+  "contentKo": "complete Korean version in Markdown with the same substance and 5-9 ## sections and no H1"
+}}
+
+Rules:
+- Answer a concrete reader question and add analysis that is specific to the supplied scenario.
+- Separate price growth from dividend yield so returns are never double-counted.
+- Explain uncertainty, taxes, inflation, and concentration risk where relevant.
+- Do not recommend individual securities or claim that any outcome is guaranteed.
+- Do not invent quotations, studies, statistics, laws, tax rates, or source claims.
+- Link factual statements only to the supplied URLs using Markdown links.
+- Tax material must say jurisdiction and tax year can change and professional advice may be needed.
+- Do not add a sources section, calculator CTA, automation disclosure, or disclaimer; the publisher adds those.
+- Do not repeat generic filler such as "in today's financial landscape."
+
+Previous validation errors to correct:
+{json.dumps(feedback, ensure_ascii=False)}
+""".strip()
+
+
+def call_gemini(api_key: str, model: str, prompt: str) -> dict[str, Any]:
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+    response = requests.post(
+        url,
+        headers={"Content-Type": "application/json", "x-goog-api-key": api_key},
+        json={
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "maxOutputTokens": 8192,
+                "responseMimeType": "application/json",
+            },
+        },
+        timeout=150,
+    )
+    print(f"Gemini model={model} status={response.status_code}")
+    if response.status_code >= 400:
+        print(response.text[:1000])
+        response.raise_for_status()
+    data = response.json()
+    candidates = data.get("candidates") or []
+    if not candidates:
+        raise RuntimeError(f"Gemini returned no candidates: {json.dumps(data)[:1000]}")
+    text = candidates[0]["content"]["parts"][0]["text"]
+    return extract_json(text)
+
+
+def generate_valid_article(
+    api_key: str,
+    theme: dict[str, Any],
+    existing_titles: list[str],
+    existing_bodies: list[str],
+    models: tuple[str, ...],
+) -> tuple[dict[str, Any], str]:
+    feedback: list[str] = []
+    last_error: Exception | None = None
+    for attempt in range(1, 3):
+        prompt = build_prompt(theme, existing_titles, feedback)
+        for model in models:
+            try:
+                print(f"Generation attempt={attempt} model={model}")
+                article = call_gemini(api_key, model, prompt)
+                errors = validate_article(
+                    article,
+                    theme["sources"],
+                    theme["tool"],
+                    existing_bodies,
+                )
+                if not errors:
+                    return article, model
+                feedback = errors
+                print("Quality gate rejected article:")
+                for error in errors:
+                    print(f"- {error}")
+                break
+            except Exception as exc:
+                last_error = exc
+                print(f"Model failed: {type(exc).__name__}: {exc}")
+        else:
+            continue
+    if feedback:
+        raise RuntimeError("Article failed quality gates: " + "; ".join(feedback))
+    raise RuntimeError(f"All Gemini models failed. Last error: {last_error}")
+
+
+def write_post(
+    article: dict[str, Any],
+    theme: dict[str, Any],
+    model: str,
+    publish_date: str,
+) -> Path:
+    POSTS_DIR.mkdir(exist_ok=True)
+    existing_for_date = sorted(POSTS_DIR.glob(f"{publish_date}-*.md"))
+    if existing_for_date:
+        print(f"A post already exists for {publish_date}: {existing_for_date[0]}")
+        return existing_for_date[0]
+
+    slug = f"{publish_date}-{slugify(article['title'])}"
+    path = POSTS_DIR / f"{slug}.md"
+    content_en = finalize_content(
+        article["contentEn"], theme["sources"], theme["tool"], lang="en"
+    )
+    content_ko = finalize_content(
+        article["contentKo"], theme["sources"], theme["tool"], lang="ko"
+    )
+    frontmatter = "\n".join(
+        [
+            "---",
+            f'title: "{yaml_escape(article["title"])}"',
+            f'titleKo: "{yaml_escape(article["titleKo"])}"',
+            f'date: "{publish_date}"',
+            f'excerpt: "{yaml_escape(article["excerpt"])}"',
+            f'excerptKo: "{yaml_escape(article["excerptKo"])}"',
+            'author: "YieldGrower Editorial"',
+            'generationMethod: "AI-assisted with automated quality checks"',
+            f'generatorModel: "{yaml_escape(model)}"',
+            "---",
+            "",
+        ]
     )
     path.write_text(
         frontmatter + content_en + "\n\n---ko---\n\n" + content_ko + "\n",
         encoding="utf-8",
     )
-    print(f"Created post: {path}")
+    print(f"Created quality-gated post: {path}")
     return path
 
 
-def main():
-    write_post()
+def choose_theme(publish_date: str) -> dict[str, Any]:
+    ordinal = datetime.strptime(publish_date, "%Y-%m-%d").date().toordinal()
+    return THEMES[ordinal % len(THEMES)]
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Run deterministic generator self-checks without calling Gemini.",
+    )
+    return parser.parse_args()
+
+
+def self_check() -> None:
+    projection = project_portfolio()
+    expected = Projection(balance=429_022, contributions=130_000, annual_dividend=10_386)
+    if projection != expected:
+        raise AssertionError(f"Projection mismatch: {projection} != {expected}")
+
+    english_sentence = (
+        "A planning scenario helps investors compare contributions, time, price growth, "
+        "dividends, taxes, uncertainty, diversification, and risk without treating the result as a forecast."
+    )
+    korean_sentence = (
+        "계획 시나리오는 납입금 기간 주가 상승 배당 세금 불확실성 분산 위험을 비교하되 "
+        "결과를 예측이나 보장으로 해석하지 않도록 돕습니다."
+    )
+    english_sections = "\n\n".join(
+        f"## Planning factor {index}\n\n" + " ".join([english_sentence] * 9)
+        for index in range(1, 6)
+    )
+    korean_sections = "\n\n".join(
+        f"## 계획 요소 {index}\n\n" + " ".join([korean_sentence] * 12)
+        for index in range(1, 6)
+    )
+    fixture = {
+        "title": "How to Stress-Test a Dividend Growth Scenario",
+        "titleKo": "배당 성장 시나리오를 점검하는 방법",
+        "excerpt": "Use a structured scenario to test dividend assumptions without treating projections as forecasts.",
+        "excerptKo": "전망을 예측으로 오해하지 않고 배당 가정을 점검하는 방법을 설명합니다.",
+        "contentEn": english_sections,
+        "contentKo": korean_sections,
+    }
+    errors = validate_article(
+        fixture,
+        ("investing", "risk"),
+        "/",
+        [],
+    )
+    if errors:
+        raise AssertionError(f"Quality-gate fixture failed: {errors}")
+
+    duplicate_errors = validate_article(
+        fixture,
+        ("investing", "risk"),
+        "/",
+        [english_sections],
+    )
+    if not any("similarity" in error for error in duplicate_errors):
+        raise AssertionError("Similarity gate did not reject duplicate content")
+
+    prohibited_fixture = dict(fixture)
+    prohibited_fixture["contentEn"] += "\n\nThis is a guaranteed return."
+    prohibited_errors = validate_article(
+        prohibited_fixture,
+        ("investing", "risk"),
+        "/",
+        [],
+    )
+    if not any("Prohibited phrase" in error for error in prohibited_errors):
+        raise AssertionError("Prohibited-claim gate did not reject unsafe wording")
+
+    print("Projection and quality-gate self-checks passed")
+
+
+def main() -> None:
+    args = parse_args()
+    if args.check:
+        self_check()
+        return
+
+    api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if not api_key:
+        raise RuntimeError("Missing GEMINI_API_KEY")
+    models = tuple(
+        model.strip()
+        for model in os.environ.get("GEMINI_MODELS", ",".join(DEFAULT_MODELS)).split(",")
+        if model.strip()
+    )
+    if not models:
+        raise RuntimeError("GEMINI_MODELS does not contain a model")
+
+    publish_date = scheduled_date()
+    existing_today = sorted(POSTS_DIR.glob(f"{publish_date}-*.md"))
+    if existing_today:
+        print(f"Daily post already exists: {existing_today[0]}")
+        return
+
+    theme = choose_theme(publish_date)
+    existing_titles, existing_bodies = existing_post_data()
+    article, model = generate_valid_article(
+        api_key,
+        theme,
+        existing_titles,
+        existing_bodies,
+        models,
+    )
+    write_post(article, theme, model, publish_date)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        print(f"Blog generation failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+        raise

@@ -1,39 +1,74 @@
-name: Blog Auto Posting Bot
+name: Daily Quality Blog Publisher
 
 on:
-  # Automatic publishing is paused. Run manually only after editorial review.
+  schedule:
+    # Every day at 08:00 Asia/Seoul (23:00 UTC).
+    - cron: "0 23 * * *"
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/blog-bot.yml"
+      - "bots/blog/**"
 
 permissions:
   contents: write
 
+concurrency:
+  group: yieldgrower-daily-blog
+  cancel-in-progress: false
+
 jobs:
-  generate-post:
+  generate-and-publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.12"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
+      - name: Install Python dependencies
+        run: python -m pip install --disable-pip-version-check requests==2.32.5
 
-      - name: Generate daily blog post
+      - name: Verify calculator example
+        run: python bots/blog/generate_post.py --check
+
+      - name: Generate quality-gated bilingual article
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODELS: gemini-3.6-flash,gemini-2.5-flash
         run: python bots/blog/generate_post.py
 
-      - name: Commit and push if changed
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install site dependencies
+        run: npm ci
+
+      - name: Build site with generated article
+        run: npm run build
+
+      - name: Commit and push if a post was created
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add posts
           if git diff --staged --quiet; then
-            echo "No new post to commit"
+            echo "No new post to publish"
             exit 0
           fi
-          git commit -m "Add automated daily blog post"
-          git push
+          git commit -m "Publish daily quality blog post"
+          git pull --rebase origin main
+          git push origin HEAD:main
