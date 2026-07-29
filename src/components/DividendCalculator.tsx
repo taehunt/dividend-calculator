@@ -427,7 +427,7 @@ export default function DividendCalculator() {
                         border: '1px solid #e2e8f0',
                         boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
                       }}
-                      formatter={(value: any, name: any) => [formatCurrency(Number(value)), name === 'balance' ? t.chartVal : t.chartCont]}
+                      formatter={(value, name) => [formatCurrency(Number(value)), name === 'balance' ? t.chartVal : t.chartCont]}
                       labelFormatter={(label) => `${lang === 'ko' ? label + '년차' : 'Year ' + label}`}
                     />
                     <Legend 
