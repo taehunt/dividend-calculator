@@ -1,9 +1,7 @@
 name: Blog Auto Posting Bot
 
 on:
-  schedule:
-    # 매일 UTC 01:00 = 한국시간 10:00
-    - cron: '0 1 * * *'
+  # Automatic publishing is paused. Run manually only after editorial review.
   workflow_dispatch:
 
 permissions:
