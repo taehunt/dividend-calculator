@@ -40,7 +40,8 @@ const translations = {
     yrsGrow: "Years to Grow",
     yrs: "Yrs",
     mktAssump: "Market Assumptions",
-    expRet: "Expected Annual Return",
+    expRet: "Annual Price Growth (Excluding Dividends)",
+    returnHelp: "Enter expected price appreciation only. Dividend yield and tax are calculated separately below.",
     divYield: "Dividend Yield",
     divTax: "Dividend Tax Rate",
     enDrip: "Enable DRIP",
@@ -65,7 +66,7 @@ const translations = {
     res4Desc: "The FIRE movement relies heavily on creating passive income streams that exceed living expenses. Dividend investing is a cornerstone strategy for many FIRE practitioners. By consistently investing in broad-market index funds (like S&P 500 ETFs) or a diversified portfolio of blue-chip dividend stocks, you can build a reliable cash flow. Use our YieldGrower calculator to determine exactly how much you need to invest monthly, and for how long, to reach your \"crossover point\" where your dividends cover your lifestyle.",
     abtTitle: "About YieldGrower Calculator",
     abt1: "YieldGrower is a comprehensive, free financial tool designed to help investors visualize the long-term trajectory of their portfolios. Whether you are a beginner taking your first steps into the stock market or a seasoned investor planning for early retirement, understanding the mathematical reality of your investment plan is crucial.",
-    abt2: "Our calculator takes into account essential variables including your initial principal, monthly contributions, expected market returns, dividend yields, and even tax implications. By toggling the DRIP feature, you can instantly see the dramatic difference that reinvesting makes over decades. We do not store your financial data; all calculations are performed securely within your browser. Start planning your financial freedom today."
+    abt2: "Our calculator models initial principal, monthly contributions, annual price growth, dividend yield, and dividend tax separately. Enter price appreciation excluding dividends to avoid counting dividend returns twice. By toggling DRIP, you can compare reinvesting after-tax dividends with taking them as cash. We do not store your financial data; all calculations are performed securely within your browser."
   },
   ko: {
     navCalc: "계산기",
@@ -81,7 +82,8 @@ const translations = {
     yrsGrow: "투자 기간",
     yrs: "년",
     mktAssump: "시장 예상치",
-    expRet: "예상 연평균 수익률",
+    expRet: "연간 주가 상승률 (배당 제외)",
+    returnHelp: "예상 주가 상승분만 입력하세요. 배당 수익률과 세금은 아래에서 별도로 계산됩니다.",
     divYield: "배당 수익률",
     divTax: "배당 소득세율",
     enDrip: "배당 재투자 (DRIP)",
@@ -106,7 +108,7 @@ const translations = {
     res4Desc: "FIRE(경제적 자립, 조기 은퇴) 운동은 생활비를 초과하는 패시브 인컴(수동적 소득) 흐름을 만드는 것에 크게 의존합니다. 배당 투자는 많은 FIRE 족들에게 핵심 전략입니다. S&P 500 ETF와 같은 시장 지수 펀드나 우량 배당주 포트폴리오에 꾸준히 투자함으로써 신뢰할 수 있는 현금 흐름을 구축할 수 있습니다. 계산기를 사용하여 배당금이 생활비를 충당하는 '크로스오버 포인트'에 도달하기 위해 매월 얼마를 투자해야 하는지 확인해 보세요.",
     abtTitle: "YieldGrower 계산기 소개",
     abt1: "YieldGrower는 투자자들이 포트폴리오의 장기적인 궤적을 시각화할 수 있도록 돕기 위해 고안된 무료 금융 도구입니다. 주식 시장에 첫 발을 내딛는 초보자이든 조기 은퇴를 계획하는 노련한 투자자이든, 투자 계획의 수학적 현실을 이해하는 것은 매우 중요합니다.",
-    abt2: "저희 계산기는 초기 투자금, 월 적립금, 예상 시장 수익률, 배당 수익률, 심지어 세금까지 필수적인 변수들을 모두 고려합니다. DRIP 기능을 켜고 끔으로써, 수십 년 동안 재투자가 만드는 극적인 차이를 즉시 확인할 수 있습니다. 저희는 귀하의 금융 데이터를 저장하지 않으며, 모든 계산은 귀하의 브라우저 내에서 안전하게 수행됩니다. 오늘부터 경제적 자유를 향한 계획을 시작하세요."
+    abt2: "이 계산기는 초기 투자금, 월 적립금, 연간 주가 상승률, 배당 수익률, 배당세를 각각 계산합니다. 배당 수익이 이중 반영되지 않도록 주가 상승률에는 배당을 제외한 값만 입력하세요. DRIP을 켜고 끄면 세후 배당을 재투자하는 경우와 현금으로 받는 경우를 비교할 수 있습니다. 금융 데이터는 저장하지 않으며 모든 계산은 브라우저에서 수행됩니다."
   }
 };
 
@@ -285,10 +287,13 @@ export default function DividendCalculator() {
                 />
                 
                 <div className="pt-4 pb-2 border-t border-slate-100">
-                  <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-slate-900 mb-2 flex items-center gap-2">
                     <TrendingUp className="w-4 h-4 text-slate-400" />
                     {t.mktAssump}
                   </h3>
+                  <p className="text-xs leading-relaxed text-slate-500 mb-4">
+                    {t.returnHelp}
+                  </p>
                   <div className="space-y-5">
                     <NumberField 
                       label={t.expRet} 

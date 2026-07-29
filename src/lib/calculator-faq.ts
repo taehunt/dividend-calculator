@@ -20,6 +20,10 @@ export const calculatorFaqs = {
         a: "Each reinvested dividend increases your share count. Those extra shares produce more dividends later, creating a snowball. Small monthly contributions plus steady reinvestment often matter more than perfect market timing over 10–30 years.",
       },
       {
+        q: "Should annual price growth include dividends?",
+        a: "No. Enter expected price appreciation only. Dividend yield and dividend tax are modeled separately, so entering a total-return assumption would count dividends twice. DRIP controls whether after-tax dividends are added to the portfolio balance.",
+      },
+      {
         q: "Should I include dividend tax in my projection?",
         a: "Yes, if you invest in a taxable account. Tax reduces cash available to reinvest, so after-tax yield is what compounds. For a focused after-tax view, also try the Dividend Tax Calculator on YieldGrower.",
       },
@@ -36,6 +40,10 @@ export const calculatorFaqs = {
       {
         q: "DRIP는 어떻게 복리를 만드나요?",
         a: "재투자된 배당으로 보유 주식이 늘고, 늘어난 주식이 다시 배당을 만듭니다. 10~30년 구간에서는 완벽한 타이밍보다 꾸준한 적립과 재투자가 결과를 더 크게 바꾸는 경우가 많습니다.",
+      },
+      {
+        q: "연간 주가 상승률에 배당을 포함해야 하나요?",
+        a: "아니요. 예상 주가 상승분만 입력하세요. 배당 수익률과 배당세는 별도로 계산되므로 총수익률을 입력하면 배당이 이중 반영됩니다. DRIP은 세후 배당을 포트폴리오 잔액에 재투자할지 결정합니다.",
       },
       {
         q: "배당세도 넣고 계산해야 하나요?",
