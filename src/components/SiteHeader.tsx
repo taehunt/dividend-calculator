@@ -76,19 +76,19 @@ export default function SiteHeader({
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-20 print:hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="bg-indigo-600 p-2 rounded-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-2 grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2 md:h-16 md:py-0 md:flex md:justify-between">
+        <Link href="/" className="flex min-w-0 items-center gap-2">
+          <div className="shrink-0 bg-indigo-600 p-2 rounded-lg">
             <PieChart className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
+          <span className="hidden min-[360px]:inline text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
             YieldGrower
           </span>
         </Link>
 
-        <div className="flex items-center gap-3 sm:gap-6">
+        <div className="contents md:flex md:items-center md:gap-6">
           {showLocaleControls && (
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1">
+            <div className="col-span-2 row-start-2 justify-self-end flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1 md:col-auto md:row-auto md:justify-self-auto">
               <div
                 className={`flex items-center pl-2 pr-1 ${
                   showCurrencyControls ? "border-r border-slate-200" : ""
@@ -230,7 +230,7 @@ export default function SiteHeader({
             </Link>
           </nav>
 
-          <nav className="flex md:hidden items-center gap-3 text-sm font-medium text-slate-600">
+          <nav className="col-start-2 row-start-1 flex justify-self-end items-center gap-3 text-sm font-medium text-slate-600 md:hidden">
             <Link href="/pulse" className={active === "pulse" ? "text-indigo-600" : ""}>
               {t.pulse}
             </Link>
