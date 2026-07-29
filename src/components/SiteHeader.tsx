@@ -37,6 +37,8 @@ const labels = {
     inflation: "Inflation Calculator",
     allTools: "All Tools",
     blog: "Blog",
+    language: "Language",
+    currency: "Currency",
   },
   ko: {
     tools: "도구",
@@ -51,6 +53,8 @@ const labels = {
     inflation: "인플레이션 계산기",
     allTools: "전체 도구",
     blog: "블로그",
+    language: "언어",
+    currency: "통화",
   },
 };
 
@@ -96,6 +100,7 @@ export default function SiteHeader({
               >
                 <Globe className="w-4 h-4 text-slate-400 mr-1" />
                 <select
+                  aria-label={t.language}
                   value={lang}
                   onChange={(e) => setLang(e.target.value as Lang)}
                   className="text-sm bg-transparent text-slate-700 py-1 pr-2 focus:outline-none cursor-pointer font-medium"
@@ -106,6 +111,7 @@ export default function SiteHeader({
               </div>
               {showCurrencyControls && (
                 <select
+                  aria-label={t.currency}
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as Currency)}
                   className="text-sm bg-transparent text-slate-700 py-1 pl-2 pr-2 focus:outline-none cursor-pointer font-medium"

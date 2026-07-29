@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ElementType } from "react";
+import { useEffect, useId, useState, type ElementType } from "react";
 
 type NumberFieldProps = {
   label: string;
@@ -27,6 +27,7 @@ export default function NumberField({
   max,
   step,
 }: NumberFieldProps) {
+  const inputId = useId();
   const [text, setText] = useState(() => String(value));
 
   useEffect(() => {
@@ -38,7 +39,10 @@ export default function NumberField({
 
   return (
     <div>
-      <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+      <label
+        htmlFor={inputId}
+        className="block text-sm font-semibold text-slate-700 mb-1.5"
+      >
         {label}
       </label>
       <div className="relative">
@@ -48,6 +52,7 @@ export default function NumberField({
           </div>
         )}
         <input
+          id={inputId}
           type="text"
           inputMode="decimal"
           value={text}
