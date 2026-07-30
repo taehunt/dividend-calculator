@@ -46,7 +46,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python dependencies
-        run: python -m pip install --disable-pip-version-check requests==2.32.5
+        run: >-
+          python -m pip install --disable-pip-version-check
+          requests==2.32.5
+          google-auth==2.56.2
 
       - name: Verify calculator example
         run: python bots/blog/generate_post.py --check
@@ -55,6 +58,8 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODELS: gemini-3.6-flash,gemini-3.5-flash-lite,gemini-3.5-flash
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_SITE_URL: sc-domain:yieldgrower.com
         run: |
           if [[ "${{ inputs.mode }}" == "backfill" || "${{ github.event.head_commit.message }}" == *"[backfill]"* ]]; then
             python bots/blog/generate_post.py --backfill-all
