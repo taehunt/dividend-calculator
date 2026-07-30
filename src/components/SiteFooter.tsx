@@ -41,12 +41,12 @@ export default function SiteFooter() {
           >
             {t.privacy}
           </Link>
-          <a
-            href="mailto:support@yieldgrower.com"
+          <Link
+            href="/contact"
             className="text-slate-500 hover:text-indigo-600 transition-colors"
           >
             {t.contact}
-          </a>
+          </Link>
         </div>
       </div>
     </footer>

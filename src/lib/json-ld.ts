@@ -1,5 +1,5 @@
 import type { RelatedTool } from "@/lib/related-tools";
-import { SITE_URL } from "@/lib/site";
+import { CONTACT_EMAIL, SITE_URL } from "@/lib/site";
 
 export function organizationJsonLd() {
   return {
@@ -7,7 +7,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: "YieldGrower",
     url: SITE_URL,
-    email: "support@yieldgrower.com",
+    email: CONTACT_EMAIL,
     description:
       "Free dividend, FIRE, and compound calculators plus a daily Income Pulse score.",
   };

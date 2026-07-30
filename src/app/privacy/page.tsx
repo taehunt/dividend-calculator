@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 const copy = {
   en: {
@@ -50,7 +51,7 @@ const copy = {
       },
       {
         h: "7. Contact Information",
-        p: "To ask questions or comment about this privacy policy and our privacy practices, contact us at: support@yieldgrower.com",
+        p: `To ask questions or comment about this privacy policy and our privacy practices, contact us at: ${CONTACT_EMAIL}`,
       },
     ],
   },
@@ -98,7 +99,7 @@ const copy = {
       },
       {
         h: "7. 문의",
-        p: "본 방침 관련 문의: support@yieldgrower.com",
+        p: `본 방침 관련 문의: ${CONTACT_EMAIL}`,
       },
     ],
   },

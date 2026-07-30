@@ -62,6 +62,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/inflation", file: "src/app/inflation/page.tsx", priority: 0.9 },
     { path: "/tools", file: "src/app/tools/page.tsx", priority: 0.8 },
     { path: "/about", file: "src/app/about/page.tsx", priority: 0.4 },
+    { path: "/contact", file: "src/app/contact/page.tsx", priority: 0.4 },
     { path: "/privacy", file: "src/app/privacy/page.tsx", priority: 0.3 },
   ];
 
@@ -94,7 +95,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${SITE_URL}${c.path}`,
       lastModified: fileLastModified(c.file),
       changeFrequency:
-        c.path === "/privacy" || c.path === "/about"
+        c.path === "/privacy" ||
+        c.path === "/about" ||
+        c.path === "/contact"
           ? ("yearly" as const)
           : ("weekly" as const),
       priority: c.priority,
