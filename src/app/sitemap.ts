@@ -21,9 +21,11 @@ function pulseLastModified(): Date {
   return new Date();
 }
 
-function fileLastModified(relativePath: string): Date {
+function calculatorLastModified(segment: string): Date {
   try {
-    return statSync(path.join(process.cwd(), relativePath)).mtime;
+    return statSync(
+      path.join(process.cwd(), "src", "app", segment, "page.tsx")
+    ).mtime;
   } catch {
     return new Date();
   }
@@ -49,21 +51,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const calculators: {
-    path: string;
-    file: string;
+    segment: string;
     priority: number;
   }[] = [
-    { path: "/fire", file: "src/app/fire/page.tsx", priority: 0.9 },
-    { path: "/average", file: "src/app/average/page.tsx", priority: 0.9 },
-    { path: "/tax", file: "src/app/tax/page.tsx", priority: 0.9 },
-    { path: "/compound", file: "src/app/compound/page.tsx", priority: 0.9 },
-    { path: "/goal", file: "src/app/goal/page.tsx", priority: 0.9 },
-    { path: "/cagr", file: "src/app/cagr/page.tsx", priority: 0.9 },
-    { path: "/inflation", file: "src/app/inflation/page.tsx", priority: 0.9 },
-    { path: "/tools", file: "src/app/tools/page.tsx", priority: 0.8 },
-    { path: "/about", file: "src/app/about/page.tsx", priority: 0.4 },
-    { path: "/contact", file: "src/app/contact/page.tsx", priority: 0.4 },
-    { path: "/privacy", file: "src/app/privacy/page.tsx", priority: 0.3 },
+    { segment: "fire", priority: 0.9 },
+    { segment: "average", priority: 0.9 },
+    { segment: "tax", priority: 0.9 },
+    { segment: "compound", priority: 0.9 },
+    { segment: "goal", priority: 0.9 },
+    { segment: "cagr", priority: 0.9 },
+    { segment: "inflation", priority: 0.9 },
+    { segment: "tools", priority: 0.8 },
+    { segment: "about", priority: 0.4 },
+    { segment: "contact", priority: 0.4 },
+    { segment: "privacy", priority: 0.3 },
   ];
 
   return [
@@ -92,12 +93,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     ...calculators.map((c) => ({
-      url: `${SITE_URL}${c.path}`,
-      lastModified: fileLastModified(c.file),
+      url: `${SITE_URL}/${c.segment}`,
+      lastModified: calculatorLastModified(c.segment),
       changeFrequency:
-        c.path === "/privacy" ||
-        c.path === "/about" ||
-        c.path === "/contact"
+        c.segment === "privacy" ||
+        c.segment === "about" ||
+        c.segment === "contact"
           ? ("yearly" as const)
           : ("weekly" as const),
       priority: c.priority,
