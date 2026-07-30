@@ -129,6 +129,15 @@ THEMES = (
     },
 )
 
+BACKFILL_TARGETS = (
+    ("2026-07-24-dividend-tax-considerations-framework.md", 9),
+    ("2026-07-25-monthly-contribution-dividend-snowball-guide.md", 2),
+    ("2026-07-26-common-dividend-investor-mistakes-checklist.md", 11),
+    ("2026-07-27-dividend-reinvestment-plans-framework.md", 0),
+    ("2026-07-28-compound-interest-wealth-building-checklist.md", 2),
+    ("2026-07-29-high-yield-vs-dividend-growth-overview.md", 5),
+)
+
 PROHIBITED_PHRASES = (
     "guaranteed return",
     "guaranteed income",
@@ -212,12 +221,14 @@ def similarity(left: str, right: str) -> float:
     return len(left_set & right_set) / len(left_set | right_set)
 
 
-def existing_post_data() -> tuple[list[str], list[str]]:
+def existing_post_data(exclude_path: Path | None = None) -> tuple[list[str], list[str]]:
     titles: list[str] = []
     bodies: list[str] = []
     if not POSTS_DIR.exists():
         return titles, bodies
     for path in sorted(POSTS_DIR.glob("*.md")):
+        if exclude_path is not None and path == exclude_path:
+            continue
         raw = path.read_text(encoding="utf-8")
         title_match = re.search(r'^title:\s*"?(.*?)"?\s*$', raw, re.MULTILINE)
         if title_match:
@@ -355,6 +366,7 @@ def build_prompt(
     theme: dict[str, Any],
     existing_titles: list[str],
     validation_feedback: list[str] | None = None,
+    fixed_metadata: dict[str, str] | None = None,
 ) -> str:
     projection = project_portfolio()
     sources = [
@@ -367,6 +379,14 @@ def build_prompt(
         for source_id in theme["sources"]
     ]
     feedback = validation_feedback or []
+    metadata_instruction = ""
+    if fixed_metadata:
+        metadata_instruction = (
+            "\nThis expands an existing article. Preserve these metadata values exactly "
+            "and write content that directly matches them:\n"
+            + json.dumps(fixed_metadata, ensure_ascii=False, indent=2)
+            + "\n"
+        )
     return f"""
 You write for YieldGrower, a bilingual educational calculator website.
 Create one original, people-first article in English and a faithful natural Korean version.
@@ -374,6 +394,7 @@ Create one original, people-first article in English and a faithful natural Kore
 Theme: {theme["name"]}
 Specific direction: {theme["hint"]}
 Related calculator: {SITE_URL}{theme["tool"]}
+{metadata_instruction}
 Recent titles that must not be repeated or lightly reworded:
 {json.dumps(existing_titles[-60:], ensure_ascii=False, indent=2)}
 
@@ -454,15 +475,18 @@ def generate_valid_article(
     existing_titles: list[str],
     existing_bodies: list[str],
     models: tuple[str, ...],
+    fixed_metadata: dict[str, str] | None = None,
 ) -> tuple[dict[str, Any], str]:
     feedback: list[str] = []
     last_error: Exception | None = None
     for attempt in range(1, 3):
-        prompt = build_prompt(theme, existing_titles, feedback)
+        prompt = build_prompt(theme, existing_titles, feedback, fixed_metadata)
         for model in models:
             try:
                 print(f"Generation attempt={attempt} model={model}")
                 article = call_gemini(api_key, model, prompt)
+                if fixed_metadata:
+                    article.update(fixed_metadata)
                 errors = validate_article(
                     article,
                     theme["sources"],
@@ -529,6 +553,80 @@ def write_post(
     return path
 
 
+def read_post_metadata(path: Path) -> dict[str, str]:
+    raw = path.read_text(encoding="utf-8")
+    metadata: dict[str, str] = {}
+    for key in ("title", "titleKo", "date", "excerpt", "excerptKo"):
+        match = re.search(rf'^{key}:\s*"([^"]*)"\s*$', raw, re.MULTILINE)
+        if not match:
+            raise ValueError(f"Missing {key} frontmatter in {path}")
+        metadata[key] = match.group(1)
+    return metadata
+
+
+def write_backfill_post(
+    path: Path,
+    article: dict[str, Any],
+    theme: dict[str, Any],
+    model: str,
+    metadata: dict[str, str],
+) -> None:
+    content_en = finalize_content(
+        article["contentEn"], theme["sources"], theme["tool"], lang="en"
+    )
+    content_ko = finalize_content(
+        article["contentKo"], theme["sources"], theme["tool"], lang="ko"
+    )
+    frontmatter = "\n".join(
+        [
+            "---",
+            f'title: "{yaml_escape(metadata["title"])}"',
+            f'titleKo: "{yaml_escape(metadata["titleKo"])}"',
+            f'date: "{metadata["date"]}"',
+            f'excerpt: "{yaml_escape(metadata["excerpt"])}"',
+            f'excerptKo: "{yaml_escape(metadata["excerptKo"])}"',
+            'author: "YieldGrower Editorial"',
+            'generationMethod: "AI-assisted with automated quality checks"',
+            f'generatorModel: "{yaml_escape(model)}"',
+            "---",
+            "",
+        ]
+    )
+    path.write_text(
+        frontmatter + content_en + "\n\n---ko---\n\n" + content_ko + "\n",
+        encoding="utf-8",
+    )
+    print(f"Expanded quality-gated legacy post: {path}")
+
+
+def backfill_legacy_posts(api_key: str, models: tuple[str, ...]) -> None:
+    for filename, theme_index in BACKFILL_TARGETS:
+        path = POSTS_DIR / filename
+        if not path.exists():
+            raise FileNotFoundError(f"Backfill target does not exist: {path}")
+        metadata = read_post_metadata(path)
+        existing_titles, existing_bodies = existing_post_data(exclude_path=path)
+        fixed_metadata = {
+            key: metadata[key]
+            for key in ("title", "titleKo", "excerpt", "excerptKo")
+        }
+        article, model = generate_valid_article(
+            api_key,
+            THEMES[theme_index],
+            existing_titles,
+            existing_bodies,
+            models,
+            fixed_metadata,
+        )
+        write_backfill_post(
+            path,
+            article,
+            THEMES[theme_index],
+            model,
+            metadata,
+        )
+
+
 def choose_theme(publish_date: str) -> dict[str, Any]:
     ordinal = datetime.strptime(publish_date, "%Y-%m-%d").date().toordinal()
     return THEMES[ordinal % len(THEMES)]
@@ -536,10 +634,16 @@ def choose_theme(publish_date: str) -> dict[str, Any]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
         "--check",
         action="store_true",
         help="Run deterministic generator self-checks without calling Gemini.",
+    )
+    mode.add_argument(
+        "--backfill-all",
+        action="store_true",
+        help="Expand the configured legacy posts while preserving their URLs and dates.",
     )
     return parser.parse_args()
 
@@ -603,6 +707,16 @@ def self_check() -> None:
     if not any("Prohibited phrase" in error for error in prohibited_errors):
         raise AssertionError("Prohibited-claim gate did not reject unsafe wording")
 
+    backfill_paths = [POSTS_DIR / filename for filename, _theme in BACKFILL_TARGETS]
+    if len(backfill_paths) != len(set(backfill_paths)):
+        raise AssertionError("Backfill targets contain duplicate paths")
+    missing_paths = [str(path) for path in backfill_paths if not path.exists()]
+    if missing_paths:
+        raise AssertionError(f"Backfill targets are missing: {missing_paths}")
+    for _filename, theme_index in BACKFILL_TARGETS:
+        if not 0 <= theme_index < len(THEMES):
+            raise AssertionError(f"Invalid backfill theme index: {theme_index}")
+
     print("Projection and quality-gate self-checks passed")
 
 
@@ -622,6 +736,10 @@ def main() -> None:
     )
     if not models:
         raise RuntimeError("GEMINI_MODELS does not contain a model")
+
+    if args.backfill_all:
+        backfill_legacy_posts(api_key, models)
+        return
 
     publish_date = scheduled_date()
     existing_today = sorted(POSTS_DIR.glob(f"{publish_date}-*.md"))

@@ -5,6 +5,15 @@ on:
     # Every day at 08:00 Asia/Seoul (23:00 UTC).
     - cron: "0 23 * * *"
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Publishing mode"
+        required: true
+        default: "daily"
+        type: choice
+        options:
+          - daily
+          - backfill
   push:
     branches:
       - main
@@ -46,7 +55,12 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODELS: gemini-3.6-flash,gemini-2.5-flash
-        run: python bots/blog/generate_post.py
+        run: |
+          if [[ "${{ inputs.mode }}" == "backfill" ]]; then
+            python bots/blog/generate_post.py --backfill-all
+          else
+            python bots/blog/generate_post.py
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -60,7 +74,7 @@ jobs:
       - name: Build site with generated article
         run: npm run build
 
-      - name: Commit and push if a post was created
+      - name: Commit and push if posts changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -69,6 +83,10 @@ jobs:
             echo "No new post to publish"
             exit 0
           fi
-          git commit -m "Publish daily quality blog post"
+          if [[ "${{ inputs.mode }}" == "backfill" ]]; then
+            git commit -m "Expand legacy dividend guides"
+          else
+            git commit -m "Publish daily quality blog post"
+          fi
           git pull --rebase origin main
           git push origin HEAD:main
