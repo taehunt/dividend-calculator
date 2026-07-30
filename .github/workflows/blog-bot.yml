@@ -54,7 +54,7 @@ jobs:
       - name: Generate quality-gated bilingual article
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODELS: gemini-3.6-flash,gemini-2.5-flash
+          GEMINI_MODELS: gemini-3.6-flash,gemini-3.5-flash-lite,gemini-3.5-flash
         run: |
           if [[ "${{ inputs.mode }}" == "backfill" || "${{ github.event.head_commit.message }}" == *"[backfill]"* ]]; then
             python bots/blog/generate_post.py --backfill-all

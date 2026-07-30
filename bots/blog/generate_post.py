@@ -14,7 +14,11 @@ import requests
 SITE_URL = "https://www.yieldgrower.com"
 POSTS_DIR = Path("posts")
 SEOUL = timezone(timedelta(hours=9), name="Asia/Seoul")
-DEFAULT_MODELS = ("gemini-3.6-flash", "gemini-2.5-flash")
+DEFAULT_MODELS = (
+    "gemini-3.6-flash",
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash",
+)
 MIN_ENGLISH_WORDS = 900
 MAX_ENGLISH_WORDS = 1_700
 MIN_KOREAN_WORDS = 550
