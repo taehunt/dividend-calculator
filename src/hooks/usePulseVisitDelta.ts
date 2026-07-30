@@ -22,6 +22,7 @@ export function usePulseVisitDelta(data: IncomePulse | null | undefined) {
 
   useEffect(() => {
     if (!data || data.score === null || data.score === undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset state when the external pulse feed is unavailable.
       setState({ status: "loading" });
       return;
     }

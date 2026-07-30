@@ -101,8 +101,8 @@ export default function PulseHistoryChart({
                   border: "1px solid #e2e8f0",
                   boxShadow: "0 10px 15px -3px rgba(0,0,0,0.08)",
                 }}
-                formatter={(value: any) => [Number(value), scoreLabel]}
-                labelFormatter={(_label: any, payload: any) => {
+                formatter={(value) => [Number(value), scoreLabel]}
+                labelFormatter={(_label, payload) => {
                   const row = payload?.[0]?.payload as
                     | { date?: string; label?: string }
                     | undefined;

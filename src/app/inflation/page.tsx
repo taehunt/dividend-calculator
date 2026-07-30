@@ -211,7 +211,7 @@ export default function InflationCalculatorPage() {
                       tickLine={false}
                     />
                     <Tooltip
-                      formatter={(value: any, name: any) => [
+                      formatter={(value, name) => [
                         formatMoney(Number(value)),
                         name === "needed" ? t.needed : t.real,
                       ]}

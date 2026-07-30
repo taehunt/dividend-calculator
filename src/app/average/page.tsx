@@ -82,6 +82,7 @@ export default function AverageCalculatorPage() {
     const stored = readStoredJson<StoredAverage>(
       calcStorageKey("average", "draft")
     );
+    /* eslint-disable react-hooks/set-state-in-effect -- Restore browser-only calculator data after hydration. */
     if (stored?.purchases?.length) {
       setPurchases(
         stored.purchases.map((p) => ({
@@ -95,6 +96,7 @@ export default function AverageCalculatorPage() {
       }
       prevCurrency.current = currency;
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
     hydrated.current = true;
   }, [ready, currency]);
 

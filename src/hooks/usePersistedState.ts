@@ -31,6 +31,7 @@ export function usePersistedState<T>(
   const urlType = options?.urlType ?? "number";
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- Restore browser-only URL or localStorage state after hydration. */
     if (urlParam) {
       if (urlType === "boolean") {
         const fromUrl = readUrlBoolean(urlParam);
@@ -60,6 +61,7 @@ export function usePersistedState<T>(
     if (stored !== undefined) {
       setValue(stored);
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
     hydrated.current = true;
   }, [key, urlParam, urlType]);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type Props = {
   value: number;
@@ -16,14 +16,8 @@ export default function DraftNumberInput({
   className,
   "aria-label": ariaLabel,
 }: Props) {
-  const [text, setText] = useState(() => String(value));
-
-  useEffect(() => {
-    const parsed = Number(text);
-    if (text === "" || text === "-" || text === "." || text === "-.") return;
-    if (Number.isFinite(parsed) && parsed === value) return;
-    setText(String(value));
-  }, [value, text]);
+  const [draft, setDraft] = useState<string | null>(null);
+  const text = draft ?? String(value);
 
   return (
     <input
@@ -34,23 +28,23 @@ export default function DraftNumberInput({
       onChange={(e) => {
         const next = e.target.value;
         if (next !== "" && !/^-?\d*\.?\d*$/.test(next)) return;
-        setText(next);
+        setDraft(next);
         if (next === "" || next === "-" || next === "." || next === "-.") return;
         const num = Number(next);
         if (Number.isFinite(num)) onChange(num);
       }}
       onBlur={() => {
         if (text === "" || text === "-" || text === "." || text === "-.") {
-          setText(String(value));
+          setDraft(null);
           return;
         }
         const num = Number(text);
         if (!Number.isFinite(num)) {
-          setText(String(value));
+          setDraft(null);
           return;
         }
-        setText(String(num));
         onChange(num);
+        setDraft(null);
       }}
       className={
         className ||

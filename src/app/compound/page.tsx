@@ -236,7 +236,7 @@ export default function CompoundCalculatorPage() {
                       tickLine={false}
                     />
                     <Tooltip
-                      formatter={(value: any, name: any) => [
+                      formatter={(value, name) => [
                         formatMoney(Number(value)),
                         name === "balance" ? t.balance : t.contributions,
                       ]}

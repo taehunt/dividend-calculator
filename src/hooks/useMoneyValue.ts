@@ -37,6 +37,7 @@ export function useMoneyValue(
   useEffect(() => {
     if ((!storageKey && !urlParam) || !ready || hydrated.current) return;
 
+    /* eslint-disable react-hooks/set-state-in-effect -- Restore browser-only URL or localStorage state after hydration. */
     if (urlParam) {
       const fromUrl = readUrlNumber(urlParam);
       if (fromUrl !== undefined) {
@@ -54,6 +55,7 @@ export function useMoneyValue(
         prevCurrency.current = currency;
       }
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
     hydrated.current = true;
   }, [storageKey, urlParam, ready, currency]);
 

@@ -440,7 +440,7 @@ export default function FireCalculatorPage() {
                       tickLine={false}
                     />
                     <Tooltip
-                      formatter={(value: any, name: any) => [
+                      formatter={(value, name) => [
                         value == null || !Number.isFinite(Number(value))
                           ? "—"
                           : formatCurrency(Number(value)),

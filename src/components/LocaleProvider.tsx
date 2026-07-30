@@ -46,12 +46,14 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = readStored();
+    /* eslint-disable react-hooks/set-state-in-effect -- Restore browser-only locale after hydration. */
     if (stored) {
       setLangState(stored.lang);
       // Keep language and money unit aligned
       setCurrencyState(stored.lang === "ko" ? "KRW" : "USD");
     }
     setReady(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   useEffect(() => {
