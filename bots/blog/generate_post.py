@@ -768,6 +768,12 @@ if __name__ == "__main__":
     except Exception as exc:
         error_message = f"Blog generation failed: {type(exc).__name__}: {exc}"
         print(error_message, file=sys.stderr)
+        annotation_message = (
+            error_message.replace("%", "%25")
+            .replace("\r", "%0D")
+            .replace("\n", "%0A")
+        )
+        print(f"::error title=Blog backfill failed::{annotation_message}")
         summary_path = os.environ.get("GITHUB_STEP_SUMMARY", "").strip()
         if summary_path:
             with Path(summary_path).open("a", encoding="utf-8") as summary:
