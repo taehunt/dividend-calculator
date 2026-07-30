@@ -2,18 +2,47 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import ConsentBanner from "@/components/ConsentBanner";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import SiteFooter from "@/components/SiteFooter";
 import JsonLd from "@/components/JsonLd";
 import { organizationJsonLd, webSiteJsonLd } from "@/lib/json-ld";
-import {
-  CONSENT_STORAGE_KEY,
-  GA_MEASUREMENT_ID,
-  SITE_URL,
-} from "@/lib/site";
+import { GA_MEASUREMENT_ID, SITE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"] });
+const GOOGLE_CMP_REGIONS = [
+  "AT",
+  "BE",
+  "BG",
+  "HR",
+  "CY",
+  "CZ",
+  "DK",
+  "EE",
+  "FI",
+  "FR",
+  "DE",
+  "GR",
+  "HU",
+  "IE",
+  "IT",
+  "LV",
+  "LT",
+  "LU",
+  "MT",
+  "NL",
+  "PL",
+  "PT",
+  "RO",
+  "SK",
+  "SI",
+  "ES",
+  "SE",
+  "IS",
+  "LI",
+  "NO",
+  "GB",
+  "CH",
+];
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -60,20 +89,19 @@ export default function RootLayout({
             __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
-            var yieldGrowerConsent = null;
-            try {
-              yieldGrowerConsent = localStorage.getItem(${JSON.stringify(
-                CONSENT_STORAGE_KEY
-              )});
-            } catch (error) {}
-            var yieldGrowerConsentState =
-              yieldGrowerConsent === "granted" ? "granted" : "denied";
             gtag("consent", "default", {
-              ad_storage: yieldGrowerConsentState,
-              ad_user_data: yieldGrowerConsentState,
-              ad_personalization: yieldGrowerConsentState,
-              analytics_storage: yieldGrowerConsentState,
-              wait_for_update: 500
+              ad_storage: "denied",
+              ad_user_data: "denied",
+              ad_personalization: "denied",
+              analytics_storage: "denied",
+              wait_for_update: 500,
+              region: ${JSON.stringify(GOOGLE_CMP_REGIONS)}
+            });
+            gtag("consent", "default", {
+              ad_storage: "granted",
+              ad_user_data: "granted",
+              ad_personalization: "granted",
+              analytics_storage: "granted"
             });
           `,
           }}
@@ -83,7 +111,6 @@ export default function RootLayout({
         <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
         <LocaleProvider>
           {children}
-          <ConsentBanner />
           <SiteFooter />
         </LocaleProvider>
         <Script

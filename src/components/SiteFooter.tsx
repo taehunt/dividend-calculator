@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useLocale } from "@/components/LocaleProvider";
-import { OPEN_CONSENT_EVENT } from "@/components/ConsentBanner";
+import GooglePrivacySettingsButton from "@/components/GooglePrivacySettingsButton";
 
 const copy = {
   en: {
@@ -11,7 +11,6 @@ const copy = {
     about: "About",
     privacy: "Privacy Policy",
     contact: "Contact",
-    cookies: "Cookie Settings",
   },
   ko: {
     disclaimer:
@@ -19,7 +18,6 @@ const copy = {
     about: "소개",
     privacy: "개인정보 처리방침",
     contact: "문의",
-    cookies: "쿠키 설정",
   },
 };
 
@@ -50,13 +48,7 @@ export default function SiteFooter() {
           >
             {t.contact}
           </Link>
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new Event(OPEN_CONSENT_EVENT))}
-            className="text-slate-500 hover:text-indigo-600 transition-colors"
-          >
-            {t.cookies}
-          </button>
+          <GooglePrivacySettingsButton />
         </div>
       </div>
     </footer>

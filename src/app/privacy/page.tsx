@@ -21,7 +21,7 @@ const copy = {
         p: "We do not require users to create an account, log in, or provide personal financial data to use our calculator. All calculations are performed locally in your browser. However, we may collect certain information automatically when you visit our Website:",
         ul: [
           "Usage Details: Information about your internet connection, the equipment you use to access our Website, and usage details.",
-          "Cookies and Tracking Technologies: We use cookies and similar technologies for Google Analytics measurement and Google AdSense advertising. Non-essential storage is denied by default until you make a choice in our cookie banner.",
+          "Cookies and Tracking Technologies: We use cookies and similar technologies for Google Analytics measurement and Google AdSense advertising. Where required, a Google-certified consent management platform (CMP) asks for and applies your choices.",
         ],
       },
       {
@@ -37,7 +37,7 @@ const copy = {
         h: "4. Third-Party Services",
         p: "We use third-party services that may collect information used to identify you:",
         ul: [
-          "Google Analytics: We use Google Analytics to measure page views, engagement, and general usage patterns. Analytics may use cookies and similar identifiers when you consent.",
+          "Google Analytics: We use Google Analytics to measure page views, engagement, and general usage patterns. Where consent is required, Analytics may use cookies and similar identifiers only according to your choice.",
           "Google AdSense: We use Google AdSense to display ads. Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our sites and/or other sites on the Internet. Users may opt out of personalized advertising by visiting Google's Ads Settings.",
           "Vercel: Our website is hosted on Vercel, which may collect basic server logs.",
         ],
@@ -48,7 +48,7 @@ const copy = {
       },
       {
         h: "6. Your Cookie Choices",
-        p: "You can allow or reject non-essential storage in the cookie banner. You can review or change your choice at any time through Cookie Settings in the Website footer. Your choice is saved in your browser's local storage.",
+        p: "Where European Economic Area, United Kingdom, or Swiss regulations apply, Google's consent message lets you manage advertising and analytics choices. After making a choice, you can reopen the message through Cookie Settings in the Website footer when that option is available.",
       },
       {
         h: "7. Changes to Our Privacy Policy",
@@ -74,7 +74,7 @@ const copy = {
         p: "계산기 이용을 위해 계정 생성, 로그인, 개인 금융 정보 입력을 요구하지 않습니다. 모든 계산은 브라우저에서 로컬로 수행됩니다. 다만 웹사이트 방문 시 아래 정보가 자동으로 수집될 수 있습니다.",
         ul: [
           "이용 정보: 인터넷 연결, 접속 기기, 이용 내역 등",
-          "쿠키 및 유사 기술: Google Analytics 측정과 Google AdSense 광고를 위해 쿠키 및 유사 기술을 사용합니다. 이용자가 쿠키 배너에서 선택하기 전에는 필수 항목 외 저장을 기본적으로 거부합니다.",
+          "쿠키 및 유사 기술: Google Analytics 측정과 Google AdSense 광고를 위해 쿠키 및 유사 기술을 사용합니다. 동의가 필요한 지역에서는 Google 인증 동의 관리 플랫폼(CMP)이 이용자의 선택을 받고 적용합니다.",
         ],
       },
       {
@@ -90,7 +90,7 @@ const copy = {
         h: "4. 제3자 서비스",
         p: "이용자를 식별하는 데 사용될 수 있는 정보를 수집하는 제3자 서비스를 이용합니다.",
         ul: [
-          "Google Analytics: 페이지 조회, 참여도, 일반적인 이용 패턴을 측정합니다. 이용자가 동의하면 쿠키 및 유사 식별자를 사용할 수 있습니다.",
+          "Google Analytics: 페이지 조회, 참여도, 일반적인 이용 패턴을 측정합니다. 동의가 필요한 경우 이용자의 선택에 따라 쿠키 및 유사 식별자를 사용합니다.",
           "Google AdSense: 광고 표시에 사용합니다. Google과 파트너는 광고 쿠키를 사용해 본 사이트 및 다른 사이트 방문 기록을 바탕으로 광고를 게재할 수 있습니다. 맞춤 광고는 Google 광고 설정에서 옵트아웃할 수 있습니다.",
           "Vercel: 웹사이트 호스팅에 사용하며 기본 서버 로그를 수집할 수 있습니다.",
         ],
@@ -101,7 +101,7 @@ const copy = {
       },
       {
         h: "6. 쿠키 선택",
-        p: "쿠키 배너에서 필수 항목 외 저장을 허용하거나 거부할 수 있습니다. 웹사이트 푸터의 쿠키 설정을 통해 언제든지 선택을 다시 확인하거나 변경할 수 있습니다. 선택 결과는 브라우저의 로컬 저장소에 보관됩니다.",
+        p: "유럽경제지역(EEA), 영국 또는 스위스 규정이 적용되는 경우 Google 동의 메시지에서 광고 및 분석 관련 선택을 관리할 수 있습니다. 선택 후에는 해당 기능이 제공되는 경우 웹사이트 푸터의 쿠키 설정을 통해 메시지를 다시 열 수 있습니다.",
       },
       {
         h: "7. 방침 변경",
