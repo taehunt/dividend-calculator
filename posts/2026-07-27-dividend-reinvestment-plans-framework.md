@@ -7,6 +7,8 @@ excerptKo: "소액 배당이 장기 복리 성장으로 이어지는 DRIP 투자
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
 generatorModel: "gemini-3.5-flash-lite+gemini-3.5-flash-lite"
+category: "Dividend Growth"
+tags: ["drip", "dividend-reinvestment", "compounding"]
 ---
 ## Understanding Dividend Reinvestment Plans (DRIP)
 

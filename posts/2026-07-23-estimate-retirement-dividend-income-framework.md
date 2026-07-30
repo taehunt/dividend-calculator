@@ -6,6 +6,8 @@ excerpt: "A practical framework for projecting future dividend income with conse
 excerptKo: "보수적 가정으로 미래 배당 소득을 추정하는 실전 프레임워크입니다."
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
+category: "Retirement Planning"
+tags: ["retirement", "dividend-income", "goal-planning"]
 ---
 
 Estimating retirement income from dividends is not the same as predicting a future paycheck. A useful estimate starts with spending, separates income from total return, and tests several assumptions instead of relying on one attractive yield. The result is a planning range that you can review as your portfolio, taxes, and retirement date change.

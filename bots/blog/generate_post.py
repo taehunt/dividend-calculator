@@ -790,6 +790,63 @@ def generate_valid_split_article(
     raise RuntimeError(f"Backfill generation failed. Last error: {last_error}")
 
 
+def taxonomy_for_theme(theme: dict[str, Any]) -> tuple[str, list[str]]:
+    taxonomy = {
+        "DRIP mechanics and realistic compounding": (
+            "Dividend Growth",
+            ["drip", "dividend-reinvestment", "compounding"],
+        ),
+        "dividend yield versus total return": (
+            "Dividend Growth",
+            ["dividend-yield", "total-return", "dividend-growth"],
+        ),
+        "monthly contribution planning": (
+            "Compounding",
+            ["monthly-contributions", "compound-growth", "long-term-investing"],
+        ),
+        "dividend income goal planning": (
+            "Retirement Planning",
+            ["dividend-income", "goal-planning", "retirement"],
+        ),
+        "FIRE scenario planning": (
+            "Retirement Planning",
+            ["fire", "retirement", "scenario-planning"],
+        ),
+        "high-yield risk": (
+            "Risk Management",
+            ["high-yield", "risk-management", "dividend-safety"],
+        ),
+        "diversification for income investors": (
+            "Risk Management",
+            ["diversification", "income-investing", "risk-management"],
+        ),
+        "inflation and future income": (
+            "Retirement Planning",
+            ["inflation", "future-income", "purchasing-power"],
+        ),
+        "average cost and recurring purchases": (
+            "Compounding",
+            ["average-cost", "recurring-investing", "long-term-investing"],
+        ),
+        "dividend tax drag": (
+            "Tax Planning",
+            ["dividend-tax", "after-tax-yield", "tax-planning"],
+        ),
+        "CAGR interpretation": (
+            "Compounding",
+            ["cagr", "compound-growth", "performance"],
+        ),
+        "assumption stress testing": (
+            "Risk Management",
+            ["stress-testing", "risk-management", "scenario-planning"],
+        ),
+    }
+    try:
+        return taxonomy[theme["name"]]
+    except KeyError as exc:
+        raise ValueError(f"Missing taxonomy for theme: {theme['name']}") from exc
+
+
 def write_post(
     article: dict[str, Any],
     theme: dict[str, Any],
@@ -810,6 +867,7 @@ def write_post(
     content_ko = finalize_content(
         article["contentKo"], theme["sources"], theme["tool"], lang="ko"
     )
+    category, tags = taxonomy_for_theme(theme)
     frontmatter = "\n".join(
         [
             "---",
@@ -821,6 +879,8 @@ def write_post(
             'author: "YieldGrower Editorial"',
             'generationMethod: "AI-assisted with automated quality checks"',
             f'generatorModel: "{yaml_escape(model)}"',
+            f'category: "{yaml_escape(category)}"',
+            f"tags: {json.dumps(tags, ensure_ascii=False)}",
             "---",
             "",
         ]
@@ -857,6 +917,7 @@ def write_backfill_post(
     content_ko = finalize_content(
         article["contentKo"], theme["sources"], theme["tool"], lang="ko"
     )
+    category, tags = taxonomy_for_theme(theme)
     frontmatter = "\n".join(
         [
             "---",
@@ -868,6 +929,8 @@ def write_backfill_post(
             'author: "YieldGrower Editorial"',
             'generationMethod: "AI-assisted with automated quality checks"',
             f'generatorModel: "{yaml_escape(model)}"',
+            f'category: "{yaml_escape(category)}"',
+            f"tags: {json.dumps(tags, ensure_ascii=False)}",
             "---",
             "",
         ]
@@ -1013,6 +1076,10 @@ def self_check() -> None:
     for _filename, theme_index in BACKFILL_TARGETS:
         if not 0 <= theme_index < len(THEMES):
             raise AssertionError(f"Invalid backfill theme index: {theme_index}")
+    for theme in THEMES:
+        category, tags = taxonomy_for_theme(theme)
+        if not category or len(tags) != 3:
+            raise AssertionError(f"Invalid taxonomy for theme: {theme['name']}")
 
     print("Projection and quality-gate self-checks passed")
 

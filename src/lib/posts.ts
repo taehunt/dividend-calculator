@@ -13,6 +13,8 @@ export type PostMeta = {
   excerptKo?: string;
   author?: string;
   generationMethod?: string;
+  category?: string;
+  tags?: string[];
 };
 
 export type PostData = PostMeta & {
@@ -45,6 +47,8 @@ export function getSortedPostsData(): PostMeta[] {
       excerptKo?: string;
       author?: string;
       generationMethod?: string;
+      category?: string;
+      tags?: string[];
     };
 
     return {
@@ -56,6 +60,8 @@ export function getSortedPostsData(): PostMeta[] {
       excerptKo: data.excerptKo,
       author: data.author,
       generationMethod: data.generationMethod,
+      category: data.category,
+      tags: Array.isArray(data.tags) ? data.tags : [],
     };
   });
 
@@ -75,6 +81,8 @@ export function getPostData(slug: string): PostData {
     excerptKo?: string;
     author?: string;
     generationMethod?: string;
+    category?: string;
+    tags?: string[];
   };
 
   return {
@@ -86,6 +94,8 @@ export function getPostData(slug: string): PostData {
     excerptKo: data.excerptKo,
     author: data.author,
     generationMethod: data.generationMethod,
+    category: data.category,
+    tags: Array.isArray(data.tags) ? data.tags : [],
     content: en,
     contentKo: ko,
   };

@@ -2,17 +2,11 @@
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
-
-type PostMeta = {
-  slug: string;
-  date: string;
-  title: string;
-  titleKo?: string;
-  excerpt: string;
-  excerptKo?: string;
-};
+import type { PostMeta } from "@/lib/posts";
+import { categoryLabel } from "@/lib/blog-taxonomy";
 
 const copy = {
   en: {
@@ -22,6 +16,7 @@ const copy = {
       "Daily insights on dividend investing, compound interest, and financial independence.",
     readMore: "Read more →",
     rss: "RSS feed",
+    all: "All",
   },
   ko: {
     back: "전체 도구로",
@@ -30,12 +25,21 @@ const copy = {
       "배당 투자, 복리, 경제적 자립에 대한 인사이트를 제공합니다.",
     readMore: "더 읽기 →",
     rss: "RSS 피드",
+    all: "전체",
   },
 };
 
 export default function BlogIndexClient({ posts }: { posts: PostMeta[] }) {
   const { lang } = useLocale();
   const t = copy[lang];
+  const [activeCategory, setActiveCategory] = useState("all");
+  const categories = Array.from(
+    new Set(posts.map((post) => post.category).filter(Boolean))
+  ) as string[];
+  const visiblePosts =
+    activeCategory === "all"
+      ? posts
+      : posts.filter((post) => post.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
@@ -67,8 +71,36 @@ export default function BlogIndexClient({ posts }: { posts: PostMeta[] }) {
           </a>
         </div>
 
+        <div className="mb-8 flex flex-wrap justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => setActiveCategory("all")}
+            className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+              activeCategory === "all"
+                ? "bg-indigo-600 text-white"
+                : "bg-white text-slate-600 border border-slate-200 hover:border-indigo-200"
+            }`}
+          >
+            {t.all}
+          </button>
+          {categories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              onClick={() => setActiveCategory(category)}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                activeCategory === category
+                  ? "bg-indigo-600 text-white"
+                  : "bg-white text-slate-600 border border-slate-200 hover:border-indigo-200"
+              }`}
+            >
+              {categoryLabel(category, lang)}
+            </button>
+          ))}
+        </div>
+
         <div className="space-y-8">
-          {posts.map((post) => {
+          {visiblePosts.map((post) => {
             const title =
               lang === "ko" && post.titleKo ? post.titleKo : post.title;
             const excerpt =
@@ -78,7 +110,9 @@ export default function BlogIndexClient({ posts }: { posts: PostMeta[] }) {
                 key={post.slug}
                 className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow"
               >
-                <p className="text-sm text-slate-500 mb-2">{post.date}</p>
+                <p className="text-sm text-slate-500 mb-2">
+                  {categoryLabel(post.category, lang)} · {post.date}
+                </p>
                 <Link href={`/blog/${post.slug}`}>
                   <h2 className="text-2xl font-bold text-slate-900 hover:text-indigo-600 transition-colors mb-3">
                     {title}

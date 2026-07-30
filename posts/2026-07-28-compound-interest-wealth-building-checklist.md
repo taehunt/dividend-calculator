@@ -7,6 +7,8 @@ excerptKo: "단기 수익 추격보다 시장에 머무는 시간과 재투자�
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
 generatorModel: "gemini-3.5-flash-lite+gemini-3.5-flash-lite"
+category: "Compounding"
+tags: ["compound-interest", "long-term-investing", "wealth-building"]
 ---
 ## Understanding the Mechanics of Compound Growth
 

@@ -7,6 +7,8 @@ excerptKo: "배당 계획을 세울 때 고배당 추격, 과집중, 세금 무�
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
 generatorModel: "gemini-3.5-flash-lite+gemini-3.5-flash-lite"
+category: "Risk Management"
+tags: ["risk-management", "diversification", "beginner-investing"]
 ---
 ## Introduction to Dividend Plan Assumptions
 

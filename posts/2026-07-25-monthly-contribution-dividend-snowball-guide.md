@@ -7,6 +7,8 @@ excerptKo: "꾸준한 월 투자와 DRIP 재투자가 배당 소득을 가속시
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
 generatorModel: "gemini-3.5-flash-lite+gemini-3.5-flash-lite"
+category: "Dividend Growth"
+tags: ["monthly-contributions", "drip", "dividend-growth"]
 ---
 ## Understanding the Dividend Snowball Mechanism
 

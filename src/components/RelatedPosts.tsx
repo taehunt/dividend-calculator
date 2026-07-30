@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useLocale } from "@/components/LocaleProvider";
 import type { PostMeta } from "@/lib/posts";
+import { categoryLabel } from "@/lib/blog-taxonomy";
 
 const copy = {
   en: {
@@ -45,7 +46,7 @@ export default function RelatedPosts({ posts }: Props) {
             >
               <div className="min-w-0">
                 <p className="text-xs font-semibold text-slate-400 mb-1">
-                  {post.date}
+                  {categoryLabel(post.category, lang)} · {post.date}
                 </p>
                 <h3 className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
                   {title}

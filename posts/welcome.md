@@ -4,6 +4,8 @@ titleKo: "YieldGrower 블로그에 오신 것을 환영합니다"
 date: "2026-07-23"
 excerpt: "This is the first automated post. We will share daily tips on dividend investing, FIRE, and compound interest."
 excerptKo: "첫 자동화 포스트입니다. 배당 투자, FIRE, 복리에 대한 팁을 공유합니다."
+category: "Getting Started"
+tags: ["dividend-investing", "fire", "compound-interest"]
 ---
 
 # Welcome to YieldGrower Blog

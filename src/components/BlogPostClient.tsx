@@ -8,6 +8,7 @@ import RelatedTools from "@/components/RelatedTools";
 import { useLocale } from "@/components/LocaleProvider";
 import type { PostMeta } from "@/lib/posts";
 import type { RelatedToolsKey } from "@/lib/related-tools";
+import { categoryLabel } from "@/lib/blog-taxonomy";
 
 type Props = {
   title: string;
@@ -17,6 +18,8 @@ type Props = {
   contentKo?: string;
   author?: string;
   generationMethod?: string;
+  category?: string;
+  tags?: string[];
   relatedPage?: RelatedToolsKey;
   relatedPosts?: PostMeta[];
 };
@@ -29,6 +32,8 @@ export default function BlogPostClient({
   contentKo,
   author = "YieldGrower Editorial",
   generationMethod,
+  category,
+  tags = [],
   relatedPage = "dividend",
   relatedPosts = [],
 }: Props) {
@@ -48,6 +53,11 @@ export default function BlogPostClient({
         <BlogBreadcrumb title={displayTitle} />
         <article className="bg-white p-8 sm:p-12 rounded-2xl shadow-sm border border-slate-200">
           <header className="mb-10 text-center border-b border-slate-100 pb-8">
+            {category && (
+              <p className="inline-flex rounded-full bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-700 mb-4">
+                {categoryLabel(category, lang)}
+              </p>
+            )}
             <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
               {displayTitle}
             </h1>
@@ -64,6 +74,18 @@ export default function BlogPostClient({
                 </p>
               )}
             </div>
+            {tags.length > 0 && (
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </header>
           <div className="prose prose-slate prose-indigo max-w-none">
             <ReactMarkdown>{displayContent}</ReactMarkdown>

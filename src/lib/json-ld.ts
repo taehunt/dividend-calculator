@@ -63,6 +63,8 @@ export function articleJsonLd(input: {
   description: string;
   slug: string;
   date: string;
+  category?: string;
+  tags?: string[];
 }) {
   const url = `${SITE_URL}/blog/${input.slug}`;
   const datePublished = input.date.includes("T")
@@ -76,6 +78,8 @@ export function articleJsonLd(input: {
     description: input.description,
     datePublished,
     dateModified: datePublished,
+    articleSection: input.category,
+    keywords: input.tags?.join(", "),
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": url,

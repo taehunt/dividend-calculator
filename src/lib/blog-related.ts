@@ -45,24 +45,35 @@ function tokensFromSlug(slug: string): string[] {
     .filter((t) => t.length > 3 && !STOP.has(t) && !/^\d+$/.test(t));
 }
 
-function relatedScore(currentSlug: string, candidate: PostMeta): number {
+function relatedScore(current: PostMeta, candidate: PostMeta): number {
+  let score = 0;
+  if (current.category && current.category === candidate.category) score += 8;
+
+  const currentTags = new Set(current.tags || []);
+  for (const tag of candidate.tags || []) {
+    if (currentTags.has(tag)) score += 4;
+  }
+
+  const currentSlug = current.slug;
   const tokens = tokensFromSlug(currentSlug);
   const hay = `${candidate.slug} ${candidate.title}`.toLowerCase();
-  let score = 0;
   for (const token of tokens) {
-    if (hay.includes(token)) score += 2;
+    if (hay.includes(token)) score += 1;
   }
   return score;
 }
 
-/** Other posts to cross-link: keyword overlap first, then newest. */
+/** Other posts to cross-link: category and tag affinity first, then newest. */
 export function getRelatedPosts(slug: string, limit = 3): PostMeta[] {
-  const others = getSortedPostsData().filter((p) => p.slug !== slug);
+  const posts = getSortedPostsData();
+  const current = posts.find((post) => post.slug === slug);
+  const others = posts.filter((post) => post.slug !== slug);
   if (!others.length) return [];
+  if (!current) return others.slice(0, limit);
 
   return [...others]
     .sort((a, b) => {
-      const scoreDiff = relatedScore(slug, b) - relatedScore(slug, a);
+      const scoreDiff = relatedScore(current, b) - relatedScore(current, a);
       if (scoreDiff !== 0) return scoreDiff;
       return a.date < b.date ? 1 : -1;
     })

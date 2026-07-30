@@ -47,6 +47,8 @@ export default async function Post({
             description,
             slug,
             date: postData.date,
+            category: postData.category,
+            tags: postData.tags,
           }),
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
@@ -63,6 +65,8 @@ export default async function Post({
         contentKo={postData.contentKo}
         author={postData.author}
         generationMethod={postData.generationMethod}
+        category={postData.category}
+        tags={postData.tags}
         relatedPage={relatedToolsKeyFromSlug(slug)}
         relatedPosts={getRelatedPosts(slug, 3)}
       />

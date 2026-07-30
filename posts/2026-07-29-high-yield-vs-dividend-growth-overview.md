@@ -7,6 +7,8 @@ excerptKo: "당장의 현금 소득 전략과 장기 배당성장 접근을 비�
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
 generatorModel: "gemini-3.5-flash-lite+gemini-3.5-flash-lite"
+category: "Dividend Growth"
+tags: ["high-yield", "dividend-growth", "risk-management"]
 ---
 When building an income-focused portfolio, investors often stand at a crossroads. On one side are high-yield assets that promise immediate cash flow. On the other side are dividend growth assets that offer modest current payouts with the expectation of larger payments down the road. Deciding between these two paths requires a careful look at your personal time horizon, risk tolerance, and asset allocation strategies, as outlined by [FINRA — Risk](https://www.finra.org/investors/investing/investing-basics/risk). To make an informed choice, you must look past the initial numbers and understand why a high displayed yield can sometimes be a warning sign rather than a bonus.
 

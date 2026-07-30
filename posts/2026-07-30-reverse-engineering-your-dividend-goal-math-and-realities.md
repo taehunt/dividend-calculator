@@ -7,6 +7,8 @@ excerptKo: "주가 상승률, 배당 수익률, 세금을 고려하여 목표 �
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
 generatorModel: "gemini-3.6-flash"
+category: "Retirement Planning"
+tags: ["dividend-income", "goal-planning", "retirement"]
 ---
 ## Starting With the End Point: Reverse-Engineering Income Goals
 

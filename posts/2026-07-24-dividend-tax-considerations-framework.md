@@ -7,6 +7,8 @@ excerptKo: "헤드라인 배당률보다 세후 수익률이 중요한 이유를
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
 generatorModel: "gemini-3.6-flash+gemini-3.6-flash"
+category: "Tax Planning"
+tags: ["dividend-tax", "after-tax-yield", "tax-planning"]
 ---
 ## Understanding Headline Yield vs. After-Tax Yield
 
