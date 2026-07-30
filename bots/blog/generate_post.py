@@ -604,27 +604,30 @@ def backfill_legacy_posts(api_key: str, models: tuple[str, ...]) -> None:
         path = POSTS_DIR / filename
         if not path.exists():
             raise FileNotFoundError(f"Backfill target does not exist: {path}")
-        metadata = read_post_metadata(path)
-        existing_titles, existing_bodies = existing_post_data(exclude_path=path)
-        fixed_metadata = {
-            key: metadata[key]
-            for key in ("title", "titleKo", "excerpt", "excerptKo")
-        }
-        article, model = generate_valid_article(
-            api_key,
-            THEMES[theme_index],
-            existing_titles,
-            existing_bodies,
-            models,
-            fixed_metadata,
-        )
-        write_backfill_post(
-            path,
-            article,
-            THEMES[theme_index],
-            model,
-            metadata,
-        )
+        try:
+            metadata = read_post_metadata(path)
+            existing_titles, existing_bodies = existing_post_data(exclude_path=path)
+            fixed_metadata = {
+                key: metadata[key]
+                for key in ("title", "titleKo", "excerpt", "excerptKo")
+            }
+            article, model = generate_valid_article(
+                api_key,
+                THEMES[theme_index],
+                existing_titles,
+                existing_bodies,
+                models,
+                fixed_metadata,
+            )
+            write_backfill_post(
+                path,
+                article,
+                THEMES[theme_index],
+                model,
+                metadata,
+            )
+        except Exception as exc:
+            raise RuntimeError(f"Backfill failed for {path}: {exc}") from exc
 
 
 def choose_theme(publish_date: str) -> dict[str, Any]:
@@ -763,5 +766,13 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as exc:
-        print(f"Blog generation failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+        error_message = f"Blog generation failed: {type(exc).__name__}: {exc}"
+        print(error_message, file=sys.stderr)
+        summary_path = os.environ.get("GITHUB_STEP_SUMMARY", "").strip()
+        if summary_path:
+            with Path(summary_path).open("a", encoding="utf-8") as summary:
+                summary.write(
+                    "## Blog generation failure\n\n"
+                    f"`{yaml_escape(error_message)}`\n"
+                )
         raise
