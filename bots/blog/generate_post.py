@@ -4,7 +4,7 @@ import os
 import re
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -194,6 +194,32 @@ def project_portfolio(
 
 def scheduled_date() -> str:
     return datetime.now(SEOUL).date().isoformat()
+
+
+def next_date_after_latest(
+    latest_date: date | None,
+    current_date: date,
+) -> date | None:
+    if latest_date is None:
+        return current_date
+    candidate = latest_date + timedelta(days=1)
+    return candidate if candidate <= current_date else None
+
+
+def pending_publish_date() -> str | None:
+    current_date = datetime.now(SEOUL).date()
+    published_dates = []
+    for path in POSTS_DIR.glob("*.md"):
+        match = re.match(r"^(\d{4}-\d{2}-\d{2})-", path.name)
+        if match:
+            published_dates.append(
+                datetime.strptime(match.group(1), "%Y-%m-%d").date()
+            )
+    pending = next_date_after_latest(
+        max(published_dates, default=None),
+        current_date,
+    )
+    return pending.isoformat() if pending else None
 
 
 def yaml_escape(value: str) -> str:
@@ -531,7 +557,7 @@ def build_backfill_english_prompt(
         for source_id in theme["sources"]
     ]
     return f"""
-Write the English body for an existing YieldGrower educational article.
+Write the English body for a YieldGrower educational article.
 
 Exact title: {metadata["title"]}
 Exact excerpt: {metadata["excerpt"]}
@@ -613,7 +639,103 @@ def call_first_available_model(
     raise RuntimeError(f"All Gemini models failed. Last error: {last_error}")
 
 
-def generate_valid_backfill_article(
+def build_daily_metadata_prompt(
+    theme: dict[str, Any],
+    existing_titles: list[str],
+    feedback: list[str],
+) -> str:
+    return f"""
+Create metadata for one original YieldGrower bilingual educational article.
+
+Theme: {theme["name"]}
+Direction: {theme["hint"]}
+Related calculator: {SITE_URL}{theme["tool"]}
+
+Existing titles that must not be repeated or lightly reworded:
+{json.dumps(existing_titles[-60:], ensure_ascii=False, indent=2)}
+
+Return only valid JSON:
+{{
+  "title": "specific English title under 70 characters",
+  "titleKo": "natural Korean title",
+  "excerpt": "English excerpt under 160 characters",
+  "excerptKo": "Korean excerpt under 160 characters"
+}}
+
+Rules:
+- Promise no outcome and recommend no security.
+- Use no statistics, tax rates, or factual claims in the metadata.
+- Do not use any of these exact phrases:
+  {json.dumps(PROHIBITED_PHRASES, ensure_ascii=False)}
+
+Previous validation errors:
+{json.dumps(feedback, ensure_ascii=False)}
+""".strip()
+
+
+def metadata_errors(
+    metadata: dict[str, Any],
+    existing_titles: list[str],
+) -> list[str]:
+    errors: list[str] = []
+    required = ("title", "titleKo", "excerpt", "excerptKo")
+    for key in required:
+        if not isinstance(metadata.get(key), str) or not metadata[key].strip():
+            errors.append(f"{key} must be a non-empty string")
+    if errors:
+        return errors
+    if len(metadata["title"]) > 70:
+        errors.append("English title exceeds 70 characters")
+    if len(metadata["excerpt"]) > 160:
+        errors.append("English excerpt exceeds 160 characters")
+    if len(metadata["excerptKo"]) > 160:
+        errors.append("Korean excerpt exceeds 160 characters")
+    existing_normalized = {title.casefold() for title in existing_titles}
+    if metadata["title"].casefold() in existing_normalized:
+        errors.append("English title duplicates an existing title")
+    combined = " ".join(str(metadata[key]) for key in required).lower()
+    for phrase in PROHIBITED_PHRASES:
+        if phrase in combined:
+            errors.append(f"Prohibited phrase found: {phrase}")
+    return errors
+
+
+def generate_daily_metadata(
+    api_key: str,
+    theme: dict[str, Any],
+    existing_titles: list[str],
+    models: tuple[str, ...],
+) -> dict[str, str]:
+    feedback: list[str] = []
+    last_error: Exception | None = None
+    for attempt in range(1, 4):
+        prompt = build_daily_metadata_prompt(theme, existing_titles, feedback)
+        for model in models:
+            try:
+                print(f"Metadata generation attempt={attempt} model={model}")
+                metadata = call_gemini(api_key, model, prompt)
+                errors = metadata_errors(metadata, existing_titles)
+                if not errors:
+                    return {
+                        key: metadata[key].strip()
+                        for key in ("title", "titleKo", "excerpt", "excerptKo")
+                    }
+                feedback = errors
+                print("Quality gate rejected metadata:")
+                for error in errors:
+                    print(f"- {error}")
+                break
+            except Exception as exc:
+                last_error = exc
+                print(f"Model failed: {type(exc).__name__}: {exc}")
+        else:
+            continue
+    if feedback:
+        raise RuntimeError("Metadata failed quality gates: " + "; ".join(feedback))
+    raise RuntimeError(f"Metadata generation failed. Last error: {last_error}")
+
+
+def generate_valid_split_article(
     api_key: str,
     theme: dict[str, Any],
     metadata: dict[str, str],
@@ -624,7 +746,7 @@ def generate_valid_backfill_article(
     feedback: list[str] = []
     last_error: Exception | None = None
     for attempt in range(1, 4):
-        print(f"Backfill generation attempt={attempt} title={metadata['title']}")
+        print(f"Split generation attempt={attempt} title={metadata['title']}")
         try:
             content_en, english_model = call_first_available_model(
                 api_key,
@@ -765,7 +887,7 @@ def backfill_legacy_posts(api_key: str, models: tuple[str, ...]) -> None:
         try:
             metadata = read_post_metadata(path)
             existing_titles, existing_bodies = existing_post_data(exclude_path=path)
-            article, model = generate_valid_backfill_article(
+            article, model = generate_valid_split_article(
                 api_key,
                 THEMES[theme_index],
                 metadata,
@@ -864,6 +986,24 @@ def self_check() -> None:
     if not any("Prohibited phrase" in error for error in prohibited_errors):
         raise AssertionError("Prohibited-claim gate did not reject unsafe wording")
 
+    first_day = datetime.strptime("2026-07-30", "%Y-%m-%d").date()
+    second_day = datetime.strptime("2026-07-31", "%Y-%m-%d").date()
+    if next_date_after_latest(first_day, second_day) != second_day:
+        raise AssertionError("Missed-day recovery did not select the next date")
+    if next_date_after_latest(second_day, first_day) is not None:
+        raise AssertionError("Future-dated content should not trigger publishing")
+
+    metadata_fixture = {
+        "title": "A New Dividend Planning Checklist",
+        "titleKo": "새로운 배당 계획 점검표",
+        "excerpt": "A concise educational planning checklist.",
+        "excerptKo": "간결한 교육용 계획 점검표입니다.",
+    }
+    if metadata_errors(metadata_fixture, ["An Existing Article"]):
+        raise AssertionError("Valid metadata fixture failed")
+    if not metadata_errors(metadata_fixture, [metadata_fixture["title"]]):
+        raise AssertionError("Duplicate metadata title was not rejected")
+
     backfill_paths = [POSTS_DIR / filename for filename, _theme in BACKFILL_TARGETS]
     if len(backfill_paths) != len(set(backfill_paths)):
         raise AssertionError("Backfill targets contain duplicate paths")
@@ -898,17 +1038,23 @@ def main() -> None:
         backfill_legacy_posts(api_key, models)
         return
 
-    publish_date = scheduled_date()
-    existing_today = sorted(POSTS_DIR.glob(f"{publish_date}-*.md"))
-    if existing_today:
-        print(f"Daily post already exists: {existing_today[0]}")
+    publish_date = pending_publish_date()
+    if not publish_date:
+        print(f"Daily post already exists through {scheduled_date()}")
         return
 
     theme = choose_theme(publish_date)
     existing_titles, existing_bodies = existing_post_data()
-    article, model = generate_valid_article(
+    metadata = generate_daily_metadata(
         api_key,
         theme,
+        existing_titles,
+        models,
+    )
+    article, model = generate_valid_split_article(
+        api_key,
+        theme,
+        metadata,
         existing_titles,
         existing_bodies,
         models,
@@ -927,7 +1073,7 @@ if __name__ == "__main__":
             .replace("\r", "%0D")
             .replace("\n", "%0A")
         )
-        print(f"::error title=Blog backfill failed::{annotation_message}")
+        print(f"::error title=Blog publishing failed::{annotation_message}")
         summary_path = os.environ.get("GITHUB_STEP_SUMMARY", "").strip()
         if summary_path:
             with Path(summary_path).open("a", encoding="utf-8") as summary:
