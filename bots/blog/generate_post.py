@@ -427,8 +427,8 @@ Return only valid JSON:
   "titleKo": "natural Korean title",
   "excerpt": "English excerpt under 160 characters",
   "excerptKo": "Korean excerpt under 160 characters",
-  "contentEn": "1100-1400 English words in Markdown with 5-9 ## sections and no H1",
-  "contentKo": "700-1200 Korean space-delimited words with the same substance, 5-9 ## sections, and no H1"
+  "contentEn": "1350-1550 English words in Markdown with 5-9 ## sections and no H1",
+  "contentKo": "600-900 Korean space-delimited words with the same substance, 5-9 ## sections, and no H1"
 }}
 
 Rules:
@@ -457,7 +457,7 @@ def call_gemini(api_key: str, model: str, prompt: str) -> dict[str, Any]:
         json={
             "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {
-                "maxOutputTokens": 12000,
+                "maxOutputTokens": 16000,
                 "responseMimeType": "application/json",
             },
         },
