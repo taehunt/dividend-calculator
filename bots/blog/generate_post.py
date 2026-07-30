@@ -432,6 +432,8 @@ Rules:
 - Separate price growth from dividend yield so returns are never double-counted.
 - Explain uncertainty, taxes, inflation, and concentration risk where relevant.
 - Do not recommend individual securities or claim that any outcome is guaranteed.
+- Do not use any of these exact phrases, even inside a warning or negation:
+  {json.dumps(PROHIBITED_PHRASES, ensure_ascii=False)}
 - Do not invent quotations, studies, statistics, laws, tax rates, or source claims.
 - Link factual statements only to the supplied URLs using Markdown links.
 - Tax material must say jurisdiction and tax year can change and professional advice may be needed.
