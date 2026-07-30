@@ -392,6 +392,10 @@ Use this calculator-generated example exactly and explain that it is a scenario,
 - Total contributions: ${projection.contributions:,}
 - Final-year after-tax dividend income: ${projection.annual_dividend:,}
 
+The example above is calculated by YieldGrower's dividend reinvestment model.
+The related calculator URL is a companion tool selected for the article topic.
+Do not attribute the example to that companion tool unless its URL is the homepage.
+
 Return only valid JSON:
 {{
   "title": "specific English title under 70 characters",
