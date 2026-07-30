@@ -47,8 +47,14 @@ const copy = {
         p: "We have implemented measures designed to secure your personal information from accidental loss and from unauthorized access, use, alteration, and disclosure. Since we do not collect sensitive personal or financial data, the risk is minimal.",
       },
       {
-        h: "6. Your Cookie Choices",
-        p: "Where European Economic Area, United Kingdom, or Swiss regulations apply, Google's consent message lets you manage advertising and analytics choices. After making a choice, you can reopen the message through Cookie Settings in the Website footer when that option is available.",
+        h: "6. Regional Privacy Choices",
+        p: "Where regional privacy laws apply, you may have choices regarding cookies and personal information used for advertising:",
+        ul: [
+          "European Economic Area, United Kingdom, and Switzerland: Google's consent message lets you manage advertising and analytics choices.",
+          'Applicable U.S. states: Use the "Do Not Sell or Share My Personal Information" link displayed by Google to opt out of the sale or sharing of personal information and targeted advertising, as those terms are defined by applicable law.',
+          "Depending on your state and subject to legal exceptions, you may also have rights to request access, correction, deletion, or a copy of personal information. Submit a request using the contact email below. We may need to verify your request.",
+          "You can reopen available Google privacy controls through Cookie Settings in the Website footer.",
+        ],
       },
       {
         h: "7. Changes to Our Privacy Policy",
@@ -100,8 +106,14 @@ const copy = {
         p: "개인정보의 우발적 손실, 무단 접근·이용·변경·공개를 막기 위한 조치를 적용합니다. 민감한 개인·금융 정보를 수집하지 않으므로 관련 위험은 낮습니다.",
       },
       {
-        h: "6. 쿠키 선택",
-        p: "유럽경제지역(EEA), 영국 또는 스위스 규정이 적용되는 경우 Google 동의 메시지에서 광고 및 분석 관련 선택을 관리할 수 있습니다. 선택 후에는 해당 기능이 제공되는 경우 웹사이트 푸터의 쿠키 설정을 통해 메시지를 다시 열 수 있습니다.",
+        h: "6. 지역별 개인정보 선택권",
+        p: "지역별 개인정보 보호법이 적용되는 경우 광고에 사용되는 쿠키와 개인정보에 관해 다음 선택권을 행사할 수 있습니다.",
+        ul: [
+          "유럽경제지역(EEA), 영국 및 스위스: Google 동의 메시지에서 광고 및 분석 관련 선택을 관리할 수 있습니다.",
+          '미국 내 해당 주: Google이 표시하는 "Do Not Sell or Share My Personal Information" 링크를 통해 관련 법률에서 정의하는 개인정보의 판매·공유 및 타겟 광고를 거부할 수 있습니다.',
+          "거주 주와 법률상 예외에 따라 개인정보 열람, 정정, 삭제 또는 사본 제공을 요청할 권리가 있을 수 있습니다. 아래 문의 이메일로 요청할 수 있으며, 요청 확인 절차가 필요할 수 있습니다.",
+          "웹사이트 푸터의 쿠키 설정에서 제공되는 Google 개인정보 보호 설정을 다시 열 수 있습니다.",
+        ],
       },
       {
         h: "7. 방침 변경",
