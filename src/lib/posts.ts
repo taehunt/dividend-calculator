@@ -11,6 +11,8 @@ export type PostMeta = {
   titleKo?: string;
   excerpt: string;
   excerptKo?: string;
+  author?: string;
+  generationMethod?: string;
 };
 
 export type PostData = PostMeta & {
@@ -19,7 +21,7 @@ export type PostData = PostMeta & {
 };
 
 function splitLocalizedContent(raw: string): { en: string; ko: string } {
-  const parts = raw.split(/\n---ko---\n/);
+  const parts = raw.split(/\r?\n---ko---\r?\n/);
   const en = (parts[0] || "").trim();
   const ko = (parts[1] || "").trim();
   return { en, ko: ko || en };
@@ -41,6 +43,8 @@ export function getSortedPostsData(): PostMeta[] {
       titleKo?: string;
       excerpt: string;
       excerptKo?: string;
+      author?: string;
+      generationMethod?: string;
     };
 
     return {
@@ -50,6 +54,8 @@ export function getSortedPostsData(): PostMeta[] {
       titleKo: data.titleKo,
       excerpt: data.excerpt,
       excerptKo: data.excerptKo,
+      author: data.author,
+      generationMethod: data.generationMethod,
     };
   });
 
@@ -67,6 +73,8 @@ export function getPostData(slug: string): PostData {
     titleKo?: string;
     excerpt?: string;
     excerptKo?: string;
+    author?: string;
+    generationMethod?: string;
   };
 
   return {
@@ -76,6 +84,8 @@ export function getPostData(slug: string): PostData {
     titleKo: data.titleKo,
     excerpt: data.excerpt || "",
     excerptKo: data.excerptKo,
+    author: data.author,
+    generationMethod: data.generationMethod,
     content: en,
     contentKo: ko,
   };

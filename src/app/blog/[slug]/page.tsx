@@ -61,6 +61,8 @@ export default async function Post({
         date={postData.date}
         content={postData.content}
         contentKo={postData.contentKo}
+        author={postData.author}
+        generationMethod={postData.generationMethod}
         relatedPage={relatedToolsKeyFromSlug(slug)}
         relatedPosts={getRelatedPosts(slug, 3)}
       />

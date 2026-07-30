@@ -15,6 +15,8 @@ type Props = {
   date: string;
   content: string;
   contentKo?: string;
+  author?: string;
+  generationMethod?: string;
   relatedPage?: RelatedToolsKey;
   relatedPosts?: PostMeta[];
 };
@@ -25,6 +27,8 @@ export default function BlogPostClient({
   date,
   content,
   contentKo,
+  author = "YieldGrower Editorial",
+  generationMethod,
   relatedPage = "dividend",
   relatedPosts = [],
 }: Props) {
@@ -48,6 +52,18 @@ export default function BlogPostClient({
               {displayTitle}
             </h1>
             <p className="text-slate-500">{date}</p>
+            <div className="mt-4 text-sm text-slate-600">
+              <p>
+                {lang === "ko" ? "작성" : "By"}: {author}
+              </p>
+              {generationMethod && (
+                <p className="mt-1 text-xs text-slate-500">
+                  {lang === "ko"
+                    ? "AI 보조 초안 · 자동 구조·중복·계산값 검사 적용"
+                    : "AI-assisted draft · automated structure, duplication, and calculation checks"}
+                </p>
+              )}
+            </div>
           </header>
           <div className="prose prose-slate prose-indigo max-w-none">
             <ReactMarkdown>{displayContent}</ReactMarkdown>
