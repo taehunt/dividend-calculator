@@ -10,7 +10,7 @@ const copy = {
   en: {
     back: "Back to Home",
     title: "Privacy Policy",
-    updated: "Last updated: July 23, 2026",
+    updated: "Last updated: July 30, 2026",
     sections: [
       {
         h: "1. Introduction",
@@ -21,7 +21,7 @@ const copy = {
         p: "We do not require users to create an account, log in, or provide personal financial data to use our calculator. All calculations are performed locally in your browser. However, we may collect certain information automatically when you visit our Website:",
         ul: [
           "Usage Details: Information about your internet connection, the equipment you use to access our Website, and usage details.",
-          "Cookies and Tracking Technologies: We use cookies and similar tracking technologies to track the activity on our Website and hold certain information. This includes Google AdSense cookies for advertising purposes.",
+          "Cookies and Tracking Technologies: We use cookies and similar technologies for Google Analytics measurement and Google AdSense advertising. Non-essential storage is denied by default until you make a choice in our cookie banner.",
         ],
       },
       {
@@ -37,6 +37,7 @@ const copy = {
         h: "4. Third-Party Services",
         p: "We use third-party services that may collect information used to identify you:",
         ul: [
+          "Google Analytics: We use Google Analytics to measure page views, engagement, and general usage patterns. Analytics may use cookies and similar identifiers when you consent.",
           "Google AdSense: We use Google AdSense to display ads. Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our sites and/or other sites on the Internet. Users may opt out of personalized advertising by visiting Google's Ads Settings.",
           "Vercel: Our website is hosted on Vercel, which may collect basic server logs.",
         ],
@@ -46,11 +47,15 @@ const copy = {
         p: "We have implemented measures designed to secure your personal information from accidental loss and from unauthorized access, use, alteration, and disclosure. Since we do not collect sensitive personal or financial data, the risk is minimal.",
       },
       {
-        h: "6. Changes to Our Privacy Policy",
+        h: "6. Your Cookie Choices",
+        p: "You can allow or reject non-essential storage in the cookie banner. You can review or change your choice at any time through Cookie Settings in the Website footer. Your choice is saved in your browser's local storage.",
+      },
+      {
+        h: "7. Changes to Our Privacy Policy",
         p: "It is our policy to post any changes we make to our privacy policy on this page. If we make material changes to how we treat our users' personal information, we will notify you through a notice on the Website home page.",
       },
       {
-        h: "7. Contact Information",
+        h: "8. Contact Information",
         p: `To ask questions or comment about this privacy policy and our privacy practices, contact us at: ${CONTACT_EMAIL}`,
       },
     ],
@@ -58,7 +63,7 @@ const copy = {
   ko: {
     back: "홈으로",
     title: "개인정보 처리방침",
-    updated: "최종 업데이트: 2026년 7월 23일",
+    updated: "최종 업데이트: 2026년 7월 30일",
     sections: [
       {
         h: "1. 소개",
@@ -69,7 +74,7 @@ const copy = {
         p: "계산기 이용을 위해 계정 생성, 로그인, 개인 금융 정보 입력을 요구하지 않습니다. 모든 계산은 브라우저에서 로컬로 수행됩니다. 다만 웹사이트 방문 시 아래 정보가 자동으로 수집될 수 있습니다.",
         ul: [
           "이용 정보: 인터넷 연결, 접속 기기, 이용 내역 등",
-          "쿠키 및 유사 기술: 웹사이트 활동 추적을 위해 쿠키 등을 사용하며, 광고 목적의 Google AdSense 쿠키가 포함될 수 있습니다.",
+          "쿠키 및 유사 기술: Google Analytics 측정과 Google AdSense 광고를 위해 쿠키 및 유사 기술을 사용합니다. 이용자가 쿠키 배너에서 선택하기 전에는 필수 항목 외 저장을 기본적으로 거부합니다.",
         ],
       },
       {
@@ -85,6 +90,7 @@ const copy = {
         h: "4. 제3자 서비스",
         p: "이용자를 식별하는 데 사용될 수 있는 정보를 수집하는 제3자 서비스를 이용합니다.",
         ul: [
+          "Google Analytics: 페이지 조회, 참여도, 일반적인 이용 패턴을 측정합니다. 이용자가 동의하면 쿠키 및 유사 식별자를 사용할 수 있습니다.",
           "Google AdSense: 광고 표시에 사용합니다. Google과 파트너는 광고 쿠키를 사용해 본 사이트 및 다른 사이트 방문 기록을 바탕으로 광고를 게재할 수 있습니다. 맞춤 광고는 Google 광고 설정에서 옵트아웃할 수 있습니다.",
           "Vercel: 웹사이트 호스팅에 사용하며 기본 서버 로그를 수집할 수 있습니다.",
         ],
@@ -94,11 +100,15 @@ const copy = {
         p: "개인정보의 우발적 손실, 무단 접근·이용·변경·공개를 막기 위한 조치를 적용합니다. 민감한 개인·금융 정보를 수집하지 않으므로 관련 위험은 낮습니다.",
       },
       {
-        h: "6. 방침 변경",
+        h: "6. 쿠키 선택",
+        p: "쿠키 배너에서 필수 항목 외 저장을 허용하거나 거부할 수 있습니다. 웹사이트 푸터의 쿠키 설정을 통해 언제든지 선택을 다시 확인하거나 변경할 수 있습니다. 선택 결과는 브라우저의 로컬 저장소에 보관됩니다.",
+      },
+      {
+        h: "7. 방침 변경",
         p: "개인정보 처리방침 변경 시 본 페이지에 게시합니다. 개인정보 취급 방식에 중요한 변경이 있으면 웹사이트 홈페이지 공지로 안내할 수 있습니다.",
       },
       {
-        h: "7. 문의",
+        h: "8. 문의",
         p: `본 방침 관련 문의: ${CONTACT_EMAIL}`,
       },
     ],

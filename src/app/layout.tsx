@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
+import ConsentBanner from "@/components/ConsentBanner";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import SiteFooter from "@/components/SiteFooter";
 import JsonLd from "@/components/JsonLd";
 import { organizationJsonLd, webSiteJsonLd } from "@/lib/json-ld";
-import { SITE_URL } from "@/lib/site";
+import {
+  CONSENT_STORAGE_KEY,
+  GA_MEASUREMENT_ID,
+  SITE_URL,
+} from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,17 +55,56 @@ export default function RootLayout({
       <head>
         <meta name="color-scheme" content="light" />
         <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8003367600295337"
-          crossOrigin="anonymous"
-        ></script>
+          id="google-consent-default"
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            var yieldGrowerConsent = null;
+            try {
+              yieldGrowerConsent = localStorage.getItem(${JSON.stringify(
+                CONSENT_STORAGE_KEY
+              )});
+            } catch (error) {}
+            var yieldGrowerConsentState =
+              yieldGrowerConsent === "granted" ? "granted" : "denied";
+            gtag("consent", "default", {
+              ad_storage: yieldGrowerConsentState,
+              ad_user_data: yieldGrowerConsentState,
+              ad_personalization: yieldGrowerConsentState,
+              analytics_storage: yieldGrowerConsentState,
+              wait_for_update: 500
+            });
+          `,
+          }}
+        />
       </head>
       <body className={`${inter.className} bg-slate-50 text-slate-900`}>
         <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
         <LocaleProvider>
           {children}
+          <ConsentBanner />
           <SiteFooter />
         </LocaleProvider>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag("js", new Date());
+            gtag("config", ${JSON.stringify(GA_MEASUREMENT_ID)});
+          `}
+        </Script>
+        <Script
+          id="google-adsense"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8003367600295337"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
