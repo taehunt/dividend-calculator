@@ -86,12 +86,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.8,
     },
-    {
-      url: `${SITE_URL}/feed.xml`,
-      lastModified: blogDate,
-      changeFrequency: "daily",
-      priority: 0.5,
-    },
     ...calculators.map((c) => ({
       url: `${SITE_URL}/${c.segment}`,
       lastModified: calculatorLastModified(c.segment),
