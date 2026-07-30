@@ -427,8 +427,8 @@ Return only valid JSON:
   "titleKo": "natural Korean title",
   "excerpt": "English excerpt under 160 characters",
   "excerptKo": "Korean excerpt under 160 characters",
-  "contentEn": "900-1400 English words in Markdown with 5-9 ## sections and no H1",
-  "contentKo": "complete Korean version in Markdown with the same substance and 5-9 ## sections and no H1"
+  "contentEn": "1100-1400 English words in Markdown with 5-9 ## sections and no H1",
+  "contentKo": "700-1200 Korean space-delimited words with the same substance, 5-9 ## sections, and no H1"
 }}
 
 Rules:
@@ -457,7 +457,7 @@ def call_gemini(api_key: str, model: str, prompt: str) -> dict[str, Any]:
         json={
             "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {
-                "maxOutputTokens": 8192,
+                "maxOutputTokens": 12000,
                 "responseMimeType": "application/json",
             },
         },
@@ -485,7 +485,7 @@ def generate_valid_article(
 ) -> tuple[dict[str, Any], str]:
     feedback: list[str] = []
     last_error: Exception | None = None
-    for attempt in range(1, 3):
+    for attempt in range(1, 4):
         prompt = build_prompt(theme, existing_titles, feedback, fixed_metadata)
         for model in models:
             try:
