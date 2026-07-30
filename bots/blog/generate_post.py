@@ -516,6 +516,158 @@ def generate_valid_article(
     raise RuntimeError(f"All Gemini models failed. Last error: {last_error}")
 
 
+def build_backfill_english_prompt(
+    theme: dict[str, Any],
+    metadata: dict[str, str],
+    existing_titles: list[str],
+    feedback: list[str],
+) -> str:
+    sources = [
+        {
+            "label": SOURCES[source_id]["label"],
+            "url": SOURCES[source_id]["url"],
+            "allowed_scope": SOURCES[source_id]["scope"],
+        }
+        for source_id in theme["sources"]
+    ]
+    return f"""
+Write the English body for an existing YieldGrower educational article.
+
+Exact title: {metadata["title"]}
+Exact excerpt: {metadata["excerpt"]}
+Theme: {theme["name"]}
+Direction: {theme["hint"]}
+Related calculator: {SITE_URL}{theme["tool"]}
+
+Use only these sources for factual claims:
+{json.dumps(sources, ensure_ascii=False, indent=2)}
+
+Other article titles to avoid duplicating:
+{json.dumps(existing_titles[-60:], ensure_ascii=False, indent=2)}
+
+Return only valid JSON:
+{{"contentEn": "1000-1350 English words in Markdown with 5-9 ## sections and no H1"}}
+
+Rules:
+- Directly answer the question implied by the exact title.
+- Include practical steps, a clearly labeled scenario, and stress tests.
+- Separate price growth, dividend yield, contributions, taxes, and inflation.
+- Do not recommend securities or invent facts, quotations, laws, or statistics.
+- Link factual statements only to the supplied official URLs.
+- Do not add a sources section, calculator CTA, disclosure, or disclaimer.
+- Do not use any of these exact phrases:
+  {json.dumps(PROHIBITED_PHRASES, ensure_ascii=False)}
+
+Previous validation errors:
+{json.dumps(feedback, ensure_ascii=False)}
+""".strip()
+
+
+def build_backfill_korean_prompt(
+    metadata: dict[str, str],
+    content_en: str,
+    feedback: list[str],
+) -> str:
+    return f"""
+Translate the supplied English article into complete, natural Korean for YieldGrower.
+
+Exact Korean title: {metadata["titleKo"]}
+Exact Korean excerpt: {metadata["excerptKo"]}
+
+Return only valid JSON:
+{{"contentKo": "650-1000 Korean space-delimited words in Markdown"}}
+
+Rules:
+- Preserve every substantive section, scenario, caveat, and Markdown link.
+- Use 5-9 ## sections and no H1.
+- Do not summarize or shorten the English article.
+- Do not add a sources section, calculator CTA, disclosure, or disclaimer.
+- Do not use any of these exact phrases:
+  {json.dumps(PROHIBITED_PHRASES, ensure_ascii=False)}
+
+English article:
+{content_en}
+
+Previous validation errors:
+{json.dumps(feedback, ensure_ascii=False)}
+""".strip()
+
+
+def call_first_available_model(
+    api_key: str,
+    models: tuple[str, ...],
+    prompt: str,
+    required_key: str,
+) -> tuple[str, str]:
+    last_error: Exception | None = None
+    for model in models:
+        try:
+            response = call_gemini(api_key, model, prompt)
+            value = response.get(required_key)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"Gemini response is missing {required_key}")
+            return value.strip(), model
+        except Exception as exc:
+            last_error = exc
+            print(f"Model failed: {type(exc).__name__}: {exc}")
+    raise RuntimeError(f"All Gemini models failed. Last error: {last_error}")
+
+
+def generate_valid_backfill_article(
+    api_key: str,
+    theme: dict[str, Any],
+    metadata: dict[str, str],
+    existing_titles: list[str],
+    existing_bodies: list[str],
+    models: tuple[str, ...],
+) -> tuple[dict[str, Any], str]:
+    feedback: list[str] = []
+    last_error: Exception | None = None
+    for attempt in range(1, 4):
+        print(f"Backfill generation attempt={attempt} title={metadata['title']}")
+        try:
+            content_en, english_model = call_first_available_model(
+                api_key,
+                models,
+                build_backfill_english_prompt(
+                    theme, metadata, existing_titles, feedback
+                ),
+                "contentEn",
+            )
+            content_ko, korean_model = call_first_available_model(
+                api_key,
+                models,
+                build_backfill_korean_prompt(metadata, content_en, feedback),
+                "contentKo",
+            )
+            article = {
+                "title": metadata["title"],
+                "titleKo": metadata["titleKo"],
+                "excerpt": metadata["excerpt"],
+                "excerptKo": metadata["excerptKo"],
+                "contentEn": content_en,
+                "contentKo": content_ko,
+            }
+            errors = validate_article(
+                article,
+                theme["sources"],
+                theme["tool"],
+                existing_bodies,
+            )
+            if not errors:
+                return article, f"{english_model}+{korean_model}"
+            feedback = errors
+            print("Quality gate rejected backfill article:")
+            for error in errors:
+                print(f"- {error}")
+        except Exception as exc:
+            last_error = exc
+            feedback = [f"{type(exc).__name__}: {exc}"]
+    if feedback:
+        raise RuntimeError("Article failed quality gates: " + "; ".join(feedback))
+    raise RuntimeError(f"Backfill generation failed. Last error: {last_error}")
+
+
 def write_post(
     article: dict[str, Any],
     theme: dict[str, Any],
@@ -613,17 +765,13 @@ def backfill_legacy_posts(api_key: str, models: tuple[str, ...]) -> None:
         try:
             metadata = read_post_metadata(path)
             existing_titles, existing_bodies = existing_post_data(exclude_path=path)
-            fixed_metadata = {
-                key: metadata[key]
-                for key in ("title", "titleKo", "excerpt", "excerptKo")
-            }
-            article, model = generate_valid_article(
+            article, model = generate_valid_backfill_article(
                 api_key,
                 THEMES[theme_index],
+                metadata,
                 existing_titles,
                 existing_bodies,
                 models,
-                fixed_metadata,
             )
             write_backfill_post(
                 path,
