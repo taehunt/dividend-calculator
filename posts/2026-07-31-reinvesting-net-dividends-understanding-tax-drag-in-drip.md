@@ -6,6 +6,7 @@ excerpt: "Learn how reinvesting net dividends after taxes affects compounding ov
 excerptKo: "세금을 차감한 순 배당금을 재투자할 때 복리 효과가 어떻게 달라지는지 확인하고, 보다 현실적인 재투자 성장 시나리오를 모델링하는 방법을 알아봅니다."
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
+draft: true
 generatorModel: "gemini-3.6-flash+gemini-3.5-flash-lite"
 topicKey: "DRIP mechanics and realistic compounding"
 category: "Dividend Growth"

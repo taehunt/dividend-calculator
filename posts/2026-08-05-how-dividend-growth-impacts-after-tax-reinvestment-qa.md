@@ -6,6 +6,7 @@ excerpt: "Learn how post-tax reinvestment and dividend payout growth interact ov
 excerptKo: "장기 포트폴리오를 설계할 때 세후 배당 재투자와 배당 성장률이 어떻게 상호작용하는지 알아봅니다."
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
+draft: true
 generatorModel: "gemini-3.6-flash+gemini-3.6-flash"
 topicKey: "DRIP mechanics and realistic compounding"
 category: "Dividend Growth"

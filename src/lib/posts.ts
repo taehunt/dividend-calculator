@@ -37,7 +37,7 @@ export function getSortedPostsData(): PostMeta[] {
     return [];
   }
   const fileNames = fs.readdirSync(postsDirectory);
-  const allPostsData = fileNames.map((fileName) => {
+  const allPostsData = fileNames.flatMap((fileName) => {
     const slug = fileName.replace(/\.md$/, "");
     const fullPath = path.join(postsDirectory, fileName);
     const fileContents = fs.readFileSync(fullPath, "utf8");
@@ -53,9 +53,12 @@ export function getSortedPostsData(): PostMeta[] {
       generationMethod?: string;
       category?: string;
       tags?: string[];
+      draft?: boolean;
     };
 
-    return {
+    if (data.draft === true) return [];
+
+    return [{
       slug,
       date: data.date,
       updated: data.updated,
@@ -67,7 +70,7 @@ export function getSortedPostsData(): PostMeta[] {
       generationMethod: data.generationMethod,
       category: data.category,
       tags: Array.isArray(data.tags) ? data.tags : [],
-    };
+    }];
   });
 
   return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));

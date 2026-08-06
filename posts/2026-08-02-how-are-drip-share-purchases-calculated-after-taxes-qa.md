@@ -6,6 +6,7 @@ excerpt: "Learn how brokers calculate DRIP share purchases from net dividends an
 excerptKo: "원천징수 후 남은 세후 배당금으로 매수되는 DRIP 주식 수의 계산 원리를 이해하고 배당 성장 계산기 활용 방법을 알아보세요."
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
+draft: true
 generatorModel: "gemini-3.6-flash+gemini-3.6-flash"
 topicKey: "DRIP mechanics and realistic compounding"
 category: "Dividend Growth"

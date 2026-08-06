@@ -6,6 +6,7 @@ excerpt: "Explore how dividend growth, net payout variations, and reinvestment t
 excerptKo: "단순한 계산 모델과 실제 배당금 재투자 성과가 달라지는 원인을 파악하고, 보다 현실적인 장기 복리 성장 과정을 이해해 보세요."
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
+draft: true
 generatorModel: "gemini-3.5-flash-lite+gemini-3.6-flash"
 topicKey: "DRIP mechanics and realistic compounding"
 category: "Dividend Growth"

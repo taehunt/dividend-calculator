@@ -6,6 +6,7 @@ excerpt: "Learn how changing share prices and net dividend payouts affect the ac
 excerptKo: "자동 DRIP 실행 시 주가 변동과 세후 배당 수령액이 실제 매수 가능한 주식 수에 어떠한 영향을 미치는지 초보자 관점에서 알아봅니다."
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
+draft: true
 generatorModel: "gemini-3.6-flash+gemini-3.6-flash"
 topicKey: "DRIP mechanics and realistic compounding"
 category: "Dividend Growth"

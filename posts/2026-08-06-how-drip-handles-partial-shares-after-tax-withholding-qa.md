@@ -6,6 +6,7 @@ excerpt: "Learn how brokerages handle leftover cash and fractional shares when r
 excerptKo: "DRIP을 통해 세후 배당금을 재투자할 때 발생하는 잔여 현금과 소수점 주식의 처리 방식을 알아봅니다."
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
+draft: true
 generatorModel: "gemini-3.6-flash+gemini-3.6-flash"
 topicKey: "DRIP mechanics and realistic compounding"
 category: "Dividend Growth"

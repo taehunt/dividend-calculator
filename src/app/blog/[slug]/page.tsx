@@ -9,6 +9,8 @@ import {
 import { articleJsonLd, breadcrumbJsonLd } from "@/lib/json-ld";
 import { pageMeta } from "@/lib/seo";
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return getSortedPostsData().map((post) => ({
     slug: post.slug,

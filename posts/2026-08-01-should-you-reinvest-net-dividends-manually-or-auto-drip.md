@@ -6,6 +6,7 @@ excerpt: "Explore how manual dividend reinvestment compares to automatic DRIP wh
 excerptKo: "세금을 차감한 배당금을 자동 DRIP으로 재투자할 때와 수동으로 재투자할 때의 차이점을 살펴보고 복리 효과를 현실적으로 시뮬레이션해 보세요."
 author: "YieldGrower Editorial"
 generationMethod: "AI-assisted with automated quality checks"
+draft: true
 generatorModel: "gemini-3.6-flash+gemini-3.6-flash"
 topicKey: "DRIP mechanics and realistic compounding"
 category: "Dividend Growth"
