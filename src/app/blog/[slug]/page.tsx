@@ -47,6 +47,7 @@ export default async function Post({
             description,
             slug,
             date: postData.date,
+            updated: postData.updated,
             category: postData.category,
             tags: postData.tags,
           }),
@@ -61,6 +62,7 @@ export default async function Post({
         title={postData.title}
         titleKo={postData.titleKo}
         date={postData.date}
+        updated={postData.updated}
         content={postData.content}
         contentKo={postData.contentKo}
         author={postData.author}

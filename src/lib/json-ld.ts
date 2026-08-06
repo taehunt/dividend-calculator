@@ -63,6 +63,7 @@ export function articleJsonLd(input: {
   description: string;
   slug: string;
   date: string;
+  updated?: string;
   category?: string;
   tags?: string[];
 }) {
@@ -77,7 +78,11 @@ export function articleJsonLd(input: {
     headline: input.title,
     description: input.description,
     datePublished,
-    dateModified: datePublished,
+    dateModified: input.updated
+      ? input.updated.includes("T")
+        ? input.updated
+        : `${input.updated}T00:00:00.000Z`
+      : datePublished,
     articleSection: input.category,
     keywords: input.tags?.join(", "),
     mainEntityOfPage: {
@@ -86,8 +91,8 @@ export function articleJsonLd(input: {
     },
     author: {
       "@type": "Organization",
-      name: "YieldGrower",
-      url: SITE_URL,
+      name: "YieldGrower Editorial",
+      url: `${SITE_URL}/editorial-policy`,
     },
     publisher: {
       "@type": "Organization",

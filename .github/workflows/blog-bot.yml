@@ -1,9 +1,6 @@
-name: Daily Quality Blog Publisher
+name: Blog Draft Generator
 
 on:
-  schedule:
-    # Every day at 08:00 Asia/Seoul (23:00 UTC).
-    - cron: "0 23 * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -14,22 +11,15 @@ on:
         options:
           - daily
           - backfill
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/blog-bot.yml"
-      - "bots/blog/**"
-
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: yieldgrower-daily-blog
+  group: yieldgrower-blog-draft
   cancel-in-progress: false
 
 jobs:
-  generate-and-publish:
+  generate-draft:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -54,7 +44,7 @@ jobs:
       - name: Verify calculator example
         run: python bots/blog/generate_post.py --check
 
-      - name: Generate quality-gated bilingual article
+      - name: Generate bilingual draft for editorial review
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODELS: gemini-3.6-flash,gemini-3.5-flash-lite,gemini-3.5-flash
@@ -76,22 +66,21 @@ jobs:
       - name: Install site dependencies
         run: npm ci
 
-      - name: Build site with generated article
+      - name: Build site with generated draft
         run: npm run build
 
-      - name: Commit and push if posts changed
+      - name: Collect generated draft
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add posts
-          if git diff --staged --quiet; then
-            echo "No new post to publish"
-            exit 0
-          fi
-          if [[ "${{ inputs.mode }}" == "backfill" || "${{ github.event.head_commit.message }}" == *"[backfill]"* ]]; then
-            git commit -m "Expand legacy dividend guides"
-          else
-            git commit -m "Publish daily quality blog post"
-          fi
-          git pull --rebase origin main
-          git push origin HEAD:main
+          mkdir -p editorial-draft
+          git status --porcelain -- posts | cut -c4- | while IFS= read -r file; do
+            if [[ -n "$file" ]]; then
+              cp --parents "$file" editorial-draft/
+            fi
+          done
+
+      - name: Upload draft for manual review
+        uses: actions/upload-artifact@v4
+        with:
+          name: yieldgrower-editorial-draft
+          path: editorial-draft/
+          if-no-files-found: warn

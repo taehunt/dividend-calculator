@@ -13,7 +13,7 @@ const copy = {
     back: "Back to Tools",
     title: "Investment Blog",
     subtitle:
-      "Daily insights on dividend investing, compound interest, and financial independence.",
+      "Source-linked guides for testing dividend, compounding, and financial independence assumptions.",
     readMore: "Read more →",
     rss: "RSS feed",
     all: "All",
@@ -22,7 +22,7 @@ const copy = {
     back: "전체 도구로",
     title: "투자 블로그",
     subtitle:
-      "배당 투자, 복리, 경제적 자립에 대한 인사이트를 제공합니다.",
+      "배당·복리·경제적 자립의 가정을 직접 검증할 수 있는 출처 기반 가이드입니다.",
     readMore: "더 읽기 →",
     rss: "RSS 피드",
     all: "전체",

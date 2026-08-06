@@ -7,6 +7,7 @@ import SiteFooter from "@/components/SiteFooter";
 import JsonLd from "@/components/JsonLd";
 import { organizationJsonLd, webSiteJsonLd } from "@/lib/json-ld";
 import { GA_MEASUREMENT_ID, SITE_URL } from "@/lib/site";
+import AdSenseScript from "@/components/AdSenseScript";
 
 const inter = Inter({ subsets: ["latin"] });
 const GOOGLE_CMP_REGIONS = [
@@ -125,13 +126,7 @@ export default function RootLayout({
             gtag("config", ${JSON.stringify(GA_MEASUREMENT_ID)});
           `}
         </Script>
-        <Script
-          id="google-adsense"
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8003367600295337"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <AdSenseScript />
       </body>
     </html>
   );

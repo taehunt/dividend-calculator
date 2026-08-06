@@ -25,8 +25,8 @@ const copy = {
         icon: BookOpen,
         title: "How articles are produced",
         paragraphs: [
-          "Articles may begin with automated drafting. Before publication, they must pass programmatic checks for structure, duplicated content, calculation consistency, source links, and prohibited return-guarantee language.",
-          "Those checks are not a substitute for individual human financial review. Sources are linked in each article when external facts are used, and errors may still occur.",
+          "AI may assist with drafting or translation, but automated publication is disabled. New drafts must be selected and reviewed before they are added to the public site; automated checks alone cannot publish an article.",
+          "Articles identify the publisher, disclose AI assistance, link the sources used for factual claims, and show calculation assumptions so readers can test them. Read the Editorial Policy for the full process and correction standard.",
         ],
       },
       {
@@ -40,6 +40,8 @@ const copy = {
     ],
     privacyLead: "For information about cookies and data handling, read our",
     privacy: "Privacy Policy",
+    editorialLead: "For authorship, AI-use, sourcing, and correction standards, read our",
+    editorial: "Editorial Policy",
   },
   ko: {
     back: "홈으로",
@@ -60,8 +62,8 @@ const copy = {
         icon: BookOpen,
         title: "콘텐츠 제작 방식",
         paragraphs: [
-          "게시글은 자동 초안으로 시작할 수 있습니다. 게시 전 구조, 중복 콘텐츠, 계산 일관성, 출처 링크, 수익 보장 표현 금지 여부를 프로그램으로 검사합니다.",
-          "이 검사는 개별 전문가의 금융 검토를 대신하지 않습니다. 외부 사실을 사용할 때는 게시글에 출처를 연결하지만 오류가 남을 수 있습니다.",
+          "AI는 초안이나 번역을 보조할 수 있지만 자동 발행은 중단되어 있습니다. 새 초안은 공개 사이트에 추가되기 전에 선별·검토되어야 하며 자동 검사만으로 게시할 수 없습니다.",
+          "게시글에는 발행 주체와 AI 보조 여부를 표시하고, 사실 주장에 사용한 출처와 독자가 재현할 수 있는 계산 가정을 제공합니다. 전체 절차와 정정 기준은 편집 정책에서 확인할 수 있습니다.",
         ],
       },
       {
@@ -75,6 +77,8 @@ const copy = {
     ],
     privacyLead: "쿠키와 정보 처리 방식은",
     privacy: "개인정보 처리방침",
+    editorialLead: "작성 주체, AI 사용, 출처 및 정정 기준은",
+    editorial: "편집 정책",
   },
 };
 
@@ -135,16 +139,28 @@ export default function AboutPage() {
               );
             })}
 
-            <p className="border-t border-slate-200 pt-8 text-sm text-slate-600">
-              {t.privacyLead}{" "}
-              <Link
-                href="/privacy"
-                className="font-medium text-indigo-600 hover:text-indigo-700"
-              >
-                {t.privacy}
-              </Link>
-              {lang === "ko" ? "을 확인하세요." : "."}
-            </p>
+            <div className="space-y-2 border-t border-slate-200 pt-8 text-sm text-slate-600">
+              <p>
+                {t.editorialLead}{" "}
+                <Link
+                  href="/editorial-policy"
+                  className="font-medium text-indigo-600 hover:text-indigo-700"
+                >
+                  {t.editorial}
+                </Link>
+                {lang === "ko" ? "에서 확인하세요." : "."}
+              </p>
+              <p>
+                {t.privacyLead}{" "}
+                <Link
+                  href="/privacy"
+                  className="font-medium text-indigo-600 hover:text-indigo-700"
+                >
+                  {t.privacy}
+                </Link>
+                {lang === "ko" ? "을 확인하세요." : "."}
+              </p>
+            </div>
           </div>
         </section>
       </main>

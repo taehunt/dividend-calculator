@@ -63,6 +63,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { segment: "inflation", priority: 0.9 },
     { segment: "tools", priority: 0.8 },
     { segment: "about", priority: 0.4 },
+    { segment: "editorial-policy", priority: 0.4 },
     { segment: "contact", priority: 0.4 },
     { segment: "privacy", priority: 0.3 },
   ];

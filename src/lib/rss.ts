@@ -38,7 +38,7 @@ export function buildBlogRssXml(): string {
     "<channel>",
     "<title>YieldGrower Blog</title>",
     `<link>${SITE_URL}/blog</link>`,
-    "<description>Daily insights on dividend investing, DRIP, compound interest, and financial independence.</description>",
+    "<description>Source-linked guides on dividend investing, DRIP, compound interest, and financial independence.</description>",
     "<language>en</language>",
     `<lastBuildDate>${lastBuild}</lastBuildDate>`,
     items,

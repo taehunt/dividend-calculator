@@ -7,6 +7,7 @@ const postsDirectory = path.join(process.cwd(), "posts");
 export type PostMeta = {
   slug: string;
   date: string;
+  updated?: string;
   title: string;
   titleKo?: string;
   excerpt: string;
@@ -24,8 +25,10 @@ export type PostData = PostMeta & {
 
 function splitLocalizedContent(raw: string): { en: string; ko: string } {
   const parts = raw.split(/\r?\n---ko---\r?\n/);
-  const en = (parts[0] || "").trim();
-  const ko = (parts[1] || "").trim();
+  const stripRepeatedTitle = (value: string) =>
+    value.trim().replace(/^#\s+[^\r\n]+\r?\n+/, "");
+  const en = stripRepeatedTitle(parts[0] || "");
+  const ko = stripRepeatedTitle(parts[1] || "");
   return { en, ko: ko || en };
 }
 
@@ -41,6 +44,7 @@ export function getSortedPostsData(): PostMeta[] {
     const matterResult = matter(fileContents);
     const data = matterResult.data as {
       date: string;
+      updated?: string;
       title: string;
       titleKo?: string;
       excerpt: string;
@@ -54,6 +58,7 @@ export function getSortedPostsData(): PostMeta[] {
     return {
       slug,
       date: data.date,
+      updated: data.updated,
       title: data.title,
       titleKo: data.titleKo,
       excerpt: data.excerpt,
@@ -75,6 +80,7 @@ export function getPostData(slug: string): PostData {
   const { en, ko } = splitLocalizedContent(matterResult.content);
   const data = matterResult.data as {
     date: string;
+    updated?: string;
     title: string;
     titleKo?: string;
     excerpt?: string;
@@ -88,6 +94,7 @@ export function getPostData(slug: string): PostData {
   return {
     slug,
     date: data.date,
+    updated: data.updated,
     title: data.title,
     titleKo: data.titleKo,
     excerpt: data.excerpt || "",
