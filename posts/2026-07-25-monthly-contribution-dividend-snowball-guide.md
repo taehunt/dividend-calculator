@@ -2,6 +2,7 @@
 title: "Building a Dividend Snowball With Monthly Contributions: Guide"
 titleKo: "월 납입으로 배당 눈덩이 키우기: 가이드"
 date: "2026-07-25"
+draft: true
 excerpt: "How steady monthly investing and DRIP reinvestment create accelerating dividend income."
 excerptKo: "꾸준한 월 투자와 DRIP 재투자가 배당 소득을 가속시키는 방식을 설명합니다."
 author: "YieldGrower Editorial"

@@ -2,6 +2,7 @@
 title: "How to Estimate Retirement Income From Dividends: Framework"
 titleKo: "배당으로 은퇴 소득 추정하기: 프레임워크"
 date: "2026-07-23"
+draft: true
 excerpt: "A practical framework for projecting future dividend income with conservative assumptions."
 excerptKo: "보수적 가정으로 미래 배당 소득을 추정하는 실전 프레임워크입니다."
 author: "YieldGrower Editorial"

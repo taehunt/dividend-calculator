@@ -2,6 +2,7 @@
 title: "Tax Considerations for Dividend Investors: Framework"
 titleKo: "배당 투자자가 알아둘 세금 이슈: 프레임워크"
 date: "2026-07-24"
+draft: true
 excerpt: "Why after-tax yield matters more than headline dividend percentages."
 excerptKo: "헤드라인 배당률보다 세후 수익률이 중요한 이유를 설명합니다."
 author: "YieldGrower Editorial"

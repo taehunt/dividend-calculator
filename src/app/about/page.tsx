@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Calculator, ShieldCheck } from "lucide-react";
+import { ArrowLeft, BookOpenCheck, Calculator, ShieldCheck, UserRound } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import { useLocale } from "@/components/LocaleProvider";
 
@@ -10,9 +10,18 @@ const copy = {
     back: "Back to Home",
     eyebrow: "About YieldGrower",
     title: "Clearer assumptions for long-term income planning",
+    updated: "Last reviewed: August 16, 2026",
     intro:
-      "YieldGrower provides free calculators and educational articles that help you explore dividend income, compounding, FIRE, taxes, inflation, and other long-term investing scenarios.",
+      "YieldGrower is an independently maintained collection of free calculators for exploring dividend income, compounding, FIRE, taxes, inflation, and other long-term investing scenarios.",
     sections: [
+      {
+        icon: UserRound,
+        title: "Who builds and maintains YieldGrower",
+        paragraphs: [
+          "The YieldGrower operator selects the calculator scope, implements and maintains the code, documents the formulas, and decides what is published. The operator can be contacted through the address on the Contact page.",
+          "YieldGrower does not claim that its operator is a licensed investment adviser, tax professional, attorney, or accountant. The site publishes the role and limits that can be verified without inventing credentials or an expert persona.",
+        ],
+      },
       {
         icon: Calculator,
         title: "How the calculators work",
@@ -22,11 +31,11 @@ const copy = {
         ],
       },
       {
-        icon: BookOpen,
-        title: "How articles are produced",
+        icon: BookOpenCheck,
+        title: "How calculator explanations are reviewed",
         paragraphs: [
-          "AI may assist with drafting or translation, but automated publication is disabled. New drafts must be selected and reviewed before they are added to the public site; automated checks alone cannot publish an article.",
-          "Articles identify the publisher, disclose AI assistance, link the sources used for factual claims, and show calculation assumptions so readers can test them. Read the Editorial Policy for the full process and correction standard.",
+          "Each calculator page states the formula used by the current implementation, gives a worked example, lists material exclusions, and links primary or regulatory references for financial and economic context.",
+          "AI may assist with drafting or translation, but automated publication is disabled. Generated blog drafts are not part of the public site. Formula descriptions and examples must be checked against the implementation before publication.",
         ],
       },
       {
@@ -47,9 +56,18 @@ const copy = {
     back: "홈으로",
     eyebrow: "YieldGrower 소개",
     title: "장기 소득 계획의 가정을 더 명확하게",
+    updated: "최종 검토일: 2026년 8월 16일",
     intro:
-      "YieldGrower는 배당 소득, 복리, FIRE, 세금, 인플레이션 등 장기 투자 시나리오를 살펴볼 수 있는 무료 계산기와 교육용 콘텐츠를 제공합니다.",
+      "YieldGrower는 배당 소득, 복리, FIRE, 세금, 인플레이션 등 장기 투자 시나리오를 살펴보는 무료 계산기 모음으로 독립 운영됩니다.",
     sections: [
+      {
+        icon: UserRound,
+        title: "YieldGrower 제작·관리 주체",
+        paragraphs: [
+          "YieldGrower 운영자가 계산기 범위를 정하고 코드를 구현·유지하며, 계산식을 문서화하고 공개 여부를 결정합니다. 운영자에게는 문의 페이지의 이메일로 연락할 수 있습니다.",
+          "운영자가 투자자문가·세무사·변호사·회계사 자격을 보유했다고 주장하지 않습니다. 확인할 수 없는 경력이나 전문가 인물을 만들어 표시하지 않고 실제 관리 역할과 한계를 공개합니다.",
+        ],
+      },
       {
         icon: Calculator,
         title: "계산 방식",
@@ -59,11 +77,11 @@ const copy = {
         ],
       },
       {
-        icon: BookOpen,
-        title: "콘텐츠 제작 방식",
+        icon: BookOpenCheck,
+        title: "계산기 설명 검토 방식",
         paragraphs: [
-          "AI는 초안이나 번역을 보조할 수 있지만 자동 발행은 중단되어 있습니다. 새 초안은 공개 사이트에 추가되기 전에 선별·검토되어야 하며 자동 검사만으로 게시할 수 없습니다.",
-          "게시글에는 발행 주체와 AI 보조 여부를 표시하고, 사실 주장에 사용한 출처와 독자가 재현할 수 있는 계산 가정을 제공합니다. 전체 절차와 정정 기준은 편집 정책에서 확인할 수 있습니다.",
+          "각 계산기 페이지에 현재 구현이 사용하는 공식, 재현 가능한 예시, 중요한 제외 항목, 금융·경제 맥락을 확인할 1차 기관 또는 규제기관 출처를 표시합니다.",
+          "AI는 초안이나 번역을 보조할 수 있지만 자동 발행은 중단되어 있습니다. 생성된 블로그 초안은 공개 사이트에 포함하지 않습니다. 계산식 설명과 예시는 공개 전에 실제 구현과 대조해야 합니다.",
         ],
       },
       {
@@ -112,6 +130,7 @@ export default function AboutPage() {
             <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
               {t.intro}
             </p>
+            <p className="mt-4 text-sm font-medium text-slate-500">{t.updated}</p>
           </div>
 
           <div className="space-y-10 px-6 py-10 sm:px-10">

@@ -11,40 +11,40 @@ const copy = {
     back: "Back to Home",
     eyebrow: "Editorial Policy",
     title: "How YieldGrower content is produced and corrected",
-    updated: "Last updated: August 7, 2026",
+    updated: "Last updated: August 16, 2026",
     intro:
-      "YieldGrower publishes educational calculators and articles about dividend income and long-term planning. Trust matters more than publishing frequency, so our process emphasizes reproducible assumptions, primary sources, clear limits, and visible corrections.",
+      "YieldGrower publishes interactive calculators and their methodology notes. Trust matters more than publishing frequency, so the public site emphasizes reproducible formulas, worked examples, primary sources, clear limits, and visible corrections.",
     sections: [
       {
         icon: FileCheck2,
         title: "Who is responsible",
         paragraphs: [
-          "YieldGrower Editorial is the site-level publisher byline. It does not imply that the publisher is a licensed investment adviser, tax professional, attorney, or accountant.",
-          "The publisher is responsible for topic selection, source selection, calculator implementation, publication decisions, and corrections. Questions and correction requests can be sent to the contact address below.",
+          "The YieldGrower operator is responsible for calculator scope, source selection, implementation, publication decisions, and corrections. This role is described on the About page and can be contacted through the address below.",
+          "YieldGrower does not claim that the operator is a licensed investment adviser, tax professional, attorney, or accountant. No unverified credential or fictional expert identity is used to support the calculators.",
         ],
       },
       {
         icon: Bot,
         title: "How AI assistance is used",
         paragraphs: [
-          "AI may assist with outlines, first drafts, or Korean-English translation. AI assistance is disclosed on the article page when it is used.",
-          "Automated publication is disabled. Draft generation and public publication are separate steps: a generated draft is saved for review and cannot update the public site by itself.",
+          "AI may assist with outlines, first drafts, or Korean-English translation. It does not choose user assumptions, provide personal recommendations, or replace formula verification against the implementation.",
+          "Automated publication is disabled. Generated blog drafts remain non-public; the current public site is centered on the calculators and their reviewed methodology pages.",
         ],
       },
       {
         icon: Scale,
         title: "What is checked before publication",
         paragraphs: [
-          "Factual claims should be traceable to the source links in the article. Preference is given to government, regulator, and other primary or authoritative sources. Tax statements must identify their jurisdiction and must not be generalized globally.",
-          "Worked examples are checked against the stated formula or the linked YieldGrower calculator. Articles must separate assumptions from forecasts, avoid guaranteed-return language, disclose material limitations, and direct personal decisions to qualified professionals.",
+          "Each public calculator must disclose its formula, operation order, worked example, material exclusions, and review date. Financial and economic context should link to government, regulator, or other primary sources; jurisdiction-specific tax material must be labeled.",
+          "Examples are checked against the current calculation order. Pages must separate assumptions from forecasts, avoid guaranteed-return language, disclose fees or taxes that are excluded, and direct personal decisions to qualified professionals.",
         ],
       },
       {
         icon: RefreshCw,
         title: "Updates and corrections",
         paragraphs: [
-          "A materially revised article shows an updated date. If a source changes, a calculation cannot be reproduced, or wording is misleading, we correct or remove the affected material rather than silently changing its meaning.",
-          `Report a possible error to ${CONTACT_EMAIL}. Include the article URL, the statement or result in question, and a source or calculation that helps reproduce the issue.`,
+          "A materially revised methodology page shows an updated review date. If a source changes, a calculation cannot be reproduced, or wording is misleading, the affected material is corrected or removed.",
+          `Report a possible error to ${CONTACT_EMAIL}. Include the calculator URL, inputs, displayed result, and a source or calculation that helps reproduce the issue.`,
         ],
       },
     ],
@@ -55,40 +55,40 @@ const copy = {
     back: "홈으로",
     eyebrow: "편집 정책",
     title: "YieldGrower 콘텐츠의 작성·검증·정정 방식",
-    updated: "최종 업데이트: 2026년 8월 7일",
+    updated: "최종 업데이트: 2026년 8월 16일",
     intro:
-      "YieldGrower는 배당 소득과 장기 계획을 다루는 교육용 계산기와 글을 제공합니다. 발행 빈도보다 신뢰가 중요하므로 재현 가능한 가정, 1차 출처, 명확한 한계와 공개적인 정정을 우선합니다.",
+      "YieldGrower는 대화형 계산기와 계산 방법론을 공개합니다. 발행 빈도보다 신뢰가 중요하므로 재현 가능한 공식, 계산 예시, 1차 출처, 명확한 한계와 공개적인 정정을 우선합니다.",
     sections: [
       {
         icon: FileCheck2,
         title: "콘텐츠 책임 주체",
         paragraphs: [
-          "YieldGrower Editorial은 사이트 차원의 발행자 표시입니다. 투자자문가·세무사·변호사·회계사 자격을 의미하지 않습니다.",
-          "발행자는 주제와 출처 선정, 계산기 구현, 공개 여부 결정과 정정을 책임집니다. 질문과 정정 요청은 아래 연락처로 보낼 수 있습니다.",
+          "YieldGrower 운영자가 계산기 범위, 출처 선정, 구현, 공개 여부 결정과 정정을 책임집니다. 실제 관리 역할은 소개 페이지에 공개하며 아래 연락처로 문의할 수 있습니다.",
+          "운영자가 투자자문가·세무사·변호사·회계사 자격을 보유했다고 주장하지 않습니다. 계산기의 신뢰를 높이기 위해 확인되지 않은 경력이나 가상의 전문가를 사용하지 않습니다.",
         ],
       },
       {
         icon: Bot,
         title: "AI 보조 사용 방식",
         paragraphs: [
-          "AI는 개요, 첫 초안 또는 한영 번역을 보조할 수 있습니다. AI를 사용한 글은 게시글 화면에 그 사실을 표시합니다.",
-          "자동 발행은 중단되어 있습니다. 초안 생성과 공개 발행은 분리되며, 생성된 초안은 검토용으로만 저장되고 스스로 공개 사이트를 갱신할 수 없습니다.",
+          "AI는 개요, 첫 초안 또는 한영 번역을 보조할 수 있습니다. 이용자의 입력값을 선택하거나 개인별 권유를 만들지 않으며 실제 구현과의 계산식 검증을 대신하지 않습니다.",
+          "자동 발행은 중단되어 있습니다. 생성된 블로그 초안은 비공개로 유지하며 현재 공개 사이트는 계산기와 검토된 방법론 페이지를 중심으로 운영합니다.",
         ],
       },
       {
         icon: Scale,
         title: "게시 전 확인 항목",
         paragraphs: [
-          "사실 주장은 본문에 연결된 출처로 추적할 수 있어야 합니다. 정부·규제기관 등 1차 또는 권위 있는 출처를 우선합니다. 세금 설명은 적용 국가를 밝혀야 하며 다른 국가에 일반화하지 않습니다.",
-          "계산 예시는 제시된 식 또는 연결된 YieldGrower 계산기로 재현합니다. 가정과 예측을 구분하고, 수익 보장 표현을 금지하며, 중요한 한계를 밝히고 개인별 결정은 자격 있는 전문가에게 확인하도록 안내합니다.",
+          "각 공개 계산기는 공식, 연산 순서, 재현 예시, 중요한 제외 항목, 검토일을 표시해야 합니다. 금융·경제 맥락은 정부·규제기관 등 1차 출처를 우선하고 국가별 세금 자료는 적용 국가를 밝힙니다.",
+          "예시는 현재 계산 순서와 대조합니다. 가정과 예측을 구분하고 수익 보장 표현을 금지하며, 제외된 수수료·세금을 밝히고 개인별 결정은 자격 있는 전문가에게 확인하도록 안내합니다.",
         ],
       },
       {
         icon: RefreshCw,
         title: "업데이트와 정정",
         paragraphs: [
-          "내용이 실질적으로 바뀐 글에는 수정일을 표시합니다. 출처가 변경되거나 계산이 재현되지 않거나 표현이 오해를 만들면 의미를 몰래 바꾸지 않고 해당 내용을 정정하거나 삭제합니다.",
-          `오류 가능성은 ${CONTACT_EMAIL}으로 알려주세요. 게시글 URL, 문제가 된 문장이나 결과, 문제를 재현할 수 있는 출처 또는 계산을 함께 보내면 확인에 도움이 됩니다.`,
+          "방법론 페이지가 실질적으로 바뀌면 검토일을 갱신합니다. 출처가 변경되거나 계산이 재현되지 않거나 표현이 오해를 만들면 해당 내용을 정정하거나 삭제합니다.",
+          `오류 가능성은 ${CONTACT_EMAIL}으로 알려주세요. 계산기 URL, 입력값, 표시 결과, 문제를 재현할 수 있는 출처 또는 계산을 함께 보내면 확인에 도움이 됩니다.`,
         ],
       },
     ],

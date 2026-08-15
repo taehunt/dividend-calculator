@@ -2,6 +2,7 @@
 title: "Common Mistakes New Dividend Investors Make: Checklist"
 titleKo: "초보 배당 투자자가 자주 하는 실수: 체크리스트"
 date: "2026-07-26"
+draft: true
 excerpt: "Avoid yield chasing, overconcentration, and ignoring taxes when building a dividend plan."
 excerptKo: "배당 계획을 세울 때 고배당 추격, 과집중, 세금 무시를 피하세요."
 author: "YieldGrower Editorial"

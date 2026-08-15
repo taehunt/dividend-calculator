@@ -3,6 +3,7 @@ title: "How the YieldGrower Dividend Calculator Works: Formula, Timing, and Limi
 titleKo: "YieldGrower 배당 계산기는 어떻게 계산할까: 계산식·시점·한계"
 date: "2026-07-23"
 updated: "2026-08-07"
+draft: true
 excerpt: "A reproducible explanation of YieldGrower's monthly dividend model, including contribution timing, after-tax DRIP, a worked example, and limitations."
 excerptKo: "월 납입 시점, 세후 DRIP, 재현 가능한 예시와 한계를 포함해 YieldGrower 배당 계산 모델을 설명합니다."
 author: "YieldGrower Editorial"

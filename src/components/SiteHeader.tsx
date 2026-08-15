@@ -36,7 +36,6 @@ const labels = {
     cagr: "CAGR Calculator",
     inflation: "Inflation Calculator",
     allTools: "All Tools",
-    blog: "Blog",
     language: "Language",
     currency: "Currency",
   },
@@ -52,7 +51,6 @@ const labels = {
     cagr: "CAGR 계산기",
     inflation: "인플레이션 계산기",
     allTools: "전체 도구",
-    blog: "블로그",
     language: "언어",
     currency: "통화",
   },
@@ -226,14 +224,6 @@ export default function SiteHeader({
                 </div>
               )}
             </div>
-            <Link
-              href="/blog"
-              className={`hover:text-indigo-600 transition-colors ${
-                active === "blog" ? "text-indigo-600" : ""
-              }`}
-            >
-              {t.blog}
-            </Link>
           </nav>
 
           <nav className="col-start-2 row-start-1 flex justify-self-end items-center gap-3 text-sm font-medium text-slate-600 md:hidden">
@@ -242,9 +232,6 @@ export default function SiteHeader({
             </Link>
             <Link href="/tools" className={toolActive ? "text-indigo-600" : ""}>
               {t.tools}
-            </Link>
-            <Link href="/blog" className={active === "blog" ? "text-indigo-600" : ""}>
-              {t.blog}
             </Link>
           </nav>
         </div>

@@ -24,6 +24,7 @@ import PulseTeaser from '@/components/PulseTeaser';
 import CalculatorFaq from '@/components/CalculatorFaq';
 import RelatedTools from '@/components/RelatedTools';
 import CopyCalcLink from '@/components/CopyCalcLink';
+import CalculatorMethodology from '@/components/CalculatorMethodology';
 
 const translations = {
   en: {
@@ -57,13 +58,13 @@ const translations = {
     resTitle: "The Power of Dividend Investing",
     resSub: "Master the fundamentals of wealth creation through compound interest and strategic dividend reinvestment.",
     res1Title: "What is a DRIP (Dividend Reinvestment Plan)?",
-    res1Desc: "A Dividend Reinvestment Plan, commonly known as DRIP, is an investment strategy that allows shareholders to automatically reinvest their cash dividends into additional shares or fractional shares of the underlying stock on the dividend payment date. Instead of receiving a cash payout, the money is immediately put back to work. This systematic approach eliminates the temptation to spend the dividends and ensures that your capital continues to compound over time without incurring additional brokerage commissions.",
+    res1Desc: "A Dividend Reinvestment Plan, commonly known as DRIP, uses cash dividends to purchase additional full or fractional shares instead of paying the cash out. Reinvestment can increase the number of shares that may receive future dividends, but plan availability, purchase timing, fees, and fractional-share rules depend on the broker or issuer.",
     res2Title: "The Magic of Compound Interest",
-    res2Desc: "Albert Einstein famously referred to compound interest as the \"eighth wonder of the world.\" In the context of dividend investing, compounding occurs when you earn returns not just on your initial principal, but also on the accumulated dividends from previous periods. As your share count grows through DRIP, your future dividend payments increase correspondingly. Over a 10, 20, or 30-year horizon, this \"snowball effect\" can transform a modest monthly contribution into a substantial portfolio capable of funding your retirement.",
+    res2Desc: "Compounding means returns can be earned on both contributed capital and previously retained returns. With DRIP, reinvested net dividends can buy more shares, which may produce additional dividends later. The effect depends on time, contributions, realized returns, taxes, fees, and whether dividends continue; it does not guarantee a retirement outcome.",
     res3Title: "High Yield vs. Dividend Growth",
-    res3Desc: "Investors often face a dilemma: should they chase high initial dividend yields (e.g., 7-10%) or focus on companies with lower yields (e.g., 2-3%) but a strong history of annual dividend increases? While high yields are attractive for immediate income, they can sometimes indicate a distressed company. Conversely, Dividend Aristocrats—companies that have increased their payouts for 25+ consecutive years—offer a growing income stream that outpaces inflation. Our calculator helps you model both scenarios to find the right balance for your financial goals.",
+    res3Desc: "A higher current yield can increase modeled income, but it can also reflect a lower market price or greater risk of a dividend reduction. A lower-yielding investment may or may not grow its dividend. Test several yield assumptions and assess total return, diversification, fees, and the sustainability of distributions outside this calculator.",
     res4Title: "Achieving FIRE (Financial Independence, Retire Early)",
-    res4Desc: "The FIRE movement relies heavily on creating passive income streams that exceed living expenses. Dividend investing is a cornerstone strategy for many FIRE practitioners. By consistently investing in broad-market index funds (like S&P 500 ETFs) or a diversified portfolio of blue-chip dividend stocks, you can build a reliable cash flow. Use our YieldGrower calculator to determine exactly how much you need to invest monthly, and for how long, to reach your \"crossover point\" where your dividends cover your lifestyle.",
+    res4Desc: "Financial-independence planning compares future spending with income and withdrawals supported by a portfolio. Dividends can be one source of cash, but they are not guaranteed and should not be evaluated separately from price changes, taxes, inflation, and portfolio risk. Use this projection alongside the FIRE and inflation tools to compare assumptions rather than to select investments.",
     abtTitle: "About YieldGrower Calculator",
     abt1: "YieldGrower is a comprehensive, free financial tool designed to help investors visualize the long-term trajectory of their portfolios. Whether you are a beginner taking your first steps into the stock market or a seasoned investor planning for early retirement, understanding the mathematical reality of your investment plan is crucial.",
     abt2: "Our calculator models initial principal, monthly contributions, annual price growth, dividend yield, and dividend tax separately. Enter price appreciation excluding dividends to avoid counting dividend returns twice. By toggling DRIP, you can compare reinvesting after-tax dividends with taking them as cash. We do not store your financial data; all calculations are performed securely within your browser."
@@ -99,13 +100,13 @@ const translations = {
     resTitle: "배당 투자의 힘",
     resSub: "복리 이자와 전략적인 배당 재투자를 통한 자산 증식의 기초를 마스터하세요.",
     res1Title: "DRIP (배당 재투자) 이란 무엇인가요?",
-    res1Desc: "DRIP(Dividend Reinvestment Plan)은 주주들이 현금 배당을 받는 대신, 그 배당금으로 해당 주식을 자동으로 추가 매수하는 투자 전략입니다. 현금을 받아 소비하는 유혹을 없애고, 돈이 곧바로 다시 일하게 만듭니다. 이 체계적인 접근법은 추가적인 거래 수수료 없이 자본이 시간이 지남에 따라 계속해서 복리로 늘어나도록 보장합니다.",
+    res1Desc: "DRIP(Dividend Reinvestment Plan)은 현금 배당을 지급받는 대신 그 배당으로 주식 또는 소수점 주식을 추가 매수하는 방식입니다. 재투자로 미래 배당을 받을 수량이 늘 수 있지만, 이용 가능 여부와 매수 시점, 수수료, 소수점 매매 규칙은 증권사나 발행사마다 다릅니다.",
     res2Title: "복리의 마법",
-    res2Desc: "알베르트 아인슈타인은 복리를 '세계 8대 불가사의'라고 불렀습니다. 배당 투자에서 복리는 초기 원금뿐만 아니라 이전 기간에 누적된 배당금에서도 수익을 얻을 때 발생합니다. DRIP을 통해 보유 주식 수가 늘어남에 따라 미래의 배당금 지급액도 그에 비례하여 증가합니다. 10년, 20년, 30년의 장기적인 관점에서 이 '스노우볼 효과'는 적은 월 적립금을 은퇴 자금으로 쓸 수 있는 거대한 포트폴리오로 탈바꿈시킬 수 있습니다.",
+    res2Desc: "복리는 납입 원금뿐 아니라 이전에 남겨 둔 수익에도 다시 수익이 발생하는 구조입니다. DRIP에서는 세후 배당으로 주식을 더 매수하고 그 주식이 이후 배당을 만들 수 있습니다. 실제 결과는 기간, 적립금, 실현 수익률, 세금, 수수료, 배당 유지 여부에 따라 달라지며 은퇴 결과를 보장하지 않습니다.",
     res3Title: "고배당 vs 배당 성장",
-    res3Desc: "투자자들은 종종 딜레마에 빠집니다. 7~10%의 높은 초기 배당 수익률을 쫓을 것인가, 아니면 2~3%로 낮지만 매년 배당금을 인상해 온 역사가 깊은 우량주에 집중할 것인가? 높은 수익률은 당장의 수입에는 매력적이지만, 때로는 기업의 재무 상태가 위험하다는 신호일 수 있습니다. 반면, 25년 이상 연속으로 배당을 늘려온 '배당 귀족주'들은 인플레이션을 뛰어넘는 성장하는 수입원을 제공합니다. 저희 계산기를 사용하여 두 시나리오를 모두 테스트해 보세요.",
+    res3Desc: "높은 현재 배당률은 계산상 소득을 늘리지만 주가 하락이나 배당 삭감 위험이 반영된 결과일 수도 있습니다. 낮은 배당률의 종목도 배당 성장이 보장되지는 않습니다. 여러 배당률을 비교하고 총수익, 분산, 수수료, 분배금 지속 가능성은 계산기 밖에서 별도로 확인해야 합니다.",
     res4Title: "FIRE (조기 은퇴) 달성하기",
-    res4Desc: "FIRE(경제적 자립, 조기 은퇴) 운동은 생활비를 초과하는 패시브 인컴(수동적 소득) 흐름을 만드는 것에 크게 의존합니다. 배당 투자는 많은 FIRE 족들에게 핵심 전략입니다. S&P 500 ETF와 같은 시장 지수 펀드나 우량 배당주 포트폴리오에 꾸준히 투자함으로써 신뢰할 수 있는 현금 흐름을 구축할 수 있습니다. 계산기를 사용하여 배당금이 생활비를 충당하는 '크로스오버 포인트'에 도달하기 위해 매월 얼마를 투자해야 하는지 확인해 보세요.",
+    res4Desc: "경제적 자립 계획은 미래 지출과 포트폴리오가 감당할 수 있는 소득·인출을 비교합니다. 배당은 현금 원천 중 하나지만 보장되지 않으며 주가 변화, 세금, 물가, 포트폴리오 위험과 분리해 평가하면 안 됩니다. 종목 선택이 아니라 가정 비교를 위해 FIRE·인플레이션 도구와 함께 사용하세요.",
     abtTitle: "YieldGrower 계산기 소개",
     abt1: "YieldGrower는 투자자들이 포트폴리오의 장기적인 궤적을 시각화할 수 있도록 돕기 위해 고안된 무료 금융 도구입니다. 주식 시장에 첫 발을 내딛는 초보자이든 조기 은퇴를 계획하는 노련한 투자자이든, 투자 계획의 수학적 현실을 이해하는 것은 매우 중요합니다.",
     abt2: "이 계산기는 초기 투자금, 월 적립금, 연간 주가 상승률, 배당 수익률, 배당세를 각각 계산합니다. 배당 수익이 이중 반영되지 않도록 주가 상승률에는 배당을 제외한 값만 입력하세요. DRIP을 켜고 끄면 세후 배당을 재투자하는 경우와 현금으로 받는 경우를 비교할 수 있습니다. 금융 데이터는 저장하지 않으며 모든 계산은 브라우저에서 수행됩니다."
@@ -508,6 +509,7 @@ export default function DividendCalculator() {
           </div>
         </div>
 
+        <CalculatorMethodology page="dividend" />
         <CalculatorFaq page="dividend" />
         <RelatedTools page="dividend" />
 

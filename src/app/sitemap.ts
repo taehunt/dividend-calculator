@@ -1,8 +1,10 @@
 import { MetadataRoute } from "next";
-import { readFileSync, statSync } from "fs";
+import { readFileSync } from "fs";
 import path from "path";
 import { getSortedPostsData } from "@/lib/posts";
 import { SITE_URL } from "@/lib/site";
+
+const CONTENT_REVIEW_DATE = new Date("2026-08-16T00:00:00+09:00");
 
 function pulseLastModified(): Date {
   try {
@@ -21,31 +23,24 @@ function pulseLastModified(): Date {
   return new Date();
 }
 
-function calculatorLastModified(segment: string): Date {
-  try {
-    return statSync(
-      path.join(process.cwd(), "src", "app", segment, "page.tsx")
-    ).mtime;
-  } catch {
-    return new Date();
-  }
-}
-
-function latestPostDate(): Date {
+function latestPostDate(): Date | null {
   const posts = getSortedPostsData();
-  if (!posts.length) return new Date();
-  return new Date(posts[0].date);
+  if (!posts.length) return null;
+  return posts.reduce((latest, post) => {
+    const modified = new Date(post.updated || post.date);
+    return modified > latest ? modified : latest;
+  }, new Date(posts[0].updated || posts[0].date));
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pulseDate = pulseLastModified();
   const blogDate = latestPostDate();
   const homeDate =
-    pulseDate > blogDate ? pulseDate : blogDate;
+    pulseDate > CONTENT_REVIEW_DATE ? pulseDate : CONTENT_REVIEW_DATE;
 
   const posts = getSortedPostsData().map((post) => ({
     url: `${SITE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: new Date(post.updated || post.date),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
@@ -81,15 +76,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 1,
     },
-    {
-      url: `${SITE_URL}/blog`,
-      lastModified: blogDate,
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
+    ...(blogDate
+      ? [{
+          url: `${SITE_URL}/blog`,
+          lastModified: blogDate,
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+        }]
+      : []),
     ...calculators.map((c) => ({
       url: `${SITE_URL}/${c.segment}`,
-      lastModified: calculatorLastModified(c.segment),
+      lastModified: CONTENT_REVIEW_DATE,
       changeFrequency:
         c.segment === "privacy" ||
         c.segment === "about" ||

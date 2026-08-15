@@ -1,4 +1,6 @@
-const PREFIX = "yg-calc:";
+// v2 starts clean after the calculator methodology and currency audit.
+// Old keys remain untouched in the browser but are no longer loaded.
+const PREFIX = "yg-calc:v2:";
 
 export function calcStorageKey(page: string, field: string): string {
   return `${PREFIX}${page}:${field}`;

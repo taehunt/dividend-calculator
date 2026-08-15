@@ -2,6 +2,7 @@
 title: "Reverse-Engineering Your Dividend Goal: Math and Realities"
 titleKo: "목표 배당 소득 역산하기: 수치 계산과 현실적 고려사항"
 date: "2026-07-30"
+draft: true
 excerpt: "Learn how to work backward from a target annual dividend income while accounting for price growth, yields, and taxes."
 excerptKo: "주가 상승률, 배당 수익률, 세금을 고려하여 목표 연간 배당 소득에서부터 역산하는 방법을 알아보세요."
 author: "YieldGrower Editorial"

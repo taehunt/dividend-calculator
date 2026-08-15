@@ -81,6 +81,18 @@ const copy = {
     sources: "Sources",
     sourcesBody:
       "Macro data from FRED (Federal Reserve Bank of St. Louis). ETF prices and dividends from Yahoo Finance delayed quotes.",
+    methodTitle: "How the score is calculated",
+    methodIntro:
+      "Income Pulse is a transparent YieldGrower heuristic, not a market forecast. It starts at 50, rewards the average watched ETF yield when it exceeds the 10-year Treasury yield, and subtracts penalties for positive real Treasury yield and elevated VIX.",
+    methodFormula:
+      "score = clamp[50 + 20 × (ETF average yield − 10Y Treasury) − 10 × max(0, 10Y Treasury − CPI YoY) − VIX penalty]",
+    methodLimitsTitle: "Important limits",
+    methodLimits: [
+      "The six-fund watchlist is selected by YieldGrower and its simple average is not a market-cap-weighted benchmark.",
+      "Covered-call distributions and ordinary equity dividends can have different drivers, sustainability, and tax treatment.",
+      "Yahoo figures are delayed third-party data; the trailing yield can differ from an issuer's official distribution rate.",
+      "Thresholds and weights are editorial choices. The score is not a buy/sell signal and does not measure total return or portfolio fit.",
+    ],
     disclaimer: "Disclaimer",
     ctaTitle: "Put today’s backdrop into a plan",
     goalTitle: "Dividend Income Goal",
@@ -128,6 +140,18 @@ const copy = {
     sources: "출처",
     sourcesBody:
       "거시지표: FRED (세인트루이스 연준). ETF 가격·배당: Yahoo Finance 지연 시세.",
+    methodTitle: "점수 계산 방식",
+    methodIntro:
+      "Income Pulse는 시장 예측이 아니라 계산식을 공개한 YieldGrower의 자체 비교 지표입니다. 50점에서 시작해 관찰 ETF 평균 배당률이 미국 10년 국채보다 높으면 가점을 주고, 양(+)의 실질 국채금리와 높은 VIX에는 감점을 적용합니다.",
+    methodFormula:
+      "점수 = 0~100 범위[50 + 20 × (ETF 평균 배당률 − 10년 국채) − 10 × max(0, 10년 국채 − CPI) − VIX 감점]",
+    methodLimitsTitle: "중요한 한계",
+    methodLimits: [
+      "6개 관찰 종목은 YieldGrower가 선택했으며 단순 평균은 시가총액 가중 시장지수가 아닙니다.",
+      "커버드콜 분배금과 일반 주식 배당은 발생 원인·지속 가능성·세금 처리가 다를 수 있습니다.",
+      "Yahoo 수치는 지연된 제3자 데이터이며 트레일링 수익률은 운용사의 공식 분배율과 다를 수 있습니다.",
+      "가중치와 기준점은 자체 편집 기준입니다. 점수는 매수·매도 신호가 아니며 총수익이나 개인 포트폴리오 적합성을 측정하지 않습니다.",
+    ],
     disclaimer: "면책",
     ctaTitle: "오늘 환경을 내 계획에 연결하기",
     goalTitle: "배당 목표 소득",
@@ -156,6 +180,29 @@ function Card({
       {sub && <p className="text-xs text-slate-400 mt-1">{sub}</p>}
     </div>
   );
+}
+
+function scoreMethodExample(data: IncomePulse, lang: PulseLang): string {
+  const avg = data.avgEtfYield;
+  const treasury = data.rates.dgs10.value;
+  const real = data.rates.real_yield.value;
+  const vix = data.rates.vix.value;
+  if (avg == null || treasury == null) {
+    return lang === "ko"
+      ? "필수 데이터가 없어 현재 점수 계산 예시를 표시할 수 없습니다."
+      : "The current worked example is unavailable because required data is missing.";
+  }
+
+  const spread = avg - treasury;
+  const spreadPoints = 20 * spread;
+  const realPenalty = 10 * Math.max(0, real ?? 0);
+  const stressPenalty = vix != null && vix > 25 ? 10 : vix != null && vix > 20 ? 5 : 0;
+  const score = Math.round(Math.max(0, Math.min(100, 50 + spreadPoints - realPenalty - stressPenalty)));
+  const vixText = vix == null ? "—" : vix.toFixed(2);
+
+  return lang === "ko"
+    ? `현재 데이터 예시: ETF 평균 ${avg.toFixed(3)}% − 10년 국채 ${treasury.toFixed(2)}% = ${spread >= 0 ? "+" : ""}${spread.toFixed(3)}%입니다. 50점에서 스프레드로 ${spreadPoints.toFixed(2)}점을 반영하고 실질금리 항목으로 ${realPenalty.toFixed(2)}점, VIX ${vixText} 기준으로 ${stressPenalty}점을 차감하면 반올림 결과는 ${score}점입니다.`
+    : `Current data example: ${avg.toFixed(3)}% ETF average − ${treasury.toFixed(2)}% 10-year Treasury = ${spread >= 0 ? "+" : ""}${spread.toFixed(3)}%. Starting from 50, the spread contributes ${spreadPoints.toFixed(2)} points; the real-yield term subtracts ${realPenalty.toFixed(2)} and VIX ${vixText} subtracts ${stressPenalty}, producing a rounded score of ${score}.`;
 }
 
 function buildShareText(
@@ -367,6 +414,25 @@ export default function PulseClient({ initialData }: Props) {
             </tbody>
           </table>
         </div>
+
+        <section className="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+          <h2 className="text-xl font-bold text-slate-900">{t.methodTitle}</h2>
+          <p className="mt-3 text-sm leading-7 text-slate-600">{t.methodIntro}</p>
+          <p className="mt-4 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3 font-mono text-sm leading-6 text-indigo-950">
+            {t.methodFormula}
+          </p>
+          <p className="mt-4 text-sm leading-7 text-slate-600">{scoreMethodExample(data, lang)}</p>
+          <h3 className="mt-7 font-bold text-slate-900">{t.methodLimitsTitle}</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-slate-600">
+            {t.methodLimits.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
+            <a className="text-indigo-700 underline decoration-indigo-200 underline-offset-4" href="https://fred.stlouisfed.org/series/DGS10" target="_blank" rel="noreferrer">FRED DGS10</a>
+            <a className="text-indigo-700 underline decoration-indigo-200 underline-offset-4" href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noreferrer">FRED CPIAUCSL</a>
+            <a className="text-indigo-700 underline decoration-indigo-200 underline-offset-4" href="https://fred.stlouisfed.org/series/VIXCLS" target="_blank" rel="noreferrer">FRED VIXCLS</a>
+            <a className="text-indigo-700 underline decoration-indigo-200 underline-offset-4" href="https://finance.yahoo.com/markets/etfs/" target="_blank" rel="noreferrer">Yahoo Finance ETF data</a>
+          </div>
+        </section>
 
         <div className="bg-slate-100 border border-slate-200 rounded-2xl p-5 text-sm text-slate-600 space-y-2 mb-10">
           <p>

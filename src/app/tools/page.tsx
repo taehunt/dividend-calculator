@@ -118,11 +118,37 @@ const pageCopy = {
     title: "Tools",
     subtitle:
       "Free calculators for dividend investing, FIRE planning, and growth tracking.",
+    reviewed: "Calculator formulas and methodology pages reviewed August 16, 2026.",
+    howTitle: "How to use the calculators",
+    howBody: [
+      "Start with the question you need to answer, then change one assumption at a time. The dividend and compound tools project a possible path; FIRE and dividend-goal tools work backward from a target; average cost and CAGR summarize values you already know; inflation translates between nominal amounts and purchasing power.",
+      "Every result is calculated in your browser. YieldGrower does not receive or store the amounts you enter. Share links contain only the inputs placed in the URL, so review a link before sending it to someone else.",
+    ],
+    checksTitle: "Before relying on a result",
+    checks: [
+      "Read the formula, worked example, and limitations shown below each calculator.",
+      "Compare a conservative, base, and optimistic case instead of treating one rate as a forecast.",
+      "Keep price growth, dividends, taxes, fees, and inflation separate to avoid double counting.",
+      "Confirm personal investment and tax decisions with current primary sources and a qualified professional.",
+    ],
   },
   ko: {
     title: "전체 도구",
     subtitle:
       "배당 투자, FIRE 계획, 자산 성장을 위한 무료 계산기 모음입니다.",
+    reviewed: "계산식·방법론 페이지 검토일: 2026년 8월 16일",
+    howTitle: "계산기 사용 순서",
+    howBody: [
+      "확인하려는 질문에 맞는 도구를 선택한 뒤 가정을 한 번에 하나씩 바꿔 비교하세요. 배당·복리 계산기는 가능한 성장 경로를, FIRE·배당 목표 계산기는 목표에서 필요한 금액을 역산합니다. 평단가·CAGR은 이미 알고 있는 거래나 기간 성과를 요약하고, 인플레이션 계산기는 명목 금액과 구매력을 구분합니다.",
+      "모든 결과는 이용자의 브라우저에서 계산됩니다. YieldGrower는 입력 금액을 전송받거나 저장하지 않습니다. 공유 링크에는 URL에 포함된 입력값이 들어가므로 다른 사람에게 보내기 전에 링크 내용을 확인하세요.",
+    ],
+    checksTitle: "결과를 사용하기 전 확인사항",
+    checks: [
+      "각 계산기 아래에 표시된 계산식, 재현 예시, 반영하지 않는 항목을 읽으세요.",
+      "한 가지 수익률을 예측처럼 사용하지 말고 보수적·기준·낙관적 시나리오를 비교하세요.",
+      "주가 상승, 배당, 세금, 수수료, 물가를 분리해 이중 계산을 피하세요.",
+      "개인 투자·세금 결정은 최신 1차 자료와 자격 있는 전문가를 통해 확인하세요.",
+    ],
   },
 };
 
@@ -144,6 +170,7 @@ export default function ToolsPage() {
             {t.title}
           </h1>
           <p className="text-slate-600 text-lg">{t.subtitle}</p>
+          <p className="mt-3 text-sm font-medium text-slate-500">{t.reviewed}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -168,6 +195,21 @@ export default function ToolsPage() {
             );
           })}
         </div>
+
+        <section className="mt-12 grid gap-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 lg:grid-cols-2">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">{t.howTitle}</h2>
+            <div className="mt-3 space-y-3 text-sm leading-7 text-slate-600">
+              {t.howBody.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            </div>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">{t.checksTitle}</h2>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-7 text-slate-600">
+              {t.checks.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
+        </section>
       </main>
     </div>
   );

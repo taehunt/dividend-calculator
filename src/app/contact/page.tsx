@@ -12,7 +12,7 @@ const copy = {
     eyebrow: "Contact",
     title: "Get in touch with YieldGrower",
     intro:
-      "Use the email below for calculator feedback, article corrections, privacy questions, or general inquiries.",
+      "Use the email below for calculator feedback, methodology corrections, privacy questions, or general inquiries.",
     emailLabel: "Email",
     button: "Send an email",
     note:
@@ -23,7 +23,7 @@ const copy = {
     eyebrow: "문의",
     title: "YieldGrower에 문의하기",
     intro:
-      "계산기 의견, 게시글 정정 요청, 개인정보 관련 질문 또는 일반 문의는 아래 이메일로 보내주세요.",
+      "계산기 의견, 방법론 정정 요청, 개인정보 관련 질문 또는 일반 문의는 아래 이메일로 보내주세요.",
     emailLabel: "이메일",
     button: "이메일 보내기",
     note:

@@ -2,6 +2,7 @@
 title: "Compound Interest and Long-Term Wealth Building: Checklist"
 titleKo: "복리와 장기 자산 형성: 체크리스트"
 date: "2026-07-28"
+draft: true
 excerpt: "See why time in the market and reinvested returns matter more than chasing short-term gains."
 excerptKo: "단기 수익 추격보다 시장에 머무는 시간과 재투자가 왜 더 중요한지 살펴봅니다."
 author: "YieldGrower Editorial"

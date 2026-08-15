@@ -2,6 +2,7 @@
 title: "High Yield vs Dividend Growth: Which Fits Your Goals?: Overview"
 titleKo: "고배당 vs 배당성장: 목표에 맞는 선택은?: 개요"
 date: "2026-07-29"
+draft: true
 excerpt: "Compare immediate income strategies with long-term dividend growth approaches."
 excerptKo: "당장의 현금 소득 전략과 장기 배당성장 접근을 비교합니다."
 author: "YieldGrower Editorial"

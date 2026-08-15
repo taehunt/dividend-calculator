@@ -1,37 +1,5 @@
-import { getSortedPostsData } from "@/lib/posts";
-import BlogIndexClient from "@/components/BlogIndexClient";
-import JsonLd from "@/components/JsonLd";
-import { blogIndexJsonLd, breadcrumbJsonLd } from "@/lib/json-ld";
+import { permanentRedirect } from "next/navigation";
 
 export default function BlogIndex() {
-  const posts = getSortedPostsData().map(
-    ({ slug, date, updated, title, titleKo, excerpt, excerptKo, category, tags }) => ({
-      slug,
-      date,
-      updated,
-      title,
-      titleKo,
-      excerpt,
-      excerptKo,
-      category,
-      tags,
-    })
-  );
-
-  return (
-    <>
-      <JsonLd
-        data={[
-          blogIndexJsonLd(
-            posts.map(({ slug, title, date }) => ({ slug, title, date }))
-          ),
-          breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "Blog", path: "/blog" },
-          ]),
-        ]}
-      />
-      <BlogIndexClient posts={posts} />
-    </>
-  );
+  permanentRedirect("/tools");
 }

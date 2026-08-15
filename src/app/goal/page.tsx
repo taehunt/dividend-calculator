@@ -12,6 +12,7 @@ import { useMoneyValue } from "@/hooks/useMoneyValue";
 import PulseCallout from "@/components/PulseCallout";
 import CalculatorFaq from "@/components/CalculatorFaq";
 import RelatedTools from "@/components/RelatedTools";
+import CalculatorMethodology from "@/components/CalculatorMethodology";
 import CopyCalcLink from "@/components/CopyCalcLink";
 
 const copy = {
@@ -202,6 +203,7 @@ export default function DividendGoalPage() {
           </div>
         </div>
 
+        <CalculatorMethodology page="goal" />
         <CalculatorFaq page="goal" />
         <RelatedTools page="goal" />
       </main>

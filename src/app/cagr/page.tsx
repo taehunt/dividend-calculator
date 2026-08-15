@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import SiteHeader from "@/components/SiteHeader";
 import CalculatorFaq from "@/components/CalculatorFaq";
 import RelatedTools from "@/components/RelatedTools";
+import CalculatorMethodology from "@/components/CalculatorMethodology";
 import CopyCalcLink from "@/components/CopyCalcLink";
 import { useLocale } from "@/components/LocaleProvider";
 import NumberField from "@/components/NumberField";
@@ -191,6 +192,7 @@ export default function CagrCalculatorPage() {
           </div>
         </div>
 
+        <CalculatorMethodology page="cagr" />
         <CalculatorFaq page="cagr" />
         <RelatedTools page="cagr" />
       </main>

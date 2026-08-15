@@ -4,7 +4,7 @@ import { pageMeta } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
   title: "About YieldGrower",
   description:
-    "Learn how YieldGrower calculators and educational articles are created, what assumptions they use, and where their limits are.",
+    "Learn who maintains YieldGrower, how its calculator formulas are reviewed, what assumptions they use, and where their limits are.",
   path: "/about",
 });
 

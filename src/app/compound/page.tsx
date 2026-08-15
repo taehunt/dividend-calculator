@@ -22,6 +22,7 @@ import { useMoneyValue } from "@/hooks/useMoneyValue";
 import PulseCallout from "@/components/PulseCallout";
 import CalculatorFaq from "@/components/CalculatorFaq";
 import RelatedTools from "@/components/RelatedTools";
+import CalculatorMethodology from "@/components/CalculatorMethodology";
 import CopyCalcLink from "@/components/CopyCalcLink";
 
 const copy = {
@@ -274,6 +275,7 @@ export default function CompoundCalculatorPage() {
           </div>
         </div>
 
+        <CalculatorMethodology page="compound" />
         <CalculatorFaq page="compound" />
         <RelatedTools page="compound" />
       </main>

@@ -2,6 +2,7 @@
 title: "Dividend Reinvestment Plans (DRIP) for Beginners: Framework"
 titleKo: "초보자를 위한 배당 재투자(DRIP) 가이드: 프레임워크"
 date: "2026-07-27"
+draft: true
 excerpt: "Learn how DRIP investing turns small dividends into long-term compounding growth."
 excerptKo: "소액 배당이 장기 복리 성장으로 이어지는 DRIP 투자 원리를 알아봅니다."
 author: "YieldGrower Editorial"
