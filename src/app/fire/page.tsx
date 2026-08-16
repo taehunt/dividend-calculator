@@ -345,7 +345,7 @@ export default function FireCalculatorPage() {
                   onChange={setAnnualExpenses}
                   suffix={moneySuffix}
                 />
-                <p className="text-xs text-slate-400 -mt-3">{t.autoHint}</p>
+                <p className="text-xs text-slate-600 -mt-3">{t.autoHint}</p>
               </>
             )}
 
@@ -397,7 +397,7 @@ export default function FireCalculatorPage() {
                       : `${result.yearsToFire}${lang === "ko" ? "년" : " yrs"}`}
                 </p>
                 {result.yearsToFire !== null && (
-                  <p className="text-xs text-emerald-600 mt-1 font-medium">
+                  <p className="text-xs text-emerald-700 mt-1 font-medium">
                     {t.reached}
                   </p>
                 )}

@@ -67,7 +67,7 @@ export default function PulseCallout({ variant = "compact" }: Props) {
                 {data?.score != null && (
                   <span className={`ml-2 ${scoreTone(data.score)}`}>
                     {data.score}
-                    <span className="text-slate-500 font-semibold text-xs ml-1">
+                    <span className="text-slate-600 font-semibold text-xs ml-1">
                       {data.scoreLabel[lang]}
                     </span>
                     {delta !== null && (
@@ -114,7 +114,7 @@ export default function PulseCallout({ variant = "compact" }: Props) {
         {data?.score != null && (
           <p className={`text-3xl font-extrabold mb-1 ${scoreTone(data.score)}`}>
             {data.score}
-            <span className="text-sm font-semibold text-slate-500 ml-2">
+            <span className="text-sm font-semibold text-slate-600 ml-2">
               {data.scoreLabel[lang]}
             </span>
           </p>

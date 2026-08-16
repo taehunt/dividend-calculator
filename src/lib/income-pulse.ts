@@ -106,7 +106,7 @@ export function formatScoreDelta(delta: number, lang: PulseLang): string {
 }
 
 export function deltaTone(delta: number | null): string {
-  if (delta === null || delta === 0) return "text-slate-500";
+  if (delta === null || delta === 0) return "text-slate-600";
   if (delta > 0) return "text-emerald-600";
   return "text-orange-600";
 }

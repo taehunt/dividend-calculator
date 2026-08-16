@@ -82,7 +82,7 @@ export default function NumberField({
         />
         {suffix && (
           <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
-            <span className="text-slate-400 text-sm">{suffix}</span>
+            <span className="text-slate-600 text-sm">{suffix}</span>
           </div>
         )}
       </div>
