@@ -13,6 +13,12 @@
 # testing
 /coverage
 
+# Python automation artifacts
+__pycache__/
+*.py[cod]
+/pinterest_pin.jpg
+/outputs/
+
 # next.js
 /.next/
 /out/
