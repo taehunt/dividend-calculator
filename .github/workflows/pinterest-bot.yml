@@ -35,12 +35,15 @@ jobs:
           Pillow==11.3.0 requests==2.32.5
 
       - name: Render and validate pin
-        run: python bots/pinterest/pin.py --dry-run
+        run: |
+          python -m unittest bots.pinterest.test_pin
+          python bots/pinterest/pin.py --dry-run
 
       - name: Publish pin
         if: ${{ !inputs.dry_run }}
         env:
-          PINTEREST_ACCESS_TOKEN: ${{ secrets.PINTEREST_ACCESS_TOKEN }}
+          PINTEREST_APP_ID: ${{ secrets.PINTEREST_APP_ID }}
+          PINTEREST_APP_SECRET: ${{ secrets.PINTEREST_APP_SECRET }}
           PINTEREST_BOARD_ID: ${{ secrets.PINTEREST_BOARD_ID }}
         run: python bots/pinterest/pin.py
 

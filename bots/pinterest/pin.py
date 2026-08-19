@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PULSE_PATH = ROOT / "public" / "data" / "income-pulse.json"
 DEFAULT_OUTPUT = ROOT / "pinterest_pin.jpg"
 PINTEREST_API = "https://api.pinterest.com/v5/pins"
+PINTEREST_TOKEN_API = "https://api.pinterest.com/v5/oauth/token"
 SITE_URL = "https://www.yieldgrower.com"
 
 
@@ -142,6 +143,28 @@ def render_pin(content: PinContent, output: Path = DEFAULT_OUTPUT) -> Path:
     return output
 
 
+def get_client_token(app_id: str, app_secret: str) -> str:
+    response = requests.post(
+        PINTEREST_TOKEN_API,
+        auth=(app_id, app_secret),
+        data={
+            "grant_type": "client_credentials",
+            "scope": "boards:read,boards:write,pins:read,pins:write",
+        },
+        timeout=30,
+    )
+    if response.status_code == 401:
+        raise RuntimeError("Pinterest app authentication failed; verify app credentials and two-factor authentication")
+    response.raise_for_status()
+    payload = response.json()
+    token = str(payload.get("access_token") or "").strip()
+    scopes = set(str(payload.get("scope") or "").split())
+    required = {"boards:read", "boards:write", "pins:read", "pins:write"}
+    if not token or not required.issubset(scopes):
+        raise RuntimeError("Pinterest token is missing required board or pin permissions")
+    return token
+
+
 def publish_pin(content: PinContent, image_path: Path, token: str, board_id: str) -> dict[str, Any]:
     encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
     payload = {
@@ -197,11 +220,13 @@ def main() -> int:
         print(json.dumps(summary, ensure_ascii=False, indent=2))
         return 0
 
-    token = os.environ.get("PINTEREST_ACCESS_TOKEN", "").strip()
+    app_id = os.environ.get("PINTEREST_APP_ID", "").strip()
+    app_secret = os.environ.get("PINTEREST_APP_SECRET", "").strip()
     board_id = os.environ.get("PINTEREST_BOARD_ID", "").strip()
-    if not token or not board_id:
-        raise RuntimeError("Missing PINTEREST_ACCESS_TOKEN or PINTEREST_BOARD_ID")
+    if not app_id or not app_secret or not board_id:
+        raise RuntimeError("Missing PINTEREST_APP_ID, PINTEREST_APP_SECRET, or PINTEREST_BOARD_ID")
 
+    token = get_client_token(app_id, app_secret)
     result = publish_pin(content, image_path, token, board_id)
     summary.update({"pin_id": result.get("id"), "dry_run": False})
     print(json.dumps(summary, ensure_ascii=False, indent=2))
