@@ -1,17 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-29T02:59:03.409302+00:00",
-  "score": 52,
+  "updatedAt": "2026-08-29T22:56:38.824293+00:00",
+  "score": 54,
   "scoreLabel": {
     "en": "Neutral",
     "ko": "중립"
   },
   "brief": {
-    "en": "Today’s income backdrop is mixed — neither clearly favoring dividend ETFs nor Treasuries. Average ETF yield 5.34% vs 10Y 4.67% (spread +0.67%); real yield 1.13%. Curve: Normal.",
-    "ko": "오늘의 인컴 환경은 혼조입니다. 배당 ETF와 국채 중 한쪽이 뚜렷이 우세하지 않습니다. ETF 평균 5.34% vs 10년물 4.67% (스프레드 +0.67%), 실질금리 1.13%. 수익률 곡선: 정상."
+    "en": "Today’s income backdrop is mixed — neither clearly favoring dividend ETFs nor Treasuries. Average ETF yield 5.41% vs 10Y 4.67% (spread +0.74%); real yield 1.13%. Curve: Normal.",
+    "ko": "오늘의 인컴 환경은 혼조입니다. 배당 ETF와 국채 중 한쪽이 뚜렷이 우세하지 않습니다. ETF 평균 5.41% vs 10년물 4.67% (스프레드 +0.74%), 실질금리 1.13%. 수익률 곡선: 정상."
   },
-  "avgEtfYield": 5.343,
-  "spreadVs10y": 0.673,
+  "avgEtfYield": 5.41,
+  "spreadVs10y": 0.74,
   "curveRegime": {
     "id": "normal",
     "label_en": "Normal",
@@ -99,7 +99,7 @@
       "symbol": "DIVO",
       "name": "Amplify CWP Enhanced Dividend",
       "price": 48.45,
-      "yield": 5.8,
+      "yield": 6.202,
       "currency": "USD",
       "ok": true
     }
@@ -387,9 +387,9 @@
     },
     {
       "date": "2026-08-29",
-      "score": 52,
-      "avgEtfYield": 5.343,
-      "spreadVs10y": 0.673,
+      "score": 54,
+      "avgEtfYield": 5.41,
+      "spreadVs10y": 0.74,
       "dgs10": 4.67,
       "realYield": 1.13
     }
