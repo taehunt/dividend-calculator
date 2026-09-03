@@ -1,17 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-02T22:55:48.807121+00:00",
-  "score": 46,
+  "updatedAt": "2026-09-03T22:55:07.638456+00:00",
+  "score": 45,
   "scoreLabel": {
     "en": "Neutral",
     "ko": "중립"
   },
   "brief": {
-    "en": "Today’s income backdrop is mixed — neither clearly favoring dividend ETFs nor Treasuries. Average ETF yield 5.22% vs 10Y 4.79% (spread +0.43%); real yield 1.25%. Curve: Normal.",
-    "ko": "오늘의 인컴 환경은 혼조입니다. 배당 ETF와 국채 중 한쪽이 뚜렷이 우세하지 않습니다. ETF 평균 5.22% vs 10년물 4.79% (스프레드 +0.43%), 실질금리 1.25%. 수익률 곡선: 정상."
+    "en": "Today’s income backdrop is mixed — neither clearly favoring dividend ETFs nor Treasuries. Average ETF yield 5.19% vs 10Y 4.79% (spread +0.40%); real yield 1.25%. Curve: Normal.",
+    "ko": "오늘의 인컴 환경은 혼조입니다. 배당 ETF와 국채 중 한쪽이 뚜렷이 우세하지 않습니다. ETF 평균 5.19% vs 10년물 4.79% (스프레드 +0.40%), 실질금리 1.25%. 수익률 곡선: 정상."
   },
-  "avgEtfYield": 5.216,
-  "spreadVs10y": 0.426,
+  "avgEtfYield": 5.186,
+  "spreadVs10y": 0.396,
   "curveRegime": {
     "id": "normal",
     "label_en": "Normal",
@@ -20,17 +20,17 @@
   "rates": {
     "dgs10": {
       "value": 4.79,
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "unit": "%"
     },
     "dgs2": {
       "value": 4.39,
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "unit": "%"
     },
     "t10y2y": {
-      "value": 0.4,
-      "date": "2026-09-02",
+      "value": 0.43,
+      "date": "2026-09-03",
       "unit": "%"
     },
     "fed_funds": {
@@ -44,13 +44,13 @@
       "unit": "%"
     },
     "vix": {
-      "value": 16.34,
-      "date": "2026-09-01",
+      "value": 15.2,
+      "date": "2026-09-02",
       "unit": "index"
     },
     "real_yield": {
       "value": 1.25,
-      "date": "2026-09-01",
+      "date": "2026-09-02",
       "unit": "%"
     }
   },
@@ -58,48 +58,48 @@
     {
       "symbol": "SCHD",
       "name": "Schwab US Dividend Equity",
-      "price": 35.01,
-      "yield": 2.993,
+      "price": 35.08,
+      "yield": 2.987,
       "currency": "USD",
       "ok": true
     },
     {
       "symbol": "VYM",
       "name": "Vanguard High Dividend Yield",
-      "price": 164.29,
-      "yield": 2.21,
+      "price": 164.89,
+      "yield": 2.202,
       "currency": "USD",
       "ok": true
     },
     {
       "symbol": "VIG",
       "name": "Vanguard Dividend Appreciation",
-      "price": 241.66,
-      "yield": 1.482,
+      "price": 243.14,
+      "yield": 1.473,
       "currency": "USD",
       "ok": true
     },
     {
       "symbol": "JEPI",
       "name": "JPMorgan Equity Premium Income",
-      "price": 57.19,
-      "yield": 8.014,
+      "price": 57.43,
+      "yield": 7.98,
       "currency": "USD",
       "ok": true
     },
     {
       "symbol": "QYLD",
       "name": "Global X Nasdaq 100 Covered Call",
-      "price": 18.21,
-      "yield": 10.741,
+      "price": 18.33,
+      "yield": 10.671,
       "currency": "USD",
       "ok": true
     },
     {
       "symbol": "DIVO",
       "name": "Amplify CWP Enhanced Dividend",
-      "price": 48.28,
-      "yield": 5.857,
+      "price": 48.71,
+      "yield": 5.806,
       "currency": "USD",
       "ok": true
     }
@@ -414,6 +414,14 @@
       "score": 46,
       "avgEtfYield": 5.216,
       "spreadVs10y": 0.426,
+      "dgs10": 4.79,
+      "realYield": 1.25
+    },
+    {
+      "date": "2026-09-03",
+      "score": 45,
+      "avgEtfYield": 5.186,
+      "spreadVs10y": 0.396,
       "dgs10": 4.79,
       "realYield": 1.25
     }
