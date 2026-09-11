@@ -3,19 +3,32 @@
 import Script from "next/script";
 import { usePathname } from "next/navigation";
 
-const NON_CONTENT_PATHS = new Set([
-  "/about",
-  "/contact",
-  "/editorial-policy",
-  "/privacy",
-  "/test",
-  "/compatibility",
+const MONETIZABLE_PATHS = new Set([
+  "/",
+  "/types",
+  "/methodology",
+  "/result/steady-vault",
+  "/result/future-architect",
+  "/result/life-coordinator",
+  "/result/family-planner",
+  "/result/adaptive-guardian",
+  "/result/quiet-opportunity-keeper",
+  "/result/warm-pragmatist",
+  "/result/flexible-supporter",
+  "/result/planned-enjoyer",
+  "/result/strategic-pioneer",
+  "/result/experience-curator",
+  "/result/shared-pioneer",
+  "/result/spontaneous-explorer",
+  "/result/bold-experimenter",
+  "/result/social-spark",
+  "/result/possibility-sponsor",
 ]);
 
 export default function AdSenseScript() {
   const pathname = usePathname();
 
-  if (NON_CONTENT_PATHS.has(pathname)) return null;
+  if (!MONETIZABLE_PATHS.has(pathname)) return null;
 
   return (
     <Script
