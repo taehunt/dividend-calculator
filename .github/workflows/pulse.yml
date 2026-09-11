@@ -1,9 +1,6 @@
-name: Income Pulse Daily Update
+name: Legacy Income Pulse Manual Update
 
 on:
-  schedule:
-    # 매일 UTC 21:00 = 한국시간 06:00
-    - cron: '0 21 * * *'
   workflow_dispatch:
 
 permissions:

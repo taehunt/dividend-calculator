@@ -8,6 +8,8 @@ const NON_CONTENT_PATHS = new Set([
   "/contact",
   "/editorial-policy",
   "/privacy",
+  "/test",
+  "/compatibility",
 ]);
 
 export default function AdSenseScript() {

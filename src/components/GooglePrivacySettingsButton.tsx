@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLocale } from "@/components/LocaleProvider";
 
 type TcfData = {
   gdprApplies?: boolean;
@@ -23,11 +22,6 @@ declare global {
   }
 }
 
-const copy = {
-  en: "Cookie Settings",
-  ko: "쿠키 설정",
-};
-
 function getGoogleFc() {
   window.googlefc = window.googlefc || {};
   window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
@@ -35,7 +29,6 @@ function getGoogleFc() {
 }
 
 export default function GooglePrivacySettingsButton() {
-  const { lang } = useLocale();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -74,9 +67,9 @@ export default function GooglePrivacySettingsButton() {
     <button
       type="button"
       onClick={openPrivacySettings}
-      className="text-slate-500 hover:text-indigo-600 transition-colors"
+      className="font-semibold text-stone-600 hover:text-stone-950"
     >
-      {copy[lang]}
+      쿠키 설정
     </button>
   );
 }

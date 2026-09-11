@@ -1,171 +1,39 @@
-"use client";
-
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import SiteHeader from "@/components/SiteHeader";
-import { useLocale } from "@/components/LocaleProvider";
+import type { Metadata } from "next";
 import { CONTACT_EMAIL } from "@/lib/site";
 
-const copy = {
-  en: {
-    back: "Back to Home",
-    title: "Privacy Policy",
-    updated: "Last updated: July 30, 2026",
-    sections: [
-      {
-        h: "1. Introduction",
-        p: 'Welcome to YieldGrower ("we," "our," or "us"). We respect your privacy and are committed to protecting it through our compliance with this privacy policy. This policy describes the types of information we may collect from you or that you may provide when you visit the website yieldgrower.com (our "Website") and our practices for collecting, using, maintaining, protecting, and disclosing that information.',
-      },
-      {
-        h: "2. Information We Collect",
-        p: "We do not require users to create an account, log in, or provide personal financial data to use our calculator. All calculations are performed locally in your browser. However, we may collect certain information automatically when you visit our Website:",
-        ul: [
-          "Usage Details: Information about your internet connection, the equipment you use to access our Website, and usage details.",
-          "Cookies and Tracking Technologies: We use cookies and similar technologies for Google Analytics measurement and Google AdSense advertising. Where required, a Google-certified consent management platform (CMP) asks for and applies your choices.",
-        ],
-      },
-      {
-        h: "3. How We Use Your Information",
-        p: "We use information that we collect about you or that you provide to us:",
-        ul: [
-          "To present our Website and its contents to you.",
-          "To improve our Website and user experience.",
-          "To display advertisements via Google AdSense.",
-        ],
-      },
-      {
-        h: "4. Third-Party Services",
-        p: "We use third-party services that may collect information used to identify you:",
-        ul: [
-          "Google Analytics: We use Google Analytics to measure page views, engagement, and general usage patterns. Where consent is required, Analytics may use cookies and similar identifiers only according to your choice.",
-          "Google AdSense: We use Google AdSense to display ads. Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our sites and/or other sites on the Internet. Users may opt out of personalized advertising by visiting Google's Ads Settings.",
-          "Vercel: Our website is hosted on Vercel, which may collect basic server logs.",
-        ],
-      },
-      {
-        h: "5. Data Security",
-        p: "We have implemented measures designed to secure your personal information from accidental loss and from unauthorized access, use, alteration, and disclosure. Since we do not collect sensitive personal or financial data, the risk is minimal.",
-      },
-      {
-        h: "6. Regional Privacy Choices",
-        p: "Where regional privacy laws apply, you may have choices regarding cookies and personal information used for advertising:",
-        ul: [
-          "European Economic Area, United Kingdom, and Switzerland: Google's consent message lets you manage advertising and analytics choices.",
-          'Applicable U.S. states: Use the "Do Not Sell or Share My Personal Information" link displayed by Google to opt out of the sale or sharing of personal information and targeted advertising, as those terms are defined by applicable law.',
-          "Depending on your state and subject to legal exceptions, you may also have rights to request access, correction, deletion, or a copy of personal information. Submit a request using the contact email below. We may need to verify your request.",
-          "You can reopen available Google privacy controls through Cookie Settings in the Website footer.",
-        ],
-      },
-      {
-        h: "7. Changes to Our Privacy Policy",
-        p: "It is our policy to post any changes we make to our privacy policy on this page. If we make material changes to how we treat our users' personal information, we will notify you through a notice on the Website home page.",
-      },
-      {
-        h: "8. Contact Information",
-        p: `To ask questions or comment about this privacy policy and our privacy practices, contact us at: ${CONTACT_EMAIL}`,
-      },
-    ],
-  },
-  ko: {
-    back: "홈으로",
-    title: "개인정보 처리방침",
-    updated: "최종 업데이트: 2026년 7월 30일",
-    sections: [
-      {
-        h: "1. 소개",
-        p: 'YieldGrower("당사")는 이용자의 개인정보를 존중하며 본 개인정보 처리방침에 따라 보호합니다. 이 방침은 yieldgrower.com(이하 "웹사이트") 방문 시 수집될 수 있는 정보와 그 정보의 수집·이용·보관·보호·제공 방식을 설명합니다.',
-      },
-      {
-        h: "2. 수집하는 정보",
-        p: "계산기 이용을 위해 계정 생성, 로그인, 개인 금융 정보 입력을 요구하지 않습니다. 모든 계산은 브라우저에서 로컬로 수행됩니다. 다만 웹사이트 방문 시 아래 정보가 자동으로 수집될 수 있습니다.",
-        ul: [
-          "이용 정보: 인터넷 연결, 접속 기기, 이용 내역 등",
-          "쿠키 및 유사 기술: Google Analytics 측정과 Google AdSense 광고를 위해 쿠키 및 유사 기술을 사용합니다. 동의가 필요한 지역에서는 Google 인증 동의 관리 플랫폼(CMP)이 이용자의 선택을 받고 적용합니다.",
-        ],
-      },
-      {
-        h: "3. 정보 이용 목적",
-        p: "수집하거나 제공받은 정보는 다음 목적으로 이용합니다.",
-        ul: [
-          "웹사이트 및 콘텐츠 제공",
-          "웹사이트와 사용자 경험 개선",
-          "Google AdSense를 통한 광고 표시",
-        ],
-      },
-      {
-        h: "4. 제3자 서비스",
-        p: "이용자를 식별하는 데 사용될 수 있는 정보를 수집하는 제3자 서비스를 이용합니다.",
-        ul: [
-          "Google Analytics: 페이지 조회, 참여도, 일반적인 이용 패턴을 측정합니다. 동의가 필요한 경우 이용자의 선택에 따라 쿠키 및 유사 식별자를 사용합니다.",
-          "Google AdSense: 광고 표시에 사용합니다. Google과 파트너는 광고 쿠키를 사용해 본 사이트 및 다른 사이트 방문 기록을 바탕으로 광고를 게재할 수 있습니다. 맞춤 광고는 Google 광고 설정에서 옵트아웃할 수 있습니다.",
-          "Vercel: 웹사이트 호스팅에 사용하며 기본 서버 로그를 수집할 수 있습니다.",
-        ],
-      },
-      {
-        h: "5. 정보 보안",
-        p: "개인정보의 우발적 손실, 무단 접근·이용·변경·공개를 막기 위한 조치를 적용합니다. 민감한 개인·금융 정보를 수집하지 않으므로 관련 위험은 낮습니다.",
-      },
-      {
-        h: "6. 지역별 개인정보 선택권",
-        p: "지역별 개인정보 보호법이 적용되는 경우 광고에 사용되는 쿠키와 개인정보에 관해 다음 선택권을 행사할 수 있습니다.",
-        ul: [
-          "유럽경제지역(EEA), 영국 및 스위스: Google 동의 메시지에서 광고 및 분석 관련 선택을 관리할 수 있습니다.",
-          '미국 내 해당 주: Google이 표시하는 "Do Not Sell or Share My Personal Information" 링크를 통해 관련 법률에서 정의하는 개인정보의 판매·공유 및 타겟 광고를 거부할 수 있습니다.',
-          "거주 주와 법률상 예외에 따라 개인정보 열람, 정정, 삭제 또는 사본 제공을 요청할 권리가 있을 수 있습니다. 아래 문의 이메일로 요청할 수 있으며, 요청 확인 절차가 필요할 수 있습니다.",
-          "웹사이트 푸터의 쿠키 설정에서 제공되는 Google 개인정보 보호 설정을 다시 열 수 있습니다.",
-        ],
-      },
-      {
-        h: "7. 방침 변경",
-        p: "개인정보 처리방침 변경 시 본 페이지에 게시합니다. 개인정보 취급 방식에 중요한 변경이 있으면 웹사이트 홈페이지 공지로 안내할 수 있습니다.",
-      },
-      {
-        h: "8. 문의",
-        p: `본 방침 관련 문의: ${CONTACT_EMAIL}`,
-      },
-    ],
-  },
+export const metadata: Metadata = {
+  title: "개인정보 처리방침",
+  description: "돈결의 브라우저 저장, 분석 도구, 광고 쿠키와 개인정보 처리 방식을 안내합니다.",
+  alternates: { canonical: "/privacy" },
 };
 
-export default function PrivacyPolicy() {
-  const { lang } = useLocale();
-  const t = copy[lang];
+const sections = [
+  { title: "테스트 응답과 결과", body: "성향 테스트의 진행 상태, 최근 결과, 오늘의 선택과 연속 참여 기록은 사용자의 브라우저 로컬 저장소에만 저장됩니다. 돈결 서버로 전송하거나 회원 프로필로 보관하지 않습니다. 브라우저 데이터를 삭제하면 이 기록도 삭제됩니다." },
+  { title: "자동으로 처리될 수 있는 정보", body: "웹 호스팅, 보안 및 접속 로그 과정에서 IP 주소, 브라우저 종류, 요청 시간, 방문 경로 같은 기술 정보가 일시적으로 처리될 수 있습니다. 이는 서비스 제공, 장애 확인과 보안을 위한 범위에서 사용됩니다." },
+  { title: "Google Analytics", body: "서비스 개선을 위해 Google Analytics를 사용할 수 있습니다. 이 과정에서 방문 페이지, 대략적인 지역, 기기와 브라우저 정보, 이용 흐름이 처리될 수 있습니다. 법적으로 동의가 필요한 지역에서는 동의 상태에 따라 저장과 측정 기능이 제한됩니다." },
+  { title: "Google AdSense", body: "광고가 제공되는 페이지에서는 Google과 광고 파트너가 쿠키, 웹 비콘, IP 주소 등을 사용해 광고 제공·측정·부정 사용 방지 업무를 수행할 수 있습니다. 광고 개인화 여부는 지역과 사용자의 동의 설정에 따라 달라질 수 있습니다." },
+  { title: "제3자 제공과 국외 처리", body: "Google 서비스와 Vercel 호스팅을 사용하는 과정에서 기술 정보가 해당 사업자의 시스템에서 처리될 수 있습니다. 각 사업자의 보관 기간과 처리 방식은 해당 사업자의 개인정보 정책을 따릅니다." },
+  { title: "사용자의 선택", body: "브라우저 설정에서 쿠키 또는 로컬 저장소를 삭제하거나 차단할 수 있습니다. 단, 차단하면 테스트 이어하기, 최근 결과, 오늘의 선택 기록이 유지되지 않을 수 있습니다. 동의 대상 지역에서는 하단의 쿠키 설정을 통해 선택을 변경할 수 있습니다." },
+  { title: "문의", body: `개인정보 관련 문의는 ${CONTACT_EMAIL}으로 보낼 수 있습니다. 요청 내용을 확인한 뒤 필요한 범위에서 답변합니다.` },
+];
 
+export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      <SiteHeader
-        active="privacy"
-        showLocaleControls
-        showCurrencyControls={false}
-      />
-
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="mb-8">
-          <Link
-            href="/"
-            className="text-sm font-medium text-slate-600 hover:text-indigo-600 inline-flex items-center gap-1"
-          >
-            <ArrowLeft className="w-4 h-4" /> {t.back}
-          </Link>
-        </div>
-        <div className="bg-white p-8 sm:p-12 rounded-2xl shadow-sm border border-slate-200 prose prose-slate max-w-none">
-          <h1>{t.title}</h1>
-          <p>{t.updated}</p>
-          {t.sections.map((section) => (
-            <div key={section.h}>
-              <h2>{section.h}</h2>
-              <p>{section.p}</p>
-              {"ul" in section && section.ul && (
-                <ul>
-                  {section.ul.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
+    <main className="px-4 py-14 sm:px-6 sm:py-20">
+      <article className="mx-auto max-w-3xl">
+        <p className="text-sm font-black tracking-[0.16em] text-[#a34f32]">PRIVACY</p>
+        <h1 className="mt-3 text-4xl font-black tracking-[-0.055em] text-stone-950 sm:text-6xl">개인정보 처리방침</h1>
+        <p className="mt-5 text-base leading-8 text-stone-600">돈결은 테스트를 이용하는 데 이름, 생년월일, 전화번호 또는 회원가입을 요구하지 않습니다.</p>
+        <div className="mt-10 grid gap-5">
+          {sections.map((section) => (
+            <section key={section.title} className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-7">
+              <h2 className="text-xl font-black text-stone-950">{section.title}</h2>
+              <p className="mt-3 text-sm leading-7 text-stone-700">{section.body}</p>
+            </section>
           ))}
         </div>
-      </main>
-    </div>
+        <p className="mt-10 text-sm font-medium text-stone-500">시행일 및 최종 검토일: 2026년 9월 11일</p>
+      </article>
+    </main>
   );
 }

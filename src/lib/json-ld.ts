@@ -5,11 +5,11 @@ export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "YieldGrower",
+    name: "돈결",
     url: SITE_URL,
     email: CONTACT_EMAIL,
     description:
-      "Free dividend, FIRE, and compound calculators plus a daily Income Pulse score.",
+      "돈을 대하는 방식을 16가지 유형으로 살펴보는 비임상적 자기이해 서비스.",
   };
 }
 
@@ -17,13 +17,13 @@ export function webSiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "YieldGrower",
+    name: "돈결",
     url: SITE_URL,
     description:
-      "Dividend reinvestment, FIRE, and income planning calculators with a daily Income Pulse.",
+      "20개의 생활 속 선택으로 돈의 목적, 관리 방식, 관계 기준과 시간 관점을 살펴보는 자기이해 서비스.",
     publisher: {
       "@type": "Organization",
-      name: "YieldGrower",
+      name: "돈결",
       url: SITE_URL,
     },
   };

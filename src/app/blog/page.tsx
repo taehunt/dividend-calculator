@@ -1,5 +1,2 @@
 import { permanentRedirect } from "next/navigation";
-
-export default function BlogIndex() {
-  permanentRedirect("/tools");
-}
+export default function LegacyBlogPage() { permanentRedirect("/test"); }
