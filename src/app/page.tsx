@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, HeartHandshake, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpenText, CalendarDays, HeartHandshake, ShieldCheck, Sparkles } from "lucide-react";
+import { GUIDES } from "@/lib/guides";
 import { AXES, AXIS_KEYS, MONEY_TYPES } from "@/lib/money-personality";
 
 const previewTypes = [MONEY_TYPES[1], MONEY_TYPES[6], MONEY_TYPES[9], MONEY_TYPES[12]];
@@ -99,6 +100,29 @@ export default function HomePage() {
               <Link href={item.href} className="mt-6 inline-flex items-center gap-1.5 text-sm font-black text-[#315c4c]">{item.cta} <ArrowRight className="h-4 w-4" /></Link>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="border-y border-stone-200 bg-white px-4 py-20 sm:px-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div className="max-w-2xl">
+              <p className="text-sm font-black tracking-[0.15em] text-[#a34f32]">PRACTICAL GUIDES</p>
+              <h2 className="mt-3 text-3xl font-black tracking-[-0.045em] text-stone-950 sm:text-5xl">유형을 생활의 언어로 바꾸기</h2>
+              <p className="mt-4 text-base leading-7 text-stone-600">관계에서 돈을 이야기하는 순서부터 후회한 소비를 복기하는 방법까지, 바로 써볼 수 있는 질문과 실습을 직접 정리했습니다.</p>
+            </div>
+            <Link href="/guides" className="inline-flex items-center gap-1.5 text-sm font-black text-[#315c4c]">전체 가이드 <ArrowRight className="h-4 w-4" /></Link>
+          </div>
+          <div className="mt-9 grid gap-4 md:grid-cols-3">
+            {GUIDES.slice(0, 3).map((guide) => (
+              <Link key={guide.slug} href={`/guides/${guide.slug}`} className="group rounded-[1.75rem] border border-stone-200 bg-[#fffdf8] p-6 hover:-translate-y-0.5 hover:shadow-md">
+                <BookOpenText className="h-6 w-6 text-[#b65335]" />
+                <p className="mt-5 text-xs font-black text-[#a34f32]">{guide.category} · 약 {guide.readMinutes}분</p>
+                <h3 className="mt-2 text-xl font-black leading-7 text-stone-950">{guide.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-stone-600">{guide.description}</p>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

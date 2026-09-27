@@ -72,7 +72,7 @@ export default function MethodologyPage() {
           <Link href="/test" className="inline-flex min-h-12 items-center gap-2 rounded-2xl bg-[#1f473b] px-6 text-sm font-black text-white">직접 테스트하기 <ArrowRight className="h-4 w-4" /></Link>
           <Link href="/types" className="inline-flex min-h-12 items-center rounded-2xl border border-stone-300 bg-white px-6 text-sm font-black text-stone-700">16가지 유형 보기</Link>
         </div>
-        <p className="mt-10 text-sm font-medium text-stone-500">버전 1.0 · 최종 검토일: 2026년 9월 11일</p>
+        <p className="mt-10 text-sm font-medium text-stone-500">버전 1.1 · 최종 검토일: 2026년 9월 28일</p>
       </article>
     </main>
   );

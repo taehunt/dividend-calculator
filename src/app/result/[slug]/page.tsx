@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, MessageCircleWarning, Sprout } from "lucide-react";
+import { ArrowRight, CheckCircle2, MessageCircleWarning, Quote, RotateCcw, Sprout } from "lucide-react";
 import { notFound } from "next/navigation";
 import ResultActions from "@/components/ResultActions";
 import ResultAxes from "@/components/ResultAxes";
@@ -9,6 +9,7 @@ import {
   getMoneyType,
   oppositeType,
 } from "@/lib/money-personality";
+import { getMoneyTypeGuidance } from "@/lib/money-type-guidance";
 
 export const dynamicParams = false;
 
@@ -43,6 +44,8 @@ export default async function ResultPage({
   if (!type) notFound();
 
   const opposite = oppositeType(type);
+  const guidance = getMoneyTypeGuidance(type.slug);
+  if (!guidance) notFound();
   const related = MONEY_TYPES.filter((candidate) => candidate.slug !== type.slug && candidate.slug !== opposite.slug).slice(0, 3);
 
   return (
@@ -94,6 +97,35 @@ export default async function ResultPage({
           <div className="mt-4 sm:mt-0"><p className="text-xs font-black tracking-[0.14em] text-[#9d4b31]">작게 시작할 한 가지</p><p className="mt-2 text-lg font-black leading-7 text-stone-900">{type.action}</p></div>
         </section>
 
+        <section className="mt-12 border-t border-stone-200 pt-10">
+          <p className="text-xs font-black tracking-[0.15em] text-[#a34f32]">FROM TYPE TO PRACTICE</p>
+          <h2 className="mt-3 text-3xl font-black tracking-[-0.045em] text-stone-950">{type.name}의 선택을 생활에 적용하기</h2>
+          <p className="mt-5 text-base leading-8 text-stone-700">{guidance.decisionRule}</p>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
+            <article className="rounded-[1.75rem] border border-stone-200 bg-white p-7">
+              <div className="flex items-center gap-2"><RotateCcw className="h-5 w-5 text-[#315c4c]" /><h3 className="text-xl font-black text-stone-950">압박이 커질 때 되돌아오는 순서</h3></div>
+              <ol className="mt-5 grid gap-4">
+                {guidance.resetSteps.map((step, index) => (
+                  <li key={step} className="flex gap-3 text-sm font-bold leading-6 text-stone-700"><span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#edf4ef] text-xs text-[#315c4c]">{index + 1}</span>{step}</li>
+                ))}
+              </ol>
+            </article>
+            <article className="rounded-[1.75rem] border border-[#ead1c3] bg-[#fff4ec] p-7">
+              <div className="flex items-center gap-2"><Quote className="h-5 w-5 text-[#a34f32]" /><h3 className="text-xl font-black text-stone-950">이렇게 말해 보세요</h3></div>
+              <blockquote className="mt-5 text-base font-bold leading-8 text-stone-800">“{guidance.conversation}”</blockquote>
+              <p className="mt-4 text-xs leading-5 text-stone-500">상대에게 그대로 읽기보다 자신의 상황과 말투에 맞게 바꾸어 사용하세요.</p>
+            </article>
+          </div>
+
+          <article className="mt-5 rounded-[1.75rem] border border-stone-200 bg-[#fffdf8] p-7">
+            <h3 className="text-xl font-black text-stone-950">이번 주 회고 질문</h3>
+            <ul className="mt-5 grid gap-3 md:grid-cols-3">
+              {guidance.reflectionQuestions.map((question) => <li key={question} className="rounded-2xl bg-white p-4 text-sm font-bold leading-6 text-stone-700">{question}</li>)}
+            </ul>
+          </article>
+        </section>
+
         <section className="mt-12 rounded-[2rem] bg-[#1f473b] p-7 text-white sm:p-10">
           <p className="text-xs font-black tracking-[0.15em] text-[#f4c77b]">OPPOSITE GRAIN</p>
           <div className="mt-5 grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
@@ -119,7 +151,7 @@ export default async function ResultPage({
           </div>
         </section>
 
-        <p className="mt-10 text-center text-xs leading-6 text-stone-500">이 결과는 자기이해와 대화를 위한 비임상적 성향 설명입니다. 정신건강 진단, 신용평가 또는 재정 자문에 사용할 수 없습니다.</p>
+        <p className="mt-10 text-center text-xs leading-6 text-stone-500">최종 검토 2026.09.28 · 이 결과는 자기이해와 대화를 위한 비임상적 성향 설명입니다. 정신건강 진단, 신용평가 또는 재정 자문에 사용할 수 없습니다.</p>
       </div>
     </main>
   );

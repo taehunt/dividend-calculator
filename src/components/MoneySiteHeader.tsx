@@ -10,6 +10,7 @@ const links = [
   { href: "/types", label: "16가지 유형" },
   { href: "/compatibility", label: "관계 비교" },
   { href: "/daily", label: "오늘의 선택" },
+  { href: "/guides", label: "가이드" },
 ];
 
 export default function MoneySiteHeader() {

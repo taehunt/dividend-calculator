@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import DailyChoice from "@/components/DailyChoice";
 
 export const metadata: Metadata = {
@@ -17,6 +19,10 @@ export default function DailyPage() {
           <p className="mt-5 text-lg leading-8 text-stone-600">유형은 평소의 경향이고 오늘의 선택은 현재의 상태입니다. 하루 한 문항을 가볍게 기록해 보세요.</p>
         </div>
         <div className="mt-10"><DailyChoice /></div>
+        <Link href="/review" className="mt-8 flex items-center justify-between gap-4 rounded-3xl bg-[#1f473b] p-6 text-white hover:bg-[#17392f]">
+          <span><strong className="block text-lg">쌓인 선택 돌아보기</strong><span className="mt-1 block text-sm text-[#d8e7de]">최근 7일 기록과 회고 질문을 한곳에서 확인합니다.</span></span>
+          <ArrowRight className="h-5 w-5 shrink-0" />
+        </Link>
         <section className="mt-10 rounded-3xl border border-stone-200 bg-[#fffdf8] p-6">
           <h2 className="text-lg font-black text-stone-950">기록은 어디에 저장되나요?</h2>
           <p className="mt-3 text-sm leading-7 text-stone-600">오늘의 답과 연속 참여 기록은 이 브라우저의 로컬 저장소에만 남습니다. 회원 계정이나 서버로 전송하지 않으며 브라우저 데이터를 지우면 함께 삭제됩니다.</p>

@@ -13,7 +13,10 @@ export default function MoneySiteFooter() {
           <p className="mt-4 text-xs text-stone-600">© 2026 Money Grain, a YieldGrower project.</p>
         </div>
         <nav className="flex flex-wrap gap-x-5 gap-y-3 text-sm font-semibold text-stone-600" aria-label="보조 메뉴">
+          <Link href="/guides" className="hover:text-stone-950">돈 생활 가이드</Link>
+          <Link href="/review" className="hover:text-stone-950">선택 기록</Link>
           <Link href="/methodology" className="hover:text-stone-950">설계 원칙</Link>
+          <Link href="/editorial-policy" className="hover:text-stone-950">콘텐츠 원칙</Link>
           <Link href="/about" className="hover:text-stone-950">소개</Link>
           <Link href="/privacy" className="hover:text-stone-950">개인정보</Link>
           <Link href="/contact" className="hover:text-stone-950">문의</Link>
