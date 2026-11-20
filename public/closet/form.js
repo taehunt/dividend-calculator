@@ -1,7 +1,8 @@
-// All fit landmarks refer to the same 1024 x 1536 studio pose.
+import {maleFit} from "./pose.js";
+// Coordinates below use the original 1024 x 1536 studio pose.
 export const slots = Object.fromEntries([
   ["hat","모자",7],["top","상의",4],["bottom","하의",3],["outer","아우터",5],
-  ["socks","양말",1],["shoes","신발",6],["gloves","장갑",8]
+  ["socks","양말",1],["shoes","신발",2],["gloves","장갑",3]
 ].map(([key,name,z])=>[key,{name,z}]));
 
 const scale = .625;
@@ -93,8 +94,13 @@ class Fitting {
       const greyCloth=red<173 && Math.abs(red-blue)<23;
       const studioShade=fabric&&greyCloth?cap(.34+.66*(red*.3+light[dest+1]*.59+blue*.11)/113,.68,1.24):1;
       const shade=(.92+.11*Math.cos(center*Math.PI/2))*studioShade;
-      for(let ch=0;ch<3;ch++)dst[dest+ch]=mix(mix(src[k+ch],src[n+ch],tx),mix(src[k+down+ch],src[n+down+ch],tx),ty)*shade;
-      dst[dest+3]=opacity;
+      const underneath=dst[dest+3]*(1-opacity/255);
+      const composedAlpha=opacity+underneath;
+      for(let ch=0;ch<3;ch++){
+        const color=mix(mix(src[k+ch],src[n+ch],tx),mix(src[k+down+ch],src[n+down+ch],tx),ty)*shade;
+        dst[dest+ch]=(color*opacity+dst[dest+ch]*underneath)/composedAlpha;
+      }
+      dst[dest+3]=composedAlpha;
     }
   }
   result(){
@@ -134,9 +140,9 @@ function neckline(s) {
   }
   return best;
 }
-function upper(fit,kind,isOuter) {
+function upper(fit,kind,isOuter,measuredNeck) {
   const s=fit.s,w=s.w,h=s.h;
-  const neck=neckline(s);
+  const neck=measuredNeck||neckline(s);
   const spans=[.53,.59,.65,.71,.77].map(t=>s.body(t*h));
   let left=median(spans.map(r=>r[0])),right=median(spans.map(r=>r[1]));
   const sideRoom=Math.max(left/w,1-right/w);
@@ -183,6 +189,15 @@ function upper(fit,kind,isOuter) {
     const mapY=(x,fx)=>{
       const dx=Math.abs(x-512),neckLine=dx<neckWidth?262+neckDepth*(1-(dx/neckWidth)**neck.power):262+.35*(dx-neckWidth);
       const hemLine=hem+9*cap(1-(dx/150)**2,0,1);
+      if(measuredNeck){
+        if(y>hemLine)return -1;
+        const fraction=cap((y-262)/(hemLine-262),0,1);
+        const ix=cap(Math.round(fx),0,w-1),u=Math.abs(fx/w-.5)/neck.radius;
+        const sourceRow=mix(0,Math.min(s.end[ix]-1,(h-1)*bodyEnd),fraction);
+        const opening=u<1?h*neck.depth*(neck.power===2?Math.sqrt(1-u*u):1-u):0;
+        if(sourceRow<opening)return -1;
+        return Math.max(sourceRow,s.top[ix]+1);
+      }
       if(y<neckLine||y>hemLine)return -1;
       const v=cap((y-neckLine)/(hemLine-neckLine),0,1);
       const ix=cap(Math.round(fx),0,w-1);
@@ -198,7 +213,7 @@ function upper(fit,kind,isOuter) {
 function lower(fit,kind) {
   const s=fit.s,w=s.w,h=s.h;
   const skirt=kind===8,shorts=kind===7||(kind==null&&w/h>1.03);
-  const hem=skirt?cap(619+h/w*440,840,1350):shorts?884:1428;
+  const hem=skirt?cap(619+h/w*440,840,1350):shorts?cap(657+h/w*345,875,1035):1428;
   let crotch=.36;
   if(!skirt)for(let p=.15;p<.8;p+=.01){
     const spans=s.runs(h*p).filter(([l,r])=>r-l>w*.12);
@@ -232,8 +247,8 @@ function accessory(fit,category,split) {
   const contours={
     hat:[[12,471,551],[31,439,584],[64,423,596],[111,422,603],[126,439,591]],
     gloves:[[744,282,325],[779,278,326],[810,274,326],[848,280,319],[892,290,306]],
-    socks:[[1260,368,446],[1330,376,438],[1414,374,429],[1463,353,432],[1497,349,425]],
-    shoes:[[1406,384,431],[1448,366,438],[1482,344,437],[1507,342,434]]
+    socks:[[1260,367,448],[1330,376,439],[1392,374,431],[1420,370,431],[1463,350,434],[1487,348,431],[1499,352,423]],
+    shoes:[[1406,375,426],[1430,366,433],[1462,349,438],[1486,340,438],[1504,343,436],[1510,352,428]]
   };
   const outline=contours[category],first=outline[0][0],end=outline.at(-1)[0];
   for(const side of category==="hat"?[0]:[0,1]){
@@ -242,15 +257,26 @@ function accessory(fit,category,split) {
       const y=row/scale,t=(y-first)/(end-first),sy=cap(t,0,1)*(s.h-1);
       let [a,b]=profile(outline,y);
       if(side)[a,b]=[(category==="gloves"?1016:1000)-b,(category==="gloves"?1016:1000)-a];
+      // Map the visible material at this height to the foot or hand once.
+      // Keeping the full transparent bounding box here would narrow the ankle twice.
+      let from=sx1,to=sx2;
+      if(category==="socks"||category==="shoes"||category==="gloves"){
+        const spans=s.runs(sy).filter(([l,r])=>r>=sx1&&l<=sx2);
+        if(!spans.length)continue;
+        const rowLeft=Math.max(sx1,spans[0][0]),rowRight=Math.min(sx2,spans.at(-1)[1]);
+        const keep=category==="gloves"?.35:category==="shoes"?.28:.12;
+        from=mix(rowLeft,sx1,keep);to=mix(rowRight,sx2,keep);
+      }
       const mirrored=side&&!split;
-      fit.strip(row,a,b,mirrored?sx2:sx1,mirrored?sx1:sx2,sy,{fabric:false,curve:.06,arc:.007*s.h});
+      fit.strip(row,a,b,mirrored?to:from,mirrored?from:to,sy,{fabric:false,curve:.06,arc:.007*s.h});
     }
   }
 }
-export function fitGarment(image,item) {
+export function fitGarment(image,item,model="female") {
   const fit=new Fitting(garment(image));
-  if(item.category==="top"||item.category==="outer")upper(fit,item.kind,item.category==="outer");
+  if(item.category==="top"||item.category==="outer")upper(fit,item.kind,item.category==="outer",item.collar);
   else if(item.category==="bottom")lower(fit,item.kind);
   else accessory(fit,item.category,item.split?Math.round(item.split*fit.s.w/image.width):0);
+  if(model==="male")return maleFit(fit.frame,{top:fit.minY,bottom:fit.maxY,left:fit.minX,right:fit.maxX},item.category,scale);
   return fit.result();
 }
