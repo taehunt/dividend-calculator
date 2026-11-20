@@ -1,3 +1,4 @@
+import {refineShirtMatte} from "./matte.js";
 import {describeGarment} from "./names.js";
 function canvas(width,height) {
   const c=document.createElement("canvas"); c.width=width;c.height=height;return c;
@@ -67,6 +68,11 @@ export async function preparePhoto(file,initialCategory) {
     sc.putImageData(ic,0,0);
     ctx.globalCompositeOperation="destination-in";ctx.drawImage(small,0,0,w,h);ctx.globalCompositeOperation="source-over";
     cut=true;
+  }
+  if(mask && (category||initialCategory)==="top"){
+    const refined=ctx.getImageData(0,0,w,h);
+    refineShirtMatte(original.data,refined.data,w,h);
+    ctx.putImageData(refined,0,0);
   }
   let pixels=ctx.getImageData(0,0,w,h),box=bounds(pixels.data,w,h);
   if(!box||box[2]*box[3]<w*h*.025){ctx.putImageData(original,0,0);cut=false;}

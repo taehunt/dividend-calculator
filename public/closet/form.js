@@ -14,16 +14,16 @@ export async function loadStudio(){
   if(!response.ok)throw Error("피팅 자료");
   const catalog=await response.json();
   await Promise.all(Object.entries(catalog).map(async ([key,parts])=>{
-    const [model,atlas]=await Promise.all(["model","atlas"].map(name=>loadImage(new URL(key+"/"+name+".webp",root))));
+    const [model,atlas,shirts]=await Promise.all(["model","atlas","shirts"].map(name=>loadImage(new URL(key+"/"+name+".webp",root))));
     model.draggable=false;model.id="form";model.alt=(key.startsWith("female")?"여성":"남성")+" 모델 "+(key.endsWith("angle")?"사선":"정면");
-    studios.set(key,{model,parts,atlas,templates:new Map()});
+    studios.set(key,{model,parts,atlas,shirts,templates:new Map()});
   }));
 }
 export function studioPhoto(key){return studios.get(key)?.model;}
 function part(studio,name){
   if(studio.templates.has(name))return studio.templates.get(name);
   const [,,w,h,sx,sy]=studio.parts[name],c=surface(w,h);
-  c.getContext("2d").drawImage(studio.atlas,sx,sy,w,h,0,0,w,h);
+  c.getContext("2d").drawImage(name.startsWith("fit-")?studio.shirts:studio.atlas,sx,sy,w,h,0,0,w,h);
   studio.templates.set(name,c);return c;
 }
 function placed(components){
@@ -42,7 +42,7 @@ export function fitGarment(image,item,view){
   const components=[];
   function add(key,photo,record){
     const [x,y]=studio.parts[key],template=part(studio,key);
-    const img=photo?dressPhoto(photo,record,template,view.endsWith("angle")):template;
+    const img=photo?dressPhoto(photo,record,template,view.endsWith("angle"),key.startsWith("fit-")):template;
     if(img)components.push({img,x,y});
   }
   if(name==="jumpsuit"){

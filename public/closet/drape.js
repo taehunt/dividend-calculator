@@ -1,3 +1,4 @@
+import {shirtGeometry,shirtTarget,sampleShirt} from "./shirt.js";
 // Each studio plate records the actual silhouette and lighting for this pose.
 const clamp=(v,lo=0,hi=1)=>Math.max(lo,Math.min(hi,v));
 export function surface(w,h) {
@@ -56,8 +57,8 @@ export function patternFor(image,item){
     case "outer":return item.kind===9?"coat":"chore-jacket";
     case "top":
       if(item.kind===10||item.kind===11)return item.kind===10?"dress":"jumpsuit";
-      if(s.sleeveDepth>.63)return "long-sleeve";
-      return item.kind===5?"tank":"brick-tee";
+      if(item.kind===5)return "tank";
+      return shirtGeometry(s)?.long || s.sleeveDepth>.63?"fit-long":"fit-short";
     case "bottom":return item.kind===8?"skirt":item.kind===7||(item.kind==null&&s.w/s.h>1.03)?"sand-shorts":"jeans";
     default:return {hat:"blue-cap",socks:"charcoal-sock",shoes:"sneaker",gloves:"leather-glove"}[item.category];
   }
@@ -95,7 +96,7 @@ function frontNeck(s){
 }
 export function hasFrontV(image){const fabric=source(image);return Boolean(fabric && frontNeck(fabric));}
 // Match the flat photograph to the neckline, sleeve, placket and individual leg panels.
-export function dressPhoto(image,item,plate,angled) {
+export function dressPhoto(image,item,plate,angled,shirt=false) {
   const s=source(image),w=plate.width,h=plate.height;
   if(!s)return null;
   const c=surface(w,h),ctx=c.getContext("2d"),dst=ctx.createImageData(w,h);
@@ -110,10 +111,14 @@ export function dressPhoto(image,item,plate,angled) {
   const regionCenter=angled?.63:.5;
   // A front V can include the back-facing lining in a flat-lay photograph.
   const neck=upper&&!outer?frontNeck(s):null;
+  const fabric=shirt?shirtGeometry(s):null;
+  const rows=fabric?Array.from({length:h},(_,y)=>spans(tpl,w,y)):null;
+  const target=rows?shirtTarget(plate,rows):null;
   for(let y=0;y<h;y++){
-    const runs=spans(tpl,w,y);if(!runs.length)continue;
+    const runs=rows?rows[y]:spans(tpl,w,y);if(!runs.length)continue;
     const left=runs[0][0],right=runs.at(-1)[1],v=y/Math.max(1,h-1);
-    for(const [a,b] of runs){
+    for(const run of runs){
+      const [a,b]=run;
       const side=(a+b)*.5>w*.5;
       const leg=item.category==="bottom" && item.kind!==8 && runs.length>=2 && v>.22 && b-a>w*.12;
       const limb=paired||leg, sleeve=upper&&runs.length>1&&(b-a)<w*.24 && v>.21 && (b<w*.33 || a>w*.67);
@@ -124,31 +129,37 @@ export function dressPhoto(image,item,plate,angled) {
           if(v<depth)continue;
         }
         if(item.category==="outer" && item.kind===5 && (x<w*.19||x>w*.81) && v>.16)continue;
-        let u=limb?(x-a)/Math.max(1,b-a):(x-left)/Math.max(1,right-left);
-        if(angled&&!paired)u=clamp(u-.15*Math.sin(Math.PI*u));
-        u=clamp(u-.035*Math.sin(2*Math.PI*u));
-        let sy=v;
-        if(upper){
-          sy=clamp(v+.024*Math.sin(Math.PI*u)*Math.sin(Math.PI*v));
-          if(sleeve){u=side?.83+.16*(x-a)/Math.max(1,b-a):.01+.16*(x-a)/Math.max(1,b-a);sy=clamp(v*s.sleeveDepth);}
-          else if(outer){
-            // Both photographed front edges sample the closure of the uploaded jacket.
-            const center=angled?.63:.5;
-            if(u<center)u=clamp(u*.5/Math.max(.2,center-.035),0,.498);
-            else u=clamp(.502+(u-center-.035)*.5/(1-center-.035),.502,1);
+        let first,second,blend=0;
+        if(target){
+          [first,second,blend]=sampleShirt(s,fabric,target,run,x,y,w,h,angled);
+        }else{
+          let u=limb?(x-a)/Math.max(1,b-a):(x-left)/Math.max(1,right-left);
+          if(angled&&!paired)u=clamp(u-.15*Math.sin(Math.PI*u));
+          u=clamp(u-.035*Math.sin(2*Math.PI*u));
+          let sy=v;
+          if(upper){
+            sy=clamp(v+.024*Math.sin(Math.PI*u)*Math.sin(Math.PI*v));
+            if(sleeve){u=side?.83+.16*(x-a)/Math.max(1,b-a):.01+.16*(x-a)/Math.max(1,b-a);sy=clamp(v*s.sleeveDepth);}
+            else if(outer){
+              // Both photographed front edges sample the closure of the uploaded jacket.
+              const center=angled?.63:.5;
+              if(u<center)u=clamp(u*.5/Math.max(.2,center-.035),0,.498);
+              else u=clamp(.502+(u-center-.035)*.5/(1-center-.035),.502,1);
+            }
           }
+          const row=Math.round(clamp(sy)*(s.h-1));
+          const bilateral=paired?Boolean(item.split):leg;
+          if(leg && sourceRows[row].length===1)u=.5*(u+Number(side));
+          if(paired&&!bilateral&&side)u=1-u;
+          const sx=sourceSpan(sourceRows[row],u,side,bilateral);
+          first=second=(row*s.w+sx)*4;
         }
-        const row=Math.round(clamp(sy)*(s.h-1));
-        const bilateral=paired?Boolean(item.split):leg;
-        if(leg && sourceRows[row].length===1)u=.5*(u+Number(side));
-        if(paired&&!bilateral&&side)u=1-u;
-        const sx=sourceSpan(sourceRows[row],u,side,bilateral),j=(row*s.w+sx)*4;
         const luminance=.3*tpl[i]+.59*tpl[i+1]+.11*tpl[i+2];
         const shade=clamp(Math.pow(Math.max(5,luminance)/median,.59),.55,1.32);
-        const high=Math.max(s.data[j],s.data[j+1],s.data[j+2]);
+        const high=Math.max(s.data[first],s.data[first+1],s.data[first+2]);
         const weight=item.category==="bottom"?.62:.8;
         for(let k=0;k<3;k++){
-          const base=s.data[j+k];
+          const base=s.data[first+k]*(1-blend)+s.data[second+k]*blend;
           const room=shade>1?Math.min(base,(255-high)*.7):base;
           dst.data[i+k]=base+room*(shade-1)*weight;
         }
