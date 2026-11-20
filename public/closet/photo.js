@@ -1,3 +1,4 @@
+import {describeGarment} from "./names.js";
 function canvas(width,height) {
   const c=document.createElement("canvas"); c.width=width;c.height=height;return c;
 }
@@ -81,5 +82,6 @@ export async function preparePhoto(file,initialCategory) {
     if(!occupied && (!split || Math.abs(x-box[2]/2)<Math.abs(split-box[2]/2)))split=x;
   }
   const blob=await new Promise((ok,fail)=>out.toBlob(b=>b?ok(b):fail(Error("이미지 저장 실패")),"image/png"));
-  return {id:crypto.randomUUID(),name:file.name.replace(/\.[^.]+$/,"")||"옷",category:category||initialCategory,kind,png:await blob.arrayBuffer(),split,created:Date.now(),recognized:Boolean(category),cut};
+  const item={id:crypto.randomUUID(),category:category||initialCategory,kind,png:await blob.arrayBuffer(),split,created:Date.now(),recognized:Boolean(category),cut};
+  return {...item,name:describeGarment(out,item),nameVersion:1};
 }

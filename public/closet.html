@@ -13,7 +13,8 @@
 <main>
 <section class="studio" aria-label="착장 미리보기">
 <div class="studio-bar"><h1>피팅룸</h1><div id="models" role="group" aria-label="피팅 모델 성별"><button type="button" data-model="female" aria-pressed="true">여성</button><button type="button" data-model="male" aria-pressed="false">남성</button></div><span id="count">착용 0개</span></div>
-<div class="stage"><div class="figure"><img id="form" src="./closet/studio-model.webp" width="768" height="1152" alt="정면으로 선 전신 피팅 모델"><div id="layers"></div></div></div>
+<div class="stage"><div class="figure"><img id="form" src="./closet/fitting/female-front/model.webp" width="512" height="1024" draggable="false" alt="정면으로 선 전신 피팅 모델"><div id="layers"></div></div></div>
+<div class="view-bar"><div id="angles" role="group" aria-label="착장 각도"><button type="button" data-angle="front" aria-pressed="true">정면</button><button type="button" data-angle="angle" aria-pressed="false">사선</button></div></div>
 <div class="caption" id="look">선택한 옷이 여기에 표시돼요.</div>
 </section>
 <section class="closet" aria-labelledby="closetTitle">
@@ -23,7 +24,7 @@
 <div id="items"></div>
 <div id="empty"><strong>아직 등록한 옷이 없어요</strong><p>한 벌씩 펼쳐 찍은 사진을 추가해 보세요.<br>배경을 지우고 종류별로 정리해요.</p></div>
 <p role="status" id="status" aria-live="polite"></p>
-<div id="tools" hidden><label>분류 수정 <select id="move"></select></label><button id="remove" type="button">옷 삭제</button></div>
+<div id="tools" hidden><label>분류 수정 <select id="move"></select></label></div>
 </section>
 </main>
 </body>
