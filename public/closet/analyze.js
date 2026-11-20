@@ -37,14 +37,14 @@ self.onmessage=async ({data})=>{
       importScripts(cdn+"ort.wasm.min.js");
       ort.env.wasm.wasmPaths=cdn; ort.env.wasm.numThreads=1;
     }
-    let category=null, mask=null;
+    let category=null, kind=null, mask=null;
     try {
       const tensor=await run("category",data.category,640);
       const count=tensor.dims[2]; let best=.18;
       for(const [id,group] of Object.entries(groups)) {
         const offset=(4+Number(id))*count;
         for(let i=0;i<count;i++) if(tensor.data[offset+i]>best) {
-          best=tensor.data[offset+i];category=group;
+          best=tensor.data[offset+i];category=group;kind=Number(id);
         }
       }
     } catch {}
@@ -58,6 +58,6 @@ self.onmessage=async ({data})=>{
         for(let i=0;i<pixels.length;i++) mask[i]=255*Math.max(0,Math.min(1,((pixels[i]-low)/(high-low)-.08)/.84));
       }
     } catch {}
-    self.postMessage({category,mask},mask?[mask.buffer]:[]);
+    self.postMessage({category,kind,mask},mask?[mask.buffer]:[]);
   }catch{self.postMessage({category:null,mask:null});}
 };

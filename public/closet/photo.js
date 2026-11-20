@@ -58,7 +58,7 @@ export async function preparePhoto(file,initialCategory) {
   let transparent=0;
   for(let i=3;i<original.data.length;i+=4)if(original.data[i]<24)transparent++;
   const hasAlpha=transparent>w*h*.03;
-  const {category,mask}=await analyze(modelInput(photo,640,true),hasAlpha?null:modelInput(photo,320,false));
+  const {category,kind,mask}=await analyze(modelInput(photo,640,true),hasAlpha?null:modelInput(photo,320,false));
   let cut=hasAlpha;
   if(mask){
     const small=canvas(320,320), sc=small.getContext("2d"), ic=sc.createImageData(320,320);
@@ -81,5 +81,5 @@ export async function preparePhoto(file,initialCategory) {
     if(!occupied && (!split || Math.abs(x-box[2]/2)<Math.abs(split-box[2]/2)))split=x;
   }
   const blob=await new Promise((ok,fail)=>out.toBlob(b=>b?ok(b):fail(Error("이미지 저장 실패")),"image/png"));
-  return {id:crypto.randomUUID(),name:file.name.replace(/\.[^.]+$/,"")||"옷",category:category||initialCategory,png:await blob.arrayBuffer(),split,created:Date.now(),recognized:Boolean(category),cut};
+  return {id:crypto.randomUUID(),name:file.name.replace(/\.[^.]+$/,"")||"옷",category:category||initialCategory,kind,png:await blob.arrayBuffer(),split,created:Date.now(),recognized:Boolean(category),cut};
 }

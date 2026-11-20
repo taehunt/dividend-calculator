@@ -1,12 +1,13 @@
-import {drawForm,slots} from "./form.js";
+import {fitGarment,loadStudio,slots} from "./form.js";
 import {preparePhoto} from "./photo.js";
 
 const $=id=>document.getElementById(id);
 const records=new Map(), images=new Map();
+const fittedCache=new Map();
 let category="top", db, wearing={}, busy=false;
 const selectionKey="codirum:selected:v1";
 const say=message=>{$("status").textContent=message;};
-drawForm($("form"));
+
 
 function write(record,erase=false){
   return new Promise((resolve,reject)=>{
@@ -19,33 +20,36 @@ function write(record,erase=false){
 async function cacheImage(record) {
   const url=URL.createObjectURL(new Blob([record.png],{type:"image/png"})),image=new Image();image.src=url;
   try{await image.decode();}catch(error){URL.revokeObjectURL(url);throw error;}
-  const urls=[url];
-  if(record.split>0&&record.split<image.width){
-    for(const [left,width] of [[0,record.split],[record.split,image.width-record.split]]){
-      const c=document.createElement("canvas");c.width=width;c.height=image.height;
-      c.getContext("2d").drawImage(image,left,0,width,image.height,0,0,width,image.height);
-      urls.push(c.toDataURL("image/png"));
-    }
-  }
-  images.set(record.id,{urls,image});
+  images.set(record.id,{url,image});
 }
 function remember(){try{localStorage.setItem(selectionKey,JSON.stringify(wearing));}catch{}}
+function fittedFor(item){
+  if(item.cut===false)return null;
+  const old=fittedCache.get(item.id);
+  fittedCache.delete(item.id);
+  const entry=old?.category===item.category?old:{
+    category:item.category,canvas:fitGarment(images.get(item.id).image,item)
+  };
+  fittedCache.set(item.id,entry);
+  if(fittedCache.size>32)fittedCache.delete(fittedCache.keys().next().value);
+  return entry.canvas;
+}
 function renderLook(){
-  const layers=$("layers");layers.replaceChildren();const names=[];
+  const layers=$("layers");layers.replaceChildren();const names=[],missing=[];
   for(const [key,slot] of Object.entries(slots)){
     const item=records.get(wearing[key]),entry=images.get(wearing[key]);
     if(!entry||item?.category!==key)continue;
-    names.push(item.name);
-    slot.boxes.forEach(([x,y,w,h],i)=>{
-      const img=new Image();img.className="piece";img.alt=slot.name+" "+item.name;
-      img.src=slot.boxes.length===2&&entry.urls.length===3?entry.urls[i+1]:entry.urls[0];
-      Object.assign(img.style,{left:x/4+"%",top:y/7.6+"%",width:w/4+"%",height:h/7.6+"%",zIndex:slot.z,
-        objectPosition:key==="bottom"||key==="top"||key==="outer"?"center top":"center",
-        transform:i===1&&entry.urls.length===1?"scaleX(-1)":""});
-      layers.append(img);
-    });
+    const canvas=fittedFor(item);
+    if(canvas){
+      names.push(item.name);
+      canvas.style.zIndex=slot.z;
+      canvas.setAttribute("role","img");
+      canvas.setAttribute("aria-label",slot.name+" "+item.name);
+      layers.append(canvas);
+    }else missing.push(item.name);
   }
-  $("count").textContent="착용 "+names.length+"개";$("look").textContent=names.length?names.join(" / "):"선택한 옷이 여기에 표시돼요.";
+  $("count").textContent="착용 "+names.length+"개";
+  $("look").textContent=missing.length?missing.join(", ")+" 사진에서 옷을 구분하지 못했어요. 한 벌씩 펼쳐 다시 찍어 주세요.":names.join(" / ")||"선택한 옷이 여기에 표시돼요.";
 }
 function choose(id){if(id)wearing[category]=id;else delete wearing[category];remember();renderLook();updateChecks();}
 function updateChecks(){
@@ -55,7 +59,7 @@ function updateChecks(){
 function tile(item){
   const b=document.createElement("button");b.type="button";b.className="tile";b.dataset.id=item?.id||"";
   const icon=item?new Image():document.createElement("span");
-  if(item){icon.src=images.get(item.id).urls[0];icon.alt="";}else{icon.className="skip";icon.textContent="∅";icon.setAttribute("aria-hidden","true");}
+  if(item){icon.src=images.get(item.id).url;icon.alt="";}else{icon.className="skip";icon.textContent="∅";icon.setAttribute("aria-hidden","true");}
   const name=document.createElement("span");name.className="name";name.textContent=item?.name||"없음";b.append(icon,name);
   b.onclick=()=>choose(item?.id);return b;
 }
@@ -79,7 +83,7 @@ $("files").onchange=async e=>{
     say("옷을 정리하는 중 ("+(i+1)+"/"+files.length+"). 첫 등록에는 모델을 내려받아 시간이 걸릴 수 있어요.");
     try {
       const item=await preparePhoto(file,initialCategory);
-      await write(item);await cacheImage(item);records.set(item.id,item);
+      await write(item);await cacheImage(item);records.set(item.id,item);fittedFor(item);
       last=item;added++;if(!item.recognized)uncertain++;if(!item.cut)backgrounds++;
     }catch{failed++;}
   }
@@ -99,11 +103,13 @@ $("move").onchange=async e=>{
 };
 $("remove").onclick=async ()=>{
   const item=records.get(wearing[category]);if(!item||!confirm(item.name+" 사진을 옷장에서 삭제할까요?"))return;
-  try{await write(item,true);URL.revokeObjectURL(images.get(item.id).urls[0]);records.delete(item.id);images.delete(item.id);delete wearing[item.category];remember();renderCategory();renderLook();say("옷을 삭제했어요.");}
+  try{await write(item,true);URL.revokeObjectURL(images.get(item.id).url);records.delete(item.id);images.delete(item.id);fittedCache.delete(item.id);delete wearing[item.category];remember();renderCategory();renderLook();say("옷을 삭제했어요.");}
   catch{say("삭제에 실패했어요.");}
 };
 async function init(){
   renderCategory();
+  try{await loadStudio();}
+  catch{say("피팅 모델을 불러오지 못했어요. 연결을 확인하고 새로고침해 주세요.");return;}
   try{
     db=await new Promise((ok,fail)=>{const req=indexedDB.open("codirum-wardrobe",1);req.onupgradeneeded=()=>req.result.createObjectStore("clothes",{keyPath:"id"});req.onsuccess=()=>ok(req.result);req.onerror=()=>fail(req.error);});
     const all=await new Promise((ok,fail)=>{const r=db.transaction("clothes").objectStore("clothes").getAll();r.onsuccess=()=>ok(r.result);r.onerror=()=>fail(r.error);});
